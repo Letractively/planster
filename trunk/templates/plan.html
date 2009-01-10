@@ -5,21 +5,20 @@
 {% block content %}
 <script type="text/javascript">
 <!--
-	// we need to know the PLAN's id in some javascript functions
-	PLAN = '{{ plan }}';
+// we need to know the PLAN's id in some javascript functions
+PLAN = '{{ plan }}';
 -->
 </script>
-<div style="position: absolute; top: 0; right: 0; font-size: x-small">
-	<a href="#" title="PLAN settings" onclick="Modalbox.show('/rpc/{{ plan }}/settings', {title: this.title, width: 600, afterHide: refreshIfNeeded}); return false;">Modify this PLAN</a>
+<div id="nav_links">
+	<a href="#" title="PLAN items" onclick="Modalbox.show('/forms/{{ plan }}/options', {title: 'Edit PLAN', width: 600, afterHide: refreshIfNeeded}); return false;">Manage items</a>
+	|
+	<a href="#" title="PLAN settings" onclick="Modalbox.show('/forms/{{ plan }}', {title: 'Edit PLAN', width: 600, afterHide: refreshIfNeeded}); return false;">Modify PLAN</a>
+	|
+	<a href="http://www.planster.net/">PLANster</a> NX
 </div>
-<!--<h1 id="h1"><a href="/{{ plan }}">{{ plan.title }}</a></h1>-->
-<h1><div id="title">{{ plan.title }}</div></h1>
+<h1 id="h1"><a href="/{{ plan }}" id="planTitleLink">{{ plan.title }}</a></h1>
 <img src="http://www.planster.net/img/logo.gif" alt="PLANster" title="" id="title" />
-<p id="product_note"><a href="http://www.planster.net/">PLANster</a> NX</p>
 <div id="instructions">{% if plan.instructions %}{{ plan.instructions }}{% else %}Add yourself to the list below and choose your preferred options. To change your selection at a later time, click your name.{% endif %}</div>
-<div id="instructions_toolbar">
-	<a href="#"><span id="instructions_edit">edit</span></a>
-</div>
 
 {% if edit %}
 <form method="post" action="/{{ plan }}/response">
@@ -112,26 +111,4 @@
 {% if edit %}
 </form>
 {% endif %}
-<script type="text/javascript">
-<!--
-	new Ajax.InPlaceEditor('title', '/rpc/{{ plan }}/title',
-	{
-		cancelControl: 'button',
-		callback: function(form, value) {
-			return 'title=' + encodeURIComponent(value)
-		}
-	});
-	new Ajax.InPlaceEditor('instructions', '/rpc/{{ plan }}/instructions',
-	{
-		cancelControl: 'button',
-		externalControl: 'instructions_edit',
-		externalControlOnly: true,
-		rows: 4,
-		cols: 80,
-		callback: function(form, value) {
-			return 'instructions=' + encodeURIComponent(value)
-		}
-	});
--->
-</script>
 {% endblock %}

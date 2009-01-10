@@ -1,0 +1,34 @@
+<div class="modalNav">
+	<ul>
+		<li><a href="#" onclick="Modalbox.show('/forms/{{ plan }}/options'); return false">Items</a></li>
+		<li class="active"><a href="#" onclick="Modalbox.show('/forms/{{ plan }}'); return false">Settings</a></li>
+	</ul>
+</div>
+<p>PLAN name: <span id="editablePlanTitle" class="inPlaceEditable">{{ plan.title }}</span></p>
+<div id="editablePlanInstructions" class="inPlaceEditable">{{ plan.instructions }}</div>
+<script type="text/javascript">
+<!--
+	new Ajax.InPlaceEditor('editablePlanTitle', '/rpc/{{ plan }}/title',
+	{
+		cancelControl: 'button',
+		callback: function(form, value) {
+			return 'title=' + encodeURIComponent(value)
+		},
+		onComplete: function(transport, element) {
+			$('planTitleLink').innerHTML = (transport.responseText);
+		}
+	});
+	new Ajax.InPlaceEditor('editablePlanInstructions', '/rpc/{{ plan }}/instructions',
+	{
+		cancelControl: 'button',
+		rows: 4,
+		cols: 80,
+		callback: function(form, value) {
+			return 'instructions=' + encodeURIComponent(value)
+		},
+		onComplete: function(transport, element) {
+			$('instructions').innerHTML = (transport.responseText);
+		}
+	});
+-->
+</script>

@@ -12,5 +12,7 @@ handlers:
   static_dir: css
 - url: /rpc.*
   script: rpc.py
+- url: /forms.*
+  script: rpc.py
 - url: .*
   script: main.py

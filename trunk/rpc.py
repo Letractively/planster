@@ -44,16 +44,6 @@ class PlanTitleRPC(PlansterRPCHandler):
 		plan = Plan.get(plan.key())
 		self.response.out.write(plan.title);
 
-class PlanSettingsRPC(PlansterRPCHandler):
-	def get(self):
-		plan = self.get_plan_from_url()
-
-		vars = {
-			'plan': plan
-		}
-
-		self.render_template('settings-form.html', vars)
-
 class PlanInstructionsRPC(PlansterRPCHandler):
 	def get(self):
 		plan = self.get_plan_from_url()
@@ -121,12 +111,37 @@ class PlanOptionsRPC(PlansterRPCHandler):
 
 		self.error(405)
 
+"""
+	These form handlers should probably be moved to some other file
+"""
+
+class PlanOptionsFormRPC(PlansterRPCHandler):
+	def get(self):
+		plan = self.get_plan_from_url()
+
+		vars = {
+			'plan': plan
+		}
+
+		self.render_template('settings-form.html', vars)
+
+class PlanFormRPC(PlansterRPCHandler):
+	def get(self):
+		plan = self.get_plan_from_url()
+
+		vars = {
+			'plan': plan
+		}
+
+		self.render_template('plan-form.html', vars)
+
 def main():
 	application = webapp.WSGIApplication([
 		('/rpc/[a-zA-Z0-9]{12}/title', PlanTitleRPC),
 		('/rpc/[a-zA-Z0-9]{12}/instructions', PlanInstructionsRPC),
-		('/rpc/[a-zA-Z0-9]{12}/settings', PlanSettingsRPC),
 		('/rpc/[a-zA-Z0-9]{12}/options.*', PlanOptionsRPC),
+		('/forms/[a-zA-Z0-9]{12}/options', PlanOptionsFormRPC),
+		('/forms/[a-zA-Z0-9]{12}', PlanFormRPC),
 		])
 	wsgiref.handlers.CGIHandler().run(application)
 

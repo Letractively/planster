@@ -149,6 +149,7 @@ h1 {
 	position: relative;
 	top: 40px;
 	z-index: 100;
+	height: 40px;
 }
 
 h1 a {
@@ -164,26 +165,15 @@ h2 {
 
 #instructions {
 	background-color: #e3f8fe;
-	margin: 0 auto;
+	margin: 10 auto;
 	width: 600px;
 	padding: .5em;
 	border: 1px #eeeeee solid;
 	font-size: small;
 	color: black;
+	margin-bottom: 10px;
 }
 
-#instructions_toolbar {
-	width: 600px;
-	margin: 0 auto;
-	text-align: right;
-	font-size: x-small;
-	margin-bottom: 2em;
-}
-
-#instructions_toolbar a {
-	color: blue;
-	font-weight: normal;
-}
 table.plan td {
 	width: 8em;
 	text-align: center;
@@ -227,7 +217,10 @@ table.plan th img.calendar {
 }*/
 
 a {
-	font-weight: bold;
+	color: DarkBlue;
+}
+
+table.plan a {
 	color: #666666;
 }
 
@@ -236,16 +229,11 @@ form {
 	display: inline;
 }
 
-#product_note {
-	margin-top: 0;
-	border: 0;
-	padding: 0;
-	padding-right: 2px;
-	text-align: right;
-	font-size: x-small;
-	position: relative;
-	top: -4px;
-	z-index: 1;
+#nav_links {
+	position: absolute;
+	top: 0;
+	right: 1px;
+	font-size: small
 }
 /*
 #footer {
@@ -597,10 +585,39 @@ li.plan_option_active {
 	font-weight: bold;
 }
 
-div.modal-dialog-options a {
-	color: blue;
-	font-size: x-small;
-	font-weight: normal;
-	border: 1px red solid;
-	padding: 0 0 10px 0;
+.modalNav {
+	background-color: white;
+	width: 598px;
+	margin: -6px 0 10px -11px;
+}
+
+.modalNav ul {
+	padding: 10px 0 0 0;
+	margin: 0;
+	position: relative;
+	top: 1px;
+}
+
+.modalNav li {
+	display: inline;
+	font-size: small;
+	padding: 5px 10px 0 10px;
+}
+
+.modalNav li:hover {
+	background-color: #fafafa;
+}
+
+.modalNav li.active {
+	background-color: #efefef;
+}
+
+span.inPlaceEditable {
+	border-bottom: 1px orange dashed;
+}
+
+div.inPlaceEditable {
+	border: 1px orange dashed;
+	height: 5em;
+	overflow: auto;
 }

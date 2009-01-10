@@ -47,7 +47,7 @@ function delete_selected_options(form)
 	}
 	if (victims.length < 1)
 	{
-		alert('No options selected');
+		alert('No items selected');
 		return;
 	}
 	if (confirm("Really delete " + victims.length + " item(s)?"))
@@ -91,7 +91,7 @@ function submit_option(form)
 
 	if (/^ *$/.match(title))
 	{
-		alert('Please enter a title for your new option');
+		alert('Please enter a title for your new item');
 		return;
 	}
 
