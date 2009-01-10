@@ -1,0 +1,26 @@
+<h3>Options</h3>
+<form method="post" onsubmit="delete_selected_options(this);return false">
+	<ul id="planOptions">
+	{% for option in plan.options %}
+		<li id="{{ option.key }}" class="plan_option"><input type="checkbox" name="delete" value="{{ option.key }}" class="plan_option_checkbox" /><span id="{{ option.key }}-text">{{ option.name }}</span></li>
+	{% endfor %} 
+	</ul>
+	<hr />
+	<input type="submit" value="Delete selected" />
+</form>
+<form method="post" action="/{{ plan }}/options" onsubmit="javascript:submit_option(this); return false" id="addOptionRPCForm">
+	<input name="name" />
+	<input type="submit" name="submit" value="Add" />
+</form>
+<script type="text/javascript">
+<!--
+/*{% for option in plan.options %}
+	new Draggable('{{ option.key }}', { revert: true });
+	Droppables.add('{{ option.key }}', { accept: 'plan_option', hoverclass: 'plan_option_active' });
+	new Ajax.InPlaceEditor('{{ option.key }}-text', '/',
+	{
+		cancelControl: 'button'
+	});
+{% endfor %}*/
+-->
+</script>

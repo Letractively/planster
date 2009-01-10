@@ -1,0 +1,137 @@
+{% extends "root.html" %}
+
+{% block title %}PLANster - {{ plan.title }}{% endblock %}
+
+{% block content %}
+<script type="text/javascript">
+<!--
+	// we need to know the PLAN's id in some javascript functions
+	PLAN = '{{ plan }}';
+-->
+</script>
+<div style="position: absolute; top: 0; right: 0; font-size: x-small">
+	<a href="#" title="PLAN settings" onclick="Modalbox.show('/rpc/{{ plan }}/settings', {title: this.title, width: 600, afterHide: refreshIfNeeded}); return false;">Modify this PLAN</a>
+</div>
+<!--<h1 id="h1"><a href="/{{ plan }}">{{ plan.title }}</a></h1>-->
+<h1><div id="title">{{ plan.title }}</div></h1>
+<img src="http://www.planster.net/img/logo.gif" alt="PLANster" title="" id="title" />
+<p id="product_note"><a href="http://www.planster.net/">PLANster</a> NX</p>
+<div id="instructions">{% if plan.instructions %}{{ plan.instructions }}{% else %}Add yourself to the list below and choose your preferred options. To change your selection at a later time, click your name.{% endif %}</div>
+<div id="instructions_toolbar">
+	<a href="#"><span id="instructions_edit">edit</span></a>
+</div>
+
+{% if edit %}
+<form method="post" action="/{{ plan }}/response">
+{% endif %}
+<table class="plan">
+	<tr>
+		<th><img src="http://planster.net/img/switch.gif" /></th>
+{% for option in plan.options %}
+		<th>{{ option.name }}</th>
+{% endfor %}
+{% if not edit %}
+		<th id="add-option-cell">
+			{% ifequal add "option" %}
+			<form method="post" action="/{{ plan }}/options">
+				<input name="name" id="optionName" />
+				<input type="submit" name="submit" value="Add" />
+				<input type="submit" name="submit" value="Cancel" />
+			</form>
+			{% else %}
+			<form method="get" action="/{{ plan }}">
+				<input type="hidden" name="add" value="option" />
+				<input type="submit" value="Add option" />
+			</form>
+			{% endifequal %}
+			<script type="text/javascript">
+			<!--
+				$('add-option-cell').hide()
+			-->
+			</script>
+		</th>
+{% endif %}
+	</tr>
+{% for participant in plan.participants %}
+	{% ifequal participant.key edit %}
+	<input type="hidden" name="participant" value="{{ participant.key }}" />
+	{% endifequal %}
+	<tr>
+		<th>
+			{% ifequal participant.key edit %}
+			<input name="name" value="{{ participant.name }}" size="10" />
+			{% else %}
+			<a href="/{{ plan }}?edit={{ participant.key }}">{{ participant.name }}</a>
+			{% endifequal %}
+		</th>
+{% for option in plan.options %}
+{% get_person_status %}
+		<td>
+			{% ifequal participant.key edit %}
+			<input type="radio" name="{{ option.key }}" value="1"><img src="http://planster.net/img/{{1|response_img }}.gif" /></input>
+			<input type="radio" name="{{ option.key }}" value="2"><img src="http://planster.net/img/{{2|response_img }}.gif" /></input>
+			<input type="radio" name="{{ option.key }}" value="3"><img src="http://planster.net/img/{{3|response_img }}.gif" /></input>
+			{% else %}
+				{% if response.value %}
+				<img src="http://planster.net/img/{{ response.value|response_img }}.gif" alt="{{ response.value|response_text }}" title="{{ response.value|response_text }}" />
+				{% else %}
+				{{ response.value|response_text }}
+				{% endif %}
+			{% endifequal %}
+		</td>
+{% endfor %}		
+		{% ifequal participant.key edit %}
+		<td>
+			<input type="submit" name="submit" value="set" />
+			<input type="submit" name="submit" value="cancel" />
+		</td>
+		{% endifequal %}
+	</tr>
+{% endfor %}
+{% if not edit %}
+	<tr>
+		{% ifequal add "participant" %}
+		<th>
+			<form method="post" action="/{{ plan }}/people">
+				<input name="name" id="participantName" />
+				<input type="submit" name="submit" value="Add" />
+				<input type="submit" name="submit" value="Cancel" />
+			</form>
+		</th>
+		{% else %}
+		<th>
+			<form method="get" action="/{{ plan }}">
+				<input type="hidden" name="add" value="participant" />
+				<input type="submit" value="Add person" id="add-person-submit" />
+			</form>
+		</th>
+		{% endifequal %}
+	</tr>
+{% endif %}
+</table>
+{% if edit %}
+</form>
+{% endif %}
+<script type="text/javascript">
+<!--
+	new Ajax.InPlaceEditor('title', '/rpc/{{ plan }}/title',
+	{
+		cancelControl: 'button',
+		callback: function(form, value) {
+			return 'title=' + encodeURIComponent(value)
+		}
+	});
+	new Ajax.InPlaceEditor('instructions', '/rpc/{{ plan }}/instructions',
+	{
+		cancelControl: 'button',
+		externalControl: 'instructions_edit',
+		externalControlOnly: true,
+		rows: 4,
+		cols: 80,
+		callback: function(form, value) {
+			return 'instructions=' + encodeURIComponent(value)
+		}
+	});
+-->
+</script>
+{% endblock %}

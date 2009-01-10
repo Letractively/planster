@@ -1,0 +1,606 @@
+body {
+	padding: 0;
+	border: 0;
+	margin: 0;
+	color: #666666;
+	text-align: center;
+}
+
+/*#mainTable {
+	text-align: center;
+}*/
+
+div {
+	text-align: left;
+}
+
+body, input {
+	font-family: Arial, sans-serif;
+}
+
+img {
+	border: 0;
+	vertical-align: middle;
+}
+
+input {
+	vertical-align: middle;
+}
+
+td {
+	vertical-align: top;
+}
+
+table.plan, #main {
+	text-align: left;
+	margin: 0 auto;
+	border: 1px #eeeeee solid;
+	background: #f7f7f7;
+	padding: 1em;
+}
+
+#main {
+	width: 800px;
+	background: #fbfbfb;
+	padding-bottom: 0;
+	min-height: 450px;
+	position: relative;
+	top: 0;
+}
+
+#main .subItems {
+	position: absolute;
+	bottom: 0;
+	font-size: small;
+	list-style-type: none;
+	display: inline;
+	width: 760px;
+	text-align: center;
+}
+
+#main .subItems img {
+	position: relative;
+	top: 1px;
+}
+
+#main .subItems li {
+	text-align: left;
+	width: 220px;
+	float: left;
+	margin-right: 20px;
+}
+
+#main .subItems li p {
+	padding: 10px;
+	margin: 0;
+}
+
+#main .subItems li div {
+	background-color: #ff9900;
+	padding-left: 10px;
+}
+
+#main .left {
+	float: left;
+	height: 250px;
+	width: 236px;
+	padding: 1em;
+	font-size: small;
+	background-image: url(img/1.gif);
+	background-repeat: no-repeat;
+}
+
+#main .center {
+	float: left;
+	height: 250px;
+	width: 236px;
+	padding: 1em;
+	font-size: small;
+	border-right: 1px #dddddd solid;
+	border-left: 1px #dddddd solid;
+	background-image: url(img/2.gif);
+	background-repeat: no-repeat;
+}
+
+#main .right {
+	float: left;
+	height: 250px;
+	width: 236px;
+	padding: 1em;
+	font-size: small;
+	background-image: url(img/3.gif);
+	background-repeat: no-repeat;
+}
+
+/*.closeButton {
+	float: right;
+	position: relative;
+	width: 16px;
+	height: 16px;
+}
+
+.warn {
+	color: red;
+}
+
+td.clone {
+	vertical-align: top;
+}
+
+input.warn {
+	border-color: red;
+	color: black;
+}*/
+
+#title {
+	position: absolute;
+	top: 0;
+	left: 9px;
+}
+
+h1 {
+	color: black;
+	border-top: 1px black solid;
+	margin: 0 2px 30px 18px;
+	padding: 0 0 0 2px;
+	text-align: left;
+	font-weight: normal;
+	font-size: 12px;
+	position: relative;
+	top: 40px;
+	z-index: 100;
+}
+
+h1 a {
+	text-decoration: none;
+	font-weight: normal;
+}
+
+h2 {
+	height: 80px;
+	border-bottom: 1px #dddddd solid;
+	margin: 0;
+}
+
+#instructions {
+	background-color: #e3f8fe;
+	margin: 0 auto;
+	width: 600px;
+	padding: .5em;
+	border: 1px #eeeeee solid;
+	font-size: small;
+	color: black;
+}
+
+#instructions_toolbar {
+	width: 600px;
+	margin: 0 auto;
+	text-align: right;
+	font-size: x-small;
+	margin-bottom: 2em;
+}
+
+#instructions_toolbar a {
+	color: blue;
+	font-weight: normal;
+}
+table.plan td {
+	width: 8em;
+	text-align: center;
+	border: 1px #eeeeee solid;
+	font-size: small;
+	padding: 0;
+	white-space: nowrap;
+}
+
+/*
+table.plan td.editing {
+	width: 150px;
+}*/
+/*
+table.plan td.clear {
+	border: 0;
+	width: 0;
+	height: 0;
+}*/
+
+table.plan th {
+	width: 100px;
+	text-align: center;
+	font-weight: normal;
+}
+
+table.plan th a {
+	font-weight: normal;
+}
+/*
+table.plan th.add {
+	text-align: left;
+	width: 0;
+	height: 0;
+}*/
+/*
+table.plan th img.calendar {
+	float: right;
+	margin-top: .2em;
+	border: 0;
+}*/
+
+a {
+	font-weight: bold;
+	color: #666666;
+}
+
+form {
+	margin: 0;
+	display: inline;
+}
+
+#product_note {
+	margin-top: 0;
+	border: 0;
+	padding: 0;
+	padding-right: 2px;
+	text-align: right;
+	font-size: x-small;
+	position: relative;
+	top: -4px;
+	z-index: 1;
+}
+/*
+#footer {
+	text-align: center;
+	font-size: x-small;
+	margin-top: 2em;
+}*/
+/*
+#eventOptions {
+	background: #f7f7f7;
+	border: 1px #dddddd solid;
+	text-align: center;
+	width: 170px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 2em;
+}
+
+#eventOptions img {
+	vertical-align: middle;
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+#eventOptions a {
+	text-decoration: none;
+}*/
+/*
+.error {
+	font-weight: bold;
+	color: red;
+	border: 1px black dotted;
+	background: #ffdddd;
+}
+*/
+/*
+.STATUS_YES, .STATUS_1 {
+	background: #9cff9c;
+}
+
+.STATUS_MAYBE, .STATUS_3 {
+	background: #feff96;
+}
+
+.STATUS_NO, .STATUS_2 {
+	background: #fdc678;
+}
+
+.STATUS_UNKNOWN, .STATUS_4 {
+	color: #cccccc;
+}
+*/
+/*
+#leftBox {
+	float: left;
+	margin-left: 5px;
+	width: 10em;
+}
+
+#rightBox {
+	float: right;
+	margin-right: 5px;
+	width: 10em;
+}
+
+#leftBox, #rightBox {
+	border: 1px #3d6493 solid;
+}
+*/
+/*
+h3 {
+	margin-top: 0;
+	margin-bottom: .5em;
+	background: #3d6493;
+	color: white;
+	padding-left: 5px;
+}
+*/
+/*
+#leftBox ul, #rightBox ul {
+	margin-top: 0;
+	padding-left: 2em;
+}
+*/
+/*
+.hovering {
+	background: #e3e8ef;
+}
+
+.hiddenHandle {
+	margin-top: .3em;
+	float: right;
+	display: none;
+}
+
+.handle {
+	margin-top: .3em;
+	float: right;
+}
+
+.hidden {
+	display: none;
+}
+
+.group {
+	font-size: x-small;
+	color: black;
+	border-top: 1px #bbbbbb solid;
+	border-bottom: 1px #bbbbbb solid;
+}
+
+.dateTitle {
+	white-space: nowrap;
+}
+
+.dateTitle a {
+	text-decoration: none;
+}
+
+.dateTitle a:hover {
+	text-decoration: underline;
+}
+
+.group a {
+	text-decoration: none;
+}
+
+.group a:hover {
+	text-decoration: underline;
+}*/
+
+#options {
+	float: left;
+	width: 200px;
+	margin: 0 3px 0 0;
+}
+
+#options ul {
+	padding: 0;
+	margin: 0;
+	list-style-type: none;
+	font-size: small;
+	background: #f0f0f0;
+}
+
+#options li {
+	border-bottom: 2px white solid;
+	padding: 2px 10px 2px 10px;
+	position: relative;
+	top: 0;
+}
+/*
+#options ul .toggle {
+	margin: 0;
+	position: relative;
+	left: -8px;
+}*/
+
+#options input, #options select {
+	font-size: x-small;
+	margin-bottom: 2px;
+}
+
+#options a {
+	text-decoration: none;
+}
+
+#options .body {
+	margin-top: 5px;
+}
+/*
+.submitbutton {
+	text-align: right;
+}*/
+/*
+#options .submit__ {
+	max-width: 44px;
+	position: absolute;
+	bottom: 2px;
+	right: 9px;
+	background: transparent;
+	max-height: 22px;
+	border: 0;
+	color: #666666;
+	font-size: small;
+	font-weight: bold;
+	padding: 0;
+	cursor: pointer;
+}*/
+/*
+#options .calIcon {
+	position: absolute;
+	right: 9px;
+}*/
+
+#options p {
+	margin: 2px 0 2px 0;
+}
+/*
+.navInput {
+	display: none;
+}
+*/
+/*
+#options .corner {
+	background-repeat: no-repeat;
+	font-size: 0px;
+	position: absolute;
+	height: 8px;
+	width: 8px;
+}*/
+/*
+#navi .tl {
+	display: none;
+	top: 0;
+	left: 0;
+	background-image: url(img/nav-topleft.png);
+}
+
+#navi .tr {
+	top: 0;
+	right: 0;
+	background-image: url(img/nav-topright.png);
+}
+
+#navi .bl {
+	display: none;
+	bottom: 0;
+	left: 0;
+	background-image: url(img/nav-bottomleft.png);
+}
+
+#navi .br {
+	bottom: 0;
+	right: 0;
+	background-image: url(img/nav-bottomright.png);
+}
+*/
+/*
+#options input.text {
+	width: 215px;
+}*/
+/*
+#message {
+	position: absolute;
+	top: 11px;
+	right: 5px;
+	padding: 2px 8px 2px 8px;
+	font-size: small;
+	background-color: #00b000;
+	color: white;
+}
+
+#message .corner {
+	position: absolute;
+	height: 4px;
+	width: 4px;
+}
+
+#message .tl {
+	top: 0;
+	left: 0;
+	background-image: url(img/msg-tl.gif);
+}
+
+#message .tr {
+	top: 0;
+	right: 0;
+	background-image: url(img/msg-tr.gif);
+}
+
+#message .bl {
+	bottom: 0;
+	left: 0;
+	background-image: url(img/msg-bl.gif);
+}
+
+#message .br {
+	bottom: 0;
+	right: 0;
+	background-image: url(img/msg-br.gif);
+}
+
+#message a {
+	color: white;
+}
+
+#adsense {
+	margin-top: 40px;
+}
+*/
+
+/*
+th.count {
+	font-style: italic;
+	width: auto;
+	text-align: left;
+}
+
+td.count {
+	vertical-align: middle;
+	width: auto;
+	border: 0;
+	font-size: xx-small;
+	color: #aaaaaa;
+}
+
+td.countmax {
+	vertical-align: middle;
+	width: auto;
+	border: 1px #00c809 solid;
+	font-weight: bold;
+}*/
+/*
+#progress {
+	position: absolute;
+	left: 300px;
+	top: 200px;
+	background: white;
+	padding: 15px;
+	color: black;
+	width: auto;
+	border: 1px black solid;
+	z-index: 100;
+}
+
+#progress #icon {
+	height: 16px;
+	width: 16px;
+	margin: 2px;
+}
+
+#progress #text {
+	display: inline;
+	padding-left: 10px;
+}*/
+
+#planOptions {
+	padding: 0;
+	margin-bottom: 0;
+}
+
+li.plan_option {
+	margin-left: none;
+	list-style-type: none;
+}
+
+li.plan_option_active {
+	font-weight: bold;
+}
+
+div.modal-dialog-options a {
+	color: blue;
+	font-size: x-small;
+	font-weight: normal;
+	border: 1px red solid;
+	padding: 0 0 10px 0;
+}
