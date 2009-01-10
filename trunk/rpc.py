@@ -82,6 +82,7 @@ class PlanOptionsRPC(PlansterRPCHandler):
 	def delete(self):
 		option = self.get_option_from_url()
 		option.delete()
+		self.response.set_status(204) # no content
 
 	def put(self):
 		plan = self.get_plan_from_url()
@@ -91,6 +92,15 @@ class PlanOptionsRPC(PlansterRPCHandler):
 
 		saved = plan.add_option(title)
 		option = Option.get(saved.key())
+
+		url = '/rpc/%s/options/%s' % (str(plan), option.key())
+		self.response.set_status(201) # created
+		self.response.headers.add_header('Location', url)
+		self.get(option)
+
+	def get(self, option = None):
+		if option is None:
+			option = self.get_option_from_url()
 
 		json = simplejson.dumps({
 			'title': option.name,
