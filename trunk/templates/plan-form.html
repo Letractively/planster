@@ -30,7 +30,10 @@
 			return 'title=' + encodeURIComponent(value)
 		},
 		onComplete: function(transport, element) {
-			$('planTitleLink').innerHTML = (transport.responseText);
+			if (transport) {
+				response = transport.responseText;
+				$('planTitleLink').innerHTML = response;
+			}
 		}
 	});
 	new Ajax.InPlaceEditor('editablePlanInstructions', '/rpc/{{ plan }}/instructions',
@@ -42,7 +45,10 @@
 			return 'instructions=' + encodeURIComponent(value)
 		},
 		onComplete: function(transport, element) {
-			$('instructions').innerHTML = (transport.responseText);
+			if (transport) {
+				response = transport.responseText;
+				$('instructions').innerHTML = response;
+			}
 		}
 	});
 -->
