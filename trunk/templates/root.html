@@ -1,6 +1,9 @@
-<html>
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">-->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 	<head>
 		<title>{% block title %}PLANster{% endblock %}</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<link rel="stylesheet"  type="text/css" href="/css/planster.css" media="screen" />
 		<link rel="stylesheet"  type="text/css" href="/css/modalbox.css" media="screen" />
 		<script src="/js/scriptaculous/prototype.js" type="text/javascript"></script>
@@ -11,16 +14,16 @@
 	</head>
 	<body>
 		<div id="nav_links">
-			{% if user %}
-				{{ user.nickname }}
-				|
-			{% endif %}
+			{% if user %}{{ user.nickname }} |{% endif %}
 			{% block navcontent %}{% endblock %}
 			{% if user %}
 				<a href="{{ logout_url }}">Sign out</a>
 			{% else %}
 				<a href="{{ login_url }}">Sign in</a>
 			{% endif %}
+		</div>
+		<div id="logo">
+			<img src="http://www.planster.net/img/logo.gif" alt="PLANster" title="" />
 		</div>
 		{% block content %}welcome{% endblock %}
 		<div style="font-size: xx-small; margin: 0 auto; text-align: center">
