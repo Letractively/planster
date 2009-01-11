@@ -34,6 +34,7 @@ class Plan(PlansterModel):
 	title = db.StringProperty()
 	created = db.DateTimeProperty(auto_now_add=True)
 	instructions = db.TextProperty()
+	owner = db.UserProperty()
 
 	def get_options(self):
 		return self.get_cached_items(Option, 'plan')

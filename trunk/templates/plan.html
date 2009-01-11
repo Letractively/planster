@@ -2,6 +2,13 @@
 
 {% block title %}PLANster - {{ plan.title }}{% endblock %}
 
+{% block navcontent %}
+	<a href="#" title="PLAN items" onclick="Modalbox.show('/forms/{{ plan }}/options', {title: 'Edit PLAN', width: 600, afterHide: refreshIfNeeded}); return false;">Manage items</a>
+	|
+	<a href="#" title="PLAN settings" onclick="Modalbox.show('/forms/{{ plan }}', {title: 'Edit PLAN', width: 600, afterHide: refreshIfNeeded}); return false;">Modify PLAN</a>
+	|
+{% endblock %}
+
 {% block content %}
 <script type="text/javascript">
 <!--
@@ -9,13 +16,6 @@
 PLAN = '{{ plan }}';
 -->
 </script>
-<div id="nav_links">
-	<a href="#" title="PLAN items" onclick="Modalbox.show('/forms/{{ plan }}/options', {title: 'Edit PLAN', width: 600, afterHide: refreshIfNeeded}); return false;">Manage items</a>
-	|
-	<a href="#" title="PLAN settings" onclick="Modalbox.show('/forms/{{ plan }}', {title: 'Edit PLAN', width: 600, afterHide: refreshIfNeeded}); return false;">Modify PLAN</a>
-	|
-	<a href="http://www.planster.net/">PLANster</a> NX
-</div>
 <h1 id="h1"><a href="/{{ plan }}" id="planTitleLink">{{ plan.title }}</a></h1>
 <img src="http://www.planster.net/img/logo.gif" alt="PLANster" title="" id="title" />
 <div id="instructions">{% if plan.instructions %}{{ plan.instructions }}{% else %}Add yourself to the list below and choose your preferred options. To change your selection at a later time, click your name.{% endif %}</div>

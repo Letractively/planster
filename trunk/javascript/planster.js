@@ -84,6 +84,16 @@ function rpc_fail()
 	alert("D'oh! Some error occurred");
 }
 
+function claim_success()
+{
+	Modalbox.show('/forms/' + PLAN);
+}
+
+function claim_fail()
+{
+	alert('Could not claim the PLAN. Did you mistype the verification key?');
+}
+
 function submit_option(form)
 {
 	var title = form.name.value;
@@ -101,4 +111,14 @@ function submit_option(form)
 
 	var url = '/rpc/' + PLAN + '/options';
 	http_put(url, data, submit_option_success, rpc_fail);
+}
+
+function claim_plan(form)
+{
+	var data = {
+		'key': form.key.value
+	}
+
+	var url = '/rpc/' + PLAN + '/owner';
+	http_put(url, data, claim_success, claim_fail);
 }

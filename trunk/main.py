@@ -13,6 +13,7 @@ import wsgiref.handlers
 from random import choice
 from planster import *
 from google.appengine.ext import db
+from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 
@@ -29,9 +30,22 @@ class PlansterRequestHandler(webapp.RequestHandler):
 		path = os.path.join(filepath, 'templates', file)
 		self.response.out.write(template.render(path, values))
 
+	def add_user_to_template(self, values):
+		user = users.get_current_user()  
+		values['user'] = user
+
+		if user is None:
+			values['login_url'] = users.create_login_url(
+				self.request.uri)
+		else:
+			values['logout_url'] = users.create_logout_url(
+				self.request.uri)
+
 class RegistrationPage(PlansterRequestHandler):
 	def get(self):
-		self.render_template('create.html', None)
+		values = {}
+		self.add_user_to_template(values)
+		self.render_template('create.html', values)
 
 	def post(self):
 		while True:
@@ -43,11 +57,15 @@ class RegistrationPage(PlansterRequestHandler):
 				break
 
 		title = self.request.get('title')
-
 		if not title:
 			title='Unnamed PLAN'
 
 		plan = Plan(key_name=id, title=title)
+
+		user = users.get_current_user()
+		if user:
+			plan.owner = user
+
 		plan.put()
 
 		self.redirect('/' + str(plan))
@@ -73,8 +91,9 @@ class PlanView(PlansterRequestHandler):
 			return
 
 		template_values = {
-			'plan'	: plan,
+			'plan': plan,
 		}
+		self.add_user_to_template(template_values)
 
 		edit = self.request.get("edit")
 		if edit:

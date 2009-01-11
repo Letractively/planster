@@ -4,6 +4,8 @@ import logging
 import wsgiref.handlers
 from planster import *
 from django.utils import simplejson
+from google.appengine.api import users
+from google.appengine.api.users import *
 
 class NoSuchItemException(Exception):
 	pass
@@ -28,6 +30,10 @@ class PlansterRPCHandler(webapp.RequestHandler):
 			super(PlansterRPCHandler, self).handle_exception(
 				exception, debug_mode)
 
+	def add_user_to_template(self, values):
+		user = users.get_current_user()  
+		values['user'] = user
+
 class PlanTitleRPC(PlansterRPCHandler):
 	def get(self):
 		plan = self.get_plan_from_url()
@@ -43,6 +49,49 @@ class PlanTitleRPC(PlansterRPCHandler):
 
 		plan = Plan.get(plan.key())
 		self.response.out.write(plan.title);
+
+class PlanOwnerRPC(PlansterRPCHandler):
+	#def get(self):
+	#	plan = self.get_plan_from_url()
+	#	self.response.out.write(plan.owner);
+
+	" not sure 'put' is the right method for this but what the hell "
+
+	def put(self):
+		plan = self.get_plan_from_url()
+		data = self.request.get("data")
+		args = simplejson.loads(data)
+
+		if plan.owner:
+			self.error(409) # conflict
+			return
+
+		user = users.get_current_user()  
+		if not user:
+			self.error(401) # unauthorized
+			return
+		
+		key = args['key']
+		if not key == str(plan.key()):
+			self.error(403) # forbidden
+			return
+
+		plan.owner = user
+		plan.put()
+
+		json = simplejson.dumps({
+			'owner': str(plan.owner.email),
+		})
+		self.response.out.write(json)
+
+	def post(self):
+		# prototype tunnels DELETE and PUT requests via POST
+		method = self.request.get('_method')
+		if method == 'put':
+			self.put()
+			return
+
+		self.error(405)
 
 class PlanInstructionsRPC(PlansterRPCHandler):
 	def get(self):
@@ -133,15 +182,29 @@ class PlanFormRPC(PlansterRPCHandler):
 			'plan': plan
 		}
 
+		self.add_user_to_template(vars)
 		self.render_template('plan-form.html', vars)
+
+class ClaimPlanFormRPC(PlansterRPCHandler):
+	def get(self):
+		plan = self.get_plan_from_url()
+
+		vars = {
+			'plan': plan
+		}
+
+		self.add_user_to_template(vars)
+		self.render_template('plan-claim.html', vars)
 
 def main():
 	application = webapp.WSGIApplication([
 		('/rpc/[a-zA-Z0-9]{12}/title', PlanTitleRPC),
+		('/rpc/[a-zA-Z0-9]{12}/owner', PlanOwnerRPC),
 		('/rpc/[a-zA-Z0-9]{12}/instructions', PlanInstructionsRPC),
 		('/rpc/[a-zA-Z0-9]{12}/options.*', PlanOptionsRPC),
-		('/forms/[a-zA-Z0-9]{12}/options', PlanOptionsFormRPC),
 		('/forms/[a-zA-Z0-9]{12}', PlanFormRPC),
+		('/forms/[a-zA-Z0-9]{12}/options', PlanOptionsFormRPC),
+		('/forms/[a-zA-Z0-9]{12}/claim', ClaimPlanFormRPC),
 		])
 	wsgiref.handlers.CGIHandler().run(application)
 
