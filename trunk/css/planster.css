@@ -165,13 +165,12 @@ h2 {
 
 #instructions {
 	background-color: #e3f8fe;
-	margin: 10 auto;
+	margin: 10px auto;
 	width: 600px;
 	padding: .5em;
 	border: 1px #eeeeee solid;
 	font-size: small;
 	color: black;
-	margin-bottom: 10px;
 }
 
 table.plan td {

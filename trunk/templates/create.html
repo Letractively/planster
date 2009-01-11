@@ -35,22 +35,20 @@
 		</div>
 		<div class="right">
 			<b>You</b>
+			{% if user %}
+			<p>You are currently signed in as {{ user.nickname }}.</p>
+			<p>Newly created PLANs will automatically be assigned to your account.</p>
+			{% else %}
 			<p>
-				{% if user %}
-				<p>You are currently signed in as {{ user.nickname }}.</p>
-				<p>Newly created PLANs will automatically be assigned to your account.</p>
-				{% else %}
-				<p>
-					Your name:<br />
-					<input name="owner" tabindex="3" id="userName" />
-				</p><p>
-					Your e-Mail address:
-					<input name="email" maxlength="50" tabindex="4" />
-				</p><p>
-					Or <a href="{{ login_url }}">sign in</a>
-				</p>
-				{% endif %}
+				Your name:<br />
+				<input name="owner" tabindex="3" id="userName" />
+			</p><p>
+				Your e-Mail address:
+				<input name="email" maxlength="50" tabindex="4" />
+			</p><p>
+				Or <a href="{{ login_url|escape }}">sign in</a>
 			</p>
+				{% endif %}
 			<p>
 				<input type="submit" name="submit" value="create PLAN" />
 				<input type="submit" name="submit" value="cancel" />
