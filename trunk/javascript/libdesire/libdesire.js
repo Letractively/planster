@@ -72,18 +72,17 @@ function http_get(url, additional)
 	});
 }
 
-function http_post(url, data)
+function http_post(url, data, onsuccess, onfail)
 {
 	time = new Date().getTime();
 
 	new Ajax.Request(url + '?ms=' + time, {
 		method: 'post',
 		parameters: 'data=' + encodeURIComponent(Object.toJSON(data)),
-		onSuccess: function(transport)
-		{
-			var json = transport.responseText.evalJSON(true);
-			process_result(json);
-		}
+		onSuccess: function(transport) {
+			onsuccess(transport.responseText.evalJSON(true));
+		},
+		onFailure: onfail
 	});
 }
 

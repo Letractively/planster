@@ -116,7 +116,7 @@ class PlanPeople(PlansterRequestHandler):
 		name = cgi.escape(self.request.get("name"))
 		submit = self.request.get("submit")
 
-		if submit == 'Add' and name:
+		if submit == 'add' and name:
 			plan.add_participant(name)
 
 		self.redirect('/' + str(plan))

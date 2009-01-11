@@ -26,6 +26,8 @@ class PlansterRPCHandler(webapp.RequestHandler):
 	def handle_exception(self, exception, debug_mode):
 		if isinstance(exception, NoSuchItemException):
 			self.error(404)
+		elif isinstance(exception, PermissionDeniedException):
+			self.error(403)
 		else:
 			super(PlansterRPCHandler, self).handle_exception(
 				exception, debug_mode)
@@ -110,6 +112,38 @@ class PlanInstructionsRPC(PlansterRPCHandler):
 		plan = Plan.get(plan.key())
 		self.response.out.write(plan.instructions);
 
+class PlanPermissionsRPC(PlansterRPCHandler):
+	def post(self):
+		user = users.get_current_user()  
+		plan = self.get_plan_from_url()
+		if not user:
+			self.error(401) # unauthorized
+			return
+
+		if not user == plan.owner and not users.is_current_user_admin():
+			logging.error(plan.owner)
+			logging.error(user)
+			self.error(401) # unauthorized
+			return
+
+		data = self.request.get("data")
+		args = simplejson.loads(data)
+		lock_settings = args['lock_settings']
+		lock_participants = args['lock_participants']
+
+		plan.settings_locked = lock_settings
+		plan.participants_locked = lock_participants
+
+		plan.put()
+
+		json = simplejson.dumps({
+			'settings_locked': plan.settings_locked,
+			'participants_locked': plan.participants_locked
+		})
+
+		self.response.out.write(json)
+
+
 class PlanOptionsRPC(PlansterRPCHandler):
 	def get_option_from_url(self):
 		key = self.request.path.split('/')[4]
@@ -162,6 +196,8 @@ class PlanOptionsRPC(PlansterRPCHandler):
 
 """
 	These form handlers should probably be moved to some other file
+
+	Also, they're all pretty much identical. Should fix that.
 """
 
 class PlanOptionsFormRPC(PlansterRPCHandler):
@@ -172,6 +208,7 @@ class PlanOptionsFormRPC(PlansterRPCHandler):
 			'plan': plan
 		}
 
+		self.add_user_to_template(vars)
 		self.render_template('settings-form.html', vars)
 
 class PlanFormRPC(PlansterRPCHandler):
@@ -196,15 +233,28 @@ class ClaimPlanFormRPC(PlansterRPCHandler):
 		self.add_user_to_template(vars)
 		self.render_template('plan-claim.html', vars)
 
+class PlanPermissionsFormRPC(PlansterRPCHandler):
+	def get(self):
+		plan = self.get_plan_from_url()
+
+		vars = {
+			'plan': plan
+		}
+
+		self.add_user_to_template(vars)
+		self.render_template('plan-permissions.html', vars)
+
 def main():
 	application = webapp.WSGIApplication([
 		('/rpc/[a-zA-Z0-9]{12}/title', PlanTitleRPC),
 		('/rpc/[a-zA-Z0-9]{12}/owner', PlanOwnerRPC),
 		('/rpc/[a-zA-Z0-9]{12}/instructions', PlanInstructionsRPC),
 		('/rpc/[a-zA-Z0-9]{12}/options.*', PlanOptionsRPC),
+		('/rpc/[a-zA-Z0-9]{12}/permissions', PlanPermissionsRPC),
 		('/forms/[a-zA-Z0-9]{12}', PlanFormRPC),
-		('/forms/[a-zA-Z0-9]{12}/options', PlanOptionsFormRPC),
 		('/forms/[a-zA-Z0-9]{12}/claim', ClaimPlanFormRPC),
+		('/forms/[a-zA-Z0-9]{12}/options', PlanOptionsFormRPC),
+		('/forms/[a-zA-Z0-9]{12}/permissions', PlanPermissionsFormRPC),
 		])
 	wsgiref.handlers.CGIHandler().run(application)
 

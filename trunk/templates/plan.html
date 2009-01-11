@@ -5,7 +5,7 @@
 {% block navcontent %}
 	<a href="#" title="PLAN items" onclick="Modalbox.show('/forms/{{ plan }}/options', {title: 'Edit PLAN', width: 600, afterHide: refreshIfNeeded}); return false;">Manage items</a>
 	|
-	<a href="#" title="PLAN settings" onclick="Modalbox.show('/forms/{{ plan }}', {title: 'Edit PLAN', width: 600, afterHide: refreshIfNeeded}); return false;">Modify PLAN</a>
+	<a href="#" title="PLAN settings" onclick="Modalbox.show('/forms/{{ plan }}', {title: 'Edit PLAN', width: 600, afterHide: refreshIfNeeded}); return false;">PLAN settings</a>
 	|
 {% endblock %}
 
@@ -86,21 +86,21 @@ PLAN = '{{ plan }}';
 		{% endifequal %}
 	</tr>
 {% endfor %}
-{% if not edit %}
+{% if not edit and plan.accepts_participants_from_current_user %}
 	<tr>
 		{% ifequal add "participant" %}
 		<th>
 			<form method="post" action="/{{ plan }}/people">
 				<input name="name" id="participantName" />
-				<input type="submit" name="submit" value="Add" />
-				<input type="submit" name="submit" value="Cancel" />
+				<input type="submit" name="submit" value="add" />
+				<input type="submit" name="submit" value="cancel" />
 			</form>
 		</th>
 		{% else %}
 		<th>
 			<form method="get" action="/{{ plan }}">
 				<input type="hidden" name="add" value="participant" />
-				<input type="submit" value="Add person" id="add-person-submit" />
+				<input type="submit" value="add person" id="add-person-submit" />
 			</form>
 		</th>
 		{% endifequal %}

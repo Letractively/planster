@@ -89,6 +89,11 @@ function claim_success()
 	Modalbox.show('/forms/' + PLAN);
 }
 
+function permissions_success()
+{
+	Modalbox.show('/forms/' + PLAN + '/permissions'); 
+}
+
 function claim_fail()
 {
 	alert('Could not claim the PLAN. Did you mistype the verification key?');
@@ -121,4 +126,18 @@ function claim_plan(form)
 
 	var url = '/rpc/' + PLAN + '/owner';
 	http_put(url, data, claim_success, claim_fail);
+}
+
+function set_permissions(form)
+{
+	var lock_settings = !form.can_change_settings.checked;
+	var lock_participants = !form.can_add_people.checked;
+
+	var data = {
+		'lock_participants': lock_participants,
+		'lock_settings': lock_settings
+	}
+
+	var url = '/rpc/' + PLAN + '/permissions';
+	http_post(url, data, permissions_success, rpc_fail);
 }

@@ -3,6 +3,11 @@
 		<td class="modalNav">
 			<a href="#" onclick="Modalbox.show('/forms/{{ plan }}/options'); return false"><div class="active">Items</div></a>
 			<a href="#" onclick="Modalbox.show('/forms/{{ plan }}'); return false"><div class="inactive">Settings</div></a>
+{% if user %}
+{% ifequal user plan.owner %}
+			<a href="#" onclick="Modalbox.show('/forms/{{ plan }}/permissions'); return false"><div class="inactive">Permissions</div></a>
+{% endifequal %}
+{% endif %}
 		</td><td>
 			<h3>Items</h3>
 			<form method="post" onsubmit="delete_selected_options(this);return false">

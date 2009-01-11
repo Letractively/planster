@@ -613,6 +613,6 @@ td.modalNav a {
 #editablePlanInstructions {
 	width: 350px;
 	border: 1px #cccccc solid;
-	height: 5em;
+	height: 100px;
 	overflow: auto;
 }
