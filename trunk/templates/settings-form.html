@@ -2,7 +2,7 @@
 	<tr>
 		<td class="modalNav">
 			<a href="#" onclick="Modalbox.show('/forms/{{ plan }}/options'); return false"><div class="active">Items</div></a>
-			<a href="#" onclick="Modalbox.show('/forms/{{ plan }}'); return false"> <div class="inactive">Settings</div></a>
+			<a href="#" onclick="Modalbox.show('/forms/{{ plan }}'); return false"><div class="inactive">Settings</div></a>
 		</td><td>
 			<h3>Items</h3>
 			<form method="post" onsubmit="delete_selected_options(this);return false">
@@ -23,6 +23,7 @@
 
 <script type="text/javascript">
 <!--
+	$('addOptionRPCForm').name.focus();
 /*{% for option in plan.options %}
 	new Draggable('{{ option.key }}', { revert: true });
 	Droppables.add('{{ option.key }}', { accept: 'plan_option', hoverclass: 'plan_option_active' });

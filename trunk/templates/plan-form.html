@@ -2,7 +2,7 @@
 	<tr>
 		<td class="modalNav">
 			<a href="#" onclick="Modalbox.show('/forms/{{ plan }}/options'); return false"><div class="inactive">Items</div></a>
-			 <a href="#" onclick="Modalbox.show('/forms/{{ plan }}'); return false"> <div class="active">Settings</div></a>
+			 <a href="#" onclick="Modalbox.show('/forms/{{ plan }}'); return false" id="settingsNavItem"><div class="active">Settings</div></a>
 		</td><td>
 			<h3>Settings</h3>
 			<table>
@@ -36,6 +36,9 @@
 </table>
 <script type="text/javascript">
 <!--
+	// for consistency we should put focus on something else, but atm ther
+	// *is* nothing else that would make sense
+	$('settingsNavItem').focus();
 	new Ajax.InPlaceEditor('editablePlanTitle', '/rpc/{{ plan }}/title',
 	{
 		cancelControl: 'button',
