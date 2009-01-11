@@ -573,7 +573,7 @@ td.countmax {
 
 #planOptions {
 	padding: 0;
-	margin-bottom: 0;
+	margin-bottom: 1em;
 }
 
 li.plan_option {
@@ -581,43 +581,39 @@ li.plan_option {
 	list-style-type: none;
 }
 
+li.plan_option input {
+	margin-right: .5em;
+}
+
 li.plan_option_active {
 	font-weight: bold;
 }
 
-.modalNav {
+td.modalNav {
 	background-color: white;
-	width: 598px;
-	margin: -6px 0 10px -11px;
+	width: 100px;
 }
 
-.modalNav ul {
-	padding: 10px 0 0 0;
-	margin: 0;
-	position: relative;
-	top: 1px;
+td.modalNav div.inactive:hover {
+	background-color: lightgray;
 }
 
-.modalNav li {
-	display: inline;
-	font-size: small;
-	padding: 5px 10px 0 10px;
+td.modalNav div.active {
+	background-color: lightblue;
 }
 
-.modalNav li:hover {
-	background-color: #fafafa;
+td.modalNav a {
+	text-decoration: none;
 }
 
-.modalNav li.active {
-	background-color: #efefef;
+#editablePlanTitle {
+	width: 350px;
+	border: 1px #cccccc solid;
 }
 
-span.inPlaceEditable {
-	border-bottom: 1px orange dashed;
-}
-
-div.inPlaceEditable {
-	border: 1px orange dashed;
+#editablePlanInstructions {
+	width: 350px;
+	border: 1px #cccccc solid;
 	height: 5em;
 	overflow: auto;
 }

@@ -1,11 +1,26 @@
-<div class="modalNav">
-	<ul>
-		<li><a href="#" onclick="Modalbox.show('/forms/{{ plan }}/options'); return false">Items</a></li>
-		<li class="active"><a href="#" onclick="Modalbox.show('/forms/{{ plan }}'); return false">Settings</a></li>
-	</ul>
-</div>
-<p>PLAN name: <span id="editablePlanTitle" class="inPlaceEditable">{{ plan.title }}</span></p>
-<div id="editablePlanInstructions" class="inPlaceEditable">{{ plan.instructions }}</div>
+<table>
+	<tr>
+		<td class="modalNav">
+			<a href="#" onclick="Modalbox.show('/forms/{{ plan }}/options'); return false"><div class="inactive">Items</div></a>
+			 <a href="#" onclick="Modalbox.show('/forms/{{ plan }}'); return false"> <div class="active">Settings</div></a>
+		</td><td>
+			<h3>Settings</h3>
+			<table>
+				<tr>
+					<td>PLAN name:</td>
+					<td>
+						<div id="editablePlanTitle">{{ plan.title }}</div>
+					</td>
+				</tr><tr>
+					<td>Instructions:</td>
+					<td>
+						<div id="editablePlanInstructions">{{ plan.instructions }}</div>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
 <script type="text/javascript">
 <!--
 	new Ajax.InPlaceEditor('editablePlanTitle', '/rpc/{{ plan }}/title',
@@ -22,7 +37,7 @@
 	{
 		cancelControl: 'button',
 		rows: 4,
-		cols: 80,
+		cols: 45,
 		callback: function(form, value) {
 			return 'instructions=' + encodeURIComponent(value)
 		},

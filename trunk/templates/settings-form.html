@@ -1,22 +1,26 @@
-<div class="modalNav">
-	<ul>
-		<li class="active"><a href="#" onclick="Modalbox.show('/forms/{{ plan }}/options'); return false">Items</a></li>
-		<li><a href="#" onclick="Modalbox.show('/forms/{{ plan }}'); return false">Settings</a></li>
-	</ul>
-</div>
-<form method="post" onsubmit="delete_selected_options(this);return false">
-	<ul id="planOptions">
-	{% for option in plan.options %}
-		<li id="{{ option.key }}" class="plan_option"><input type="checkbox" name="delete" value="{{ option.key }}" class="plan_option_checkbox" /><span id="{{ option.key }}-text">{{ option.name }}</span></li>
-	{% endfor %} 
-	</ul>
-	<hr />
-	<input type="submit" value="Delete selected" />
-</form>
-<form method="post" action="/{{ plan }}/options" onsubmit="javascript:submit_option(this); return false" id="addOptionRPCForm">
-	<input name="name" />
-	<input type="submit" name="submit" value="Add item" />
-</form>
+<table>
+	<tr>
+		<td class="modalNav">
+			<a href="#" onclick="Modalbox.show('/forms/{{ plan }}/options'); return false"><div class="active">Items</div></a>
+			<a href="#" onclick="Modalbox.show('/forms/{{ plan }}'); return false"> <div class="inactive">Settings</div></a>
+		</td><td>
+			<h3>Items</h3>
+			<form method="post" onsubmit="delete_selected_options(this);return false">
+				<ul id="planOptions">
+				{% for option in plan.options %}
+					<li id="{{ option.key }}" class="plan_option"><input type="checkbox" name="delete" value="{{ option.key }}" class="plan_option_checkbox" /><span id="{{ option.key }}-text">{{ option.name }}</span></li>
+				{% endfor %} 
+				</ul>
+				<input type="submit" value="Delete selected" />
+			</form>
+			<form method="post" action="/{{ plan }}/options" onsubmit="javascript:submit_option(this); return false" id="addOptionRPCForm">
+				<input name="name" />
+				<input type="submit" name="submit" value="Add item" />
+			</form>
+		</td>
+	</tr>
+</table>
+
 <script type="text/javascript">
 <!--
 /*{% for option in plan.options %}
