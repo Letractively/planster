@@ -55,20 +55,17 @@ function process_result (result)
 	}
 }
 
-function http_get(url, additional)
+function http_get(url, onsuccess, onfail)
 {
-	if (!additional)
-		additional = ''
-
 	time = new Date().getTime();
 
-	new Ajax.Request(url + '?ms=' + time + additional, {
+	new Ajax.Request(url + '?ms=' + time, {
 		method: 'get',
 		onSuccess: function(transport)
 		{
-			var json = transport.responseText.evalJSON(true);
-			process_result(json);
-		}
+			onsuccess(transport.responseText);
+		},
+		onFailure: onfail
 	});
 }
 

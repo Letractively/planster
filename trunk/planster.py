@@ -38,6 +38,7 @@ class Plan(PlansterModel):
 	__title = db.StringProperty(name='title')
 	__instructions = db.TextProperty(name='instructions')
 	created = db.DateTimeProperty(auto_now_add=True)
+	expires = db.DateTimeProperty()
 	owner = db.UserProperty()
 	participants_locked = db.BooleanProperty()
 	settings_locked = db.BooleanProperty()

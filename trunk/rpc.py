@@ -244,6 +244,17 @@ class PlanPermissionsFormRPC(PlansterRPCHandler):
 		self.add_user_to_template(vars)
 		self.render_template('plan-permissions.html', vars)
 
+class AddPersonFormRPC(PlansterRPCHandler):
+	def get(self):
+		plan = self.get_plan_from_url()
+
+		vars = {
+			'plan': plan
+		}
+
+		self.add_user_to_template(vars)
+		self.render_template('plan-addperson.html', vars)
+
 def main():
 	application = webapp.WSGIApplication([
 		('/rpc/[a-zA-Z0-9]{12}/title', PlanTitleRPC),
@@ -253,6 +264,7 @@ def main():
 		('/rpc/[a-zA-Z0-9]{12}/permissions', PlanPermissionsRPC),
 		('/forms/[a-zA-Z0-9]{12}', PlanFormRPC),
 		('/forms/[a-zA-Z0-9]{12}/claim', ClaimPlanFormRPC),
+		('/forms/[a-zA-Z0-9]{12}/addperson', AddPersonFormRPC),
 		('/forms/[a-zA-Z0-9]{12}/options', PlanOptionsFormRPC),
 		('/forms/[a-zA-Z0-9]{12}/permissions', PlanPermissionsFormRPC),
 		])

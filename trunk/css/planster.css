@@ -163,6 +163,10 @@ h2 {
 	margin: 0;
 }
 
+h3 {
+	margin: 0 0 1em 3px;
+}
+
 #instructions {
 	background-color: #e3f8fe;
 	margin: 10px auto;

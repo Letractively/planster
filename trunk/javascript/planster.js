@@ -79,6 +79,12 @@ function submit_option_success(result)
 	needRefresh = true;
 }
 
+function add_person_form_success(result)
+{
+	$('add-person').innerHTML = result;
+	$('participantName').focus();
+}
+
 function rpc_fail()
 {
 	alert("D'oh! Some error occurred");
@@ -140,4 +146,10 @@ function set_permissions(form)
 
 	var url = '/rpc/' + PLAN + '/permissions';
 	http_post(url, data, permissions_success, rpc_fail);
+}
+
+function show_add_person_form(form)
+{
+	var url = '/forms/' + PLAN + '/addperson';
+	http_get(url, add_person_form_success, rpc_fail);
 }

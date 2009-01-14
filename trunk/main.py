@@ -9,6 +9,7 @@ import os
 import cgi
 import string
 import logging
+import datetime
 import wsgiref.handlers
 from random import choice
 from planster import *
@@ -59,6 +60,12 @@ class RegistrationPage(PlansterRequestHandler):
 		title = self.request.get('title')
 		if not title:
 			title='Unnamed PLAN'
+
+		#duration = max(1,min(12, int(self.request.get('duration'))))
+		" assuming each month has 31 days - in dubio pro reo "
+		" also, TODO: this, right "
+		#offset = datetime.timedelta(31 * duration)
+		#expires = datetime.date.today() + offset
 
 		plan = Plan(key_name=id, title=title)
 
@@ -150,8 +157,9 @@ class PlanResponse(PlansterRequestHandler):
 		submit = self.request.get("submit")
 		name = self.request.get("name")
 
-		if submit is "cancel":
+		if submit == "cancel":
 			self.redirect('/' + str(plan))
+			return
 
 		if not name:
 			participant.delete()

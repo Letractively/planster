@@ -89,7 +89,8 @@ PLAN = '{{ plan }}';
 {% if not edit and plan.accepts_participants_from_current_user %}
 	<tr>
 		{% ifequal add "participant" %}
-		<th>
+		<!-- TODO: include the add-person template -->
+		<th id="add-person">
 			<form method="post" action="/{{ plan }}/people">
 				<input name="name" id="participantName" />
 				<input type="submit" name="submit" value="add" />
@@ -97,8 +98,8 @@ PLAN = '{{ plan }}';
 			</form>
 		</th>
 		{% else %}
-		<th>
-			<form method="get" action="/{{ plan }}">
+		<th id="add-person">
+			<form method="get" action="/{{ plan }}" onsubmit="show_add_person_form(); return false">
 				<input type="hidden" name="add" value="participant" />
 				<input type="submit" value="add person" id="add-person-submit" />
 			</form>
