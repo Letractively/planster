@@ -84,7 +84,7 @@ class Plan(PlansterModel):
 	def __get_instructions(self):
 		return self.__instructions
 
-	def __set_instructions(instructions):
+	def __set_instructions(self, instructions):
 		if not self.can_be_edited_by_current_user():
 			raise PermissionDeniedException()
 		self.__instructions = instructions
