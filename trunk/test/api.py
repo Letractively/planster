@@ -1,23 +1,12 @@
 # coding=utf8
 import unittest
 import urllib
-import urllib2
 import httplib
 from django.utils import simplejson as json
 
 class TestAPI(unittest.TestCase):
 	def setUp(self):
 		self.__createPlan()
-
-	def __http_post2(self, url, data):
-		" TODO: delete this one, once the API has been fixed "
-		opener = urllib2.build_opener(urllib2.HTTPHandler)
-		request = urllib2.Request(url, data = data)
-		request.get_method = lambda: 'POST'
-		request.add_header("Content-type",
-			"application/x-www-form-urlencoded")
-		url = opener.open(request)
-		return url.read()
 
 	def __http_post(self, url, data):
 		connection = httplib.HTTPConnection('localhost', '8080')
@@ -51,10 +40,22 @@ class TestAPI(unittest.TestCase):
 		return response
 
 	def __createPlan(self):
-		answer = self.__http_post2('http://localhost:8080/create', '')	
-		for line in answer.splitlines():
-			if line.startswith('PLAN = '):
-				self.planID = line[8:-2]
+		answer = self.__http_put('', json.dumps({}))
+		data = json.loads(answer.read())
+		self.planID = data['key']
+
+	def testCreatePlan(self):
+		data = json.dumps({})
+		answer = self.__http_put('', data)
+		data = json.loads(answer.read())
+		self.assertTrue(len(data['key']) > 0)
+		self.assertEquals('Unnamed PLAN', data['title'])
+
+		data = json.dumps({'title': 'Test PLAN'})
+		answer = self.__http_put('', data)
+		data = json.loads(answer.read())
+		self.assertTrue(len(data['key']) > 0)
+		self.assertEquals('Test PLAN', data['title'])
 
 	def testGetTitle(self):
 		answer = self.__http_get(self.planID + '/title')
@@ -158,7 +159,6 @@ class TestAPI(unittest.TestCase):
 
 		self.assertEqual(3, len(data))
 
-	"""
 	def testSetGetOwner(self):
 		" TODO "
 		pass
@@ -166,7 +166,6 @@ class TestAPI(unittest.TestCase):
 	def testSetGetPermissions(self):
 		" TODO "
 		pass
-	"""
 
 if __name__ == '__main__':
     unittest.main()

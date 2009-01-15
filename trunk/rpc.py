@@ -1,8 +1,10 @@
 import os
 import cgi
+import string
 import logging
 import wsgiref.handlers
 from planster import *
+from random import choice
 from django.utils import simplejson
 from google.appengine.api import users
 from google.appengine.api.users import *
@@ -35,6 +37,34 @@ class PlansterRPCHandler(webapp.RequestHandler):
 	def add_user_to_template(self, values):
 		user = users.get_current_user()  
 		values['user'] = user
+
+class PlanRPC(PlansterRPCHandler):
+	def put(self):
+		" TODO: Most of this should be in the Plan class "
+		data = self.request.body
+		args = simplejson.loads(data)
+
+		while True:
+			id = choice(string.letters)
+			id += ''.join([choice(string.letters + string.digits)
+				for i in range(11)])
+			plan = Plan(key_name=id)
+			if not plan.exists():
+				break
+
+		if 'title' in args:
+			title = args['title']
+		else:
+			title='Unnamed PLAN'
+
+		plan = Plan(key_name=id, title=title)
+		plan.put()
+
+		data = {
+			'key': str(plan),
+			'title': plan.title
+		}
+		self.response.out.write(simplejson.dumps(data))
 
 class PlanTitleRPC(PlansterRPCHandler):
 	def get(self):
@@ -287,6 +317,7 @@ class AddPersonFormRPC(PlansterRPCHandler):
 
 def main():
 	application = webapp.WSGIApplication([
+		('/rpc/', PlanRPC),
 		('/rpc/[a-zA-Z0-9]{12}/title', PlanTitleRPC),
 		('/rpc/[a-zA-Z0-9]{12}/owner', PlanOwnerRPC),
 		('/rpc/[a-zA-Z0-9]{12}/instructions', PlanInstructionsRPC),
