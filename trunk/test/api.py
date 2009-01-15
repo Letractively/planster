@@ -1,4 +1,6 @@
+# coding=utf8
 import unittest
+import urllib
 import urllib2
 import httplib
 from django.utils import simplejson as json
@@ -21,6 +23,17 @@ class TestAPI(unittest.TestCase):
 		connection = httplib.HTTPConnection('localhost', '8080')
 		headers = {"Content-type": "application/x-www-form-urlencoded"}
 		connection.request("POST", '/rpc/' + url, data, headers)
+		response = connection.getresponse()
+		return response
+
+	def __http_post_put(self, url, data):
+		params = urllib.urlencode({
+			'_method': 'put',
+			'data': data
+		})
+		connection = httplib.HTTPConnection('localhost', '8080')
+		headers = {"Content-type": "application/x-www-form-urlencoded"}
+		connection.request("POST", '/rpc/' + url, params, headers)
 		response = connection.getresponse()
 		return response
 
@@ -50,16 +63,23 @@ class TestAPI(unittest.TestCase):
 
 	def testSetTitle(self):
 		" TODO: make the 'title=' part go away "
-		data = 'title=Some new title'
+		data = urllib.urlencode({'title': 'Some new title'})
 		answer = self.__http_post(self.planID + '/title', data)
 		self.assertEqual('Some new title', answer.read())
 
 		answer = self.__http_get(self.planID + '/title')
 		self.assertEqual('Some new title', answer.read())
 
-		data = 'title=Some new<a href=""> title'
+		title = 'Some new<a href=""> title'
+		data = "title=" + title
 		answer = self.__http_post(self.planID + '/title', data)
 		self.assertEqual('Some new&lt;a href=""&gt; title', answer.read())
+
+	def testUnicodeTitle(self):
+		title = u'fünf'
+		data = "title=" + title.encode('utf8')
+		answer = self.__http_post(self.planID + '/title', data)
+		self.assertEqual(title, answer.read().decode('utf8'))
 
 	def testGetInstructions(self):
 		answer = self.__http_get(self.planID + '/instructions')
@@ -68,6 +88,7 @@ class TestAPI(unittest.TestCase):
 
 	def testSetInstructions(self):
 		" TODO: make the 'instructions=' part go away "
+		" also, test unicode "
 		data = 'instructions=Do <b>bar\n\nand foo'
 		answer = self.__http_post(self.planID + '/instructions', data)
 		self.assertEquals('Do &lt;b&gt;bar<br />\n<br />\nand foo',
@@ -79,7 +100,6 @@ class TestAPI(unittest.TestCase):
 
 	def testPutItem(self):
 		" TODO: this should be /items "
-		" Also, include test for POST bypass "
 
 		data = json.dumps({'title': 'Pizza'})
 		answer = self.__http_put(self.planID + '/options', data)
@@ -92,6 +112,38 @@ class TestAPI(unittest.TestCase):
 		self.assertEqual('Pizza', new_item['title'])
 		self.assertEqual('/rpc/' + self.planID + '/options/' + new_id,
 			answer.getheader('Location'))
+
+	def testPutUnicodeItem(self):
+		title = u'fünf'
+		data = json.dumps({'title':  title})
+		answer = self.__http_put(self.planID + '/options', data)
+		data = answer.read()
+		new_item = json.loads(data)
+		self.assertEqual(title, new_item['title'])
+
+	def testPutItemViaPost(self):
+		data = json.dumps({'title': 'Orange juice'})
+		answer = self.__http_post_put(self.planID + '/options', data)
+		data = answer.read()
+		new_item = json.loads(data)
+		new_id = new_item['id']
+
+		self.assertEqual(201, answer.status)
+		self.assertTrue(len(new_id) > 0)
+		self.assertEqual('Orange juice', new_item['title'])
+		self.assertEqual('/rpc/' + self.planID + '/options/' + new_id,
+			answer.getheader('Location'))
+
+		data = json.dumps({'title': u'fünf'})
+		answer = self.__http_post_put(self.planID + '/options', data)
+		data = answer.read()
+		new_item = json.loads(data)
+		new_id = new_item['id']
+		new_title = new_item['title']
+
+		self.assertEqual(201, answer.status)
+		self.assertTrue(len(new_id) > 0)
+		self.assertEqual(u'fünf', new_title)
 
 	def testPutItems(self):
 		" TODO: include test for POST bypass "
@@ -106,6 +158,7 @@ class TestAPI(unittest.TestCase):
 
 		self.assertEqual(3, len(data))
 
+	"""
 	def testSetGetOwner(self):
 		" TODO "
 		pass
@@ -113,7 +166,7 @@ class TestAPI(unittest.TestCase):
 	def testSetGetPermissions(self):
 		" TODO "
 		pass
-	
+	"""
 
 if __name__ == '__main__':
     unittest.main()

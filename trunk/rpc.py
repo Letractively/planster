@@ -183,11 +183,10 @@ class PlanOptionsRPC(PlansterRPCHandler):
 	def post(self):
 		# prototype tunnels DELETE and PUT requests via POST
 		method = self.request.get('_method')
+
 		if method == 'put':
 			# TODO: accept umlauts & stuff
-			data = unicode(self.request.get('data'))
-			logging.error(data)
-			self.request.body = str(data)
+			self.request.body = self.request.get('data').encode('utf8')
 			self.put()
 			return
 
