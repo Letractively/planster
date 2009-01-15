@@ -32,7 +32,7 @@ This is how we communicate with planster's server side.
 || || || || ||403||Wrong session user||-||
 ||`<`plan`>`/items||GET||Get items||-||200||OK||Items (title/id)||
 || || || || ||404||No such plan||-||
-|| ||PUT||Add item||title=?||201||OK||URL for new item's resource in HTTP header||
+|| ||PUT||Add item||title=?||201||OK||URL for new item's resource in HTTP header, new item's title and id (JSON)||
 || || || || ||403||Permission denied||-||
 || || || || ||404||No such plan||-||
 ||`<`plan`>`/items/`<`item`>`||GET||Get item|| ||200||OK||title=, id=||
