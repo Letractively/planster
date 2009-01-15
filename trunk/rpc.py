@@ -143,8 +143,57 @@ class PlanPermissionsRPC(PlansterRPCHandler):
 
 		self.response.out.write(json)
 
-
 class PlanOptionsRPC(PlansterRPCHandler):
+	def put(self):
+		plan = self.get_plan_from_url()
+		data = self.request.body
+
+		args = simplejson.loads(data)
+		title = cgi.escape(args['title'])
+
+		saved = plan.add_option(title)
+		option = Option.get(saved.key())
+
+		url = '/rpc/%s/options/%s' % (str(plan), option.key())
+		self.response.set_status(201) # created
+		self.response.headers.add_header('Location', url)
+
+		json = simplejson.dumps({
+			'title': option.name,
+			'id': str(option.key())
+		})
+		
+		self.response.out.write(json)
+
+	def get(self):
+		plan = self.get_plan_from_url()
+		options = plan.options
+
+		data = []
+
+		for option in options:
+			data.append({
+				'title': option.name,
+				'id': str(option.key())
+			})
+
+		json = simplejson.dumps(data)
+		self.response.out.write(json)
+
+	def post(self):
+		# prototype tunnels DELETE and PUT requests via POST
+		method = self.request.get('_method')
+		if method == 'put':
+			# TODO: accept umlauts & stuff
+			data = unicode(self.request.get('data'))
+			logging.error(data)
+			self.request.body = str(data)
+			self.put()
+			return
+
+		self.error(405)
+
+class PlanOptionRPC(PlansterRPCHandler):
 	def get_option_from_url(self):
 		key = self.request.path.split('/')[4]
 		option = Option.get(key)
@@ -157,29 +206,14 @@ class PlanOptionsRPC(PlansterRPCHandler):
 		option.delete()
 		self.response.set_status(204) # no content
 
-	def put(self):
-		plan = self.get_plan_from_url()
-		data = self.request.get("data")
-		args = simplejson.loads(data)
-		title = cgi.escape(args['title'])
-
-		saved = plan.add_option(title)
-		option = Option.get(saved.key())
-
-		url = '/rpc/%s/options/%s' % (str(plan), option.key())
-		self.response.set_status(201) # created
-		self.response.headers.add_header('Location', url)
-		self.get(option)
-
-	def get(self, option = None):
-		if option is None:
-			option = self.get_option_from_url()
+	def get(self):
+		option = self.get_option_from_url()
 
 		json = simplejson.dumps({
-			'title': option.name,
-			'id': str(option.key())
+			'title': item.name,
+			'id': str(item.key())
 		})
-
+		
 		self.response.out.write(json)
 
 	def post(self):
@@ -187,9 +221,6 @@ class PlanOptionsRPC(PlansterRPCHandler):
 		method = self.request.get('_method')
 		if method == 'delete':
 			self.delete()
-			return
-		elif method == 'put':
-			self.put()
 			return
 
 		self.error(405)
@@ -260,7 +291,8 @@ def main():
 		('/rpc/[a-zA-Z0-9]{12}/title', PlanTitleRPC),
 		('/rpc/[a-zA-Z0-9]{12}/owner', PlanOwnerRPC),
 		('/rpc/[a-zA-Z0-9]{12}/instructions', PlanInstructionsRPC),
-		('/rpc/[a-zA-Z0-9]{12}/options.*', PlanOptionsRPC),
+		('/rpc/[a-zA-Z0-9]{12}/options', PlanOptionsRPC),
+		('/rpc/[a-zA-Z0-9]{12}/options/.*', PlanOptionRPC),
 		('/rpc/[a-zA-Z0-9]{12}/permissions', PlanPermissionsRPC),
 		('/forms/[a-zA-Z0-9]{12}', PlanFormRPC),
 		('/forms/[a-zA-Z0-9]{12}/claim', ClaimPlanFormRPC),
