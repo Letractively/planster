@@ -8,7 +8,7 @@ This is how we communicate with planster's server side.
 = Details =
 
 ||URL||Method||Does||Arguments||Code||Means||Return value||
-||/||PUT||Create plan||...||201||Created||URL for new plan resource (in HTTP header)||
+||/||PUT||Create plan||title=? (JSON)||201||Created||URL for new plan resource (in HTTP header)||
 || || || || ||403||Wrong captcha value||-||
 ||`<`plan`>`/title||GET||Returns title|| ||200||OK||The title||
 || || || || ||404||No such plan||-||
