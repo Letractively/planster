@@ -60,11 +60,22 @@ class PlanRPC(PlansterRPCHandler):
 		plan = Plan(key_name=id, title=title)
 		plan.put()
 
-		data = {
-			'key': str(plan),
-			'title': plan.title
-		}
-		self.response.out.write(simplejson.dumps(data))
+		accept = self.request.headers['accept']
+
+		self.response.set_status(201) # created
+
+		url = '/rpc/%s' % (str(plan))
+		self.response.headers.add_header('Location', url)
+
+		if accept == "application/json":
+			data = {
+				'id': str(plan),
+				'title': plan.title,
+				'key': str(plan.key())
+			}
+			self.response.out.write(simplejson.dumps(data))
+		else:
+			self.redirect('/' + str(plan))
 
 class PlanTitleRPC(PlansterRPCHandler):
 	def get(self):
@@ -83,16 +94,19 @@ class PlanTitleRPC(PlansterRPCHandler):
 		self.response.out.write(plan.title);
 
 class PlanOwnerRPC(PlansterRPCHandler):
-	#def get(self):
-	#	plan = self.get_plan_from_url()
-	#	self.response.out.write(plan.owner);
+	def get(self):
+		user = users.get_current_user()  
+		if not user:
+			self.error(401) # unauthorized
+			return
+
+		plan = self.get_plan_from_url()
+		self.response.out.write(plan.owner)
 
 	" not sure 'put' is the right method for this but what the hell "
 
 	def put(self):
 		plan = self.get_plan_from_url()
-		data = self.request.get("data")
-		args = simplejson.loads(data)
 
 		if plan.owner:
 			self.error(409) # conflict
@@ -101,6 +115,18 @@ class PlanOwnerRPC(PlansterRPCHandler):
 		user = users.get_current_user()  
 		if not user:
 			self.error(401) # unauthorized
+			return
+
+		try:
+			args = simplejson.loads(self.request.body)
+		except ValueError, e:
+			logging.error(e)
+			self.error(400) # bad request
+			return
+
+		if not 'key' in args:
+			logging.error('No "key" attribute')
+			self.error(400) # bad request
 			return
 		
 		key = args['key']
@@ -112,7 +138,7 @@ class PlanOwnerRPC(PlansterRPCHandler):
 		plan.put()
 
 		json = simplejson.dumps({
-			'owner': str(plan.owner.email),
+			'owner': str(plan.owner.nickname()),
 		})
 		self.response.out.write(json)
 
@@ -120,6 +146,8 @@ class PlanOwnerRPC(PlansterRPCHandler):
 		# prototype tunnels DELETE and PUT requests via POST
 		method = self.request.get('_method')
 		if method == 'put':
+			self.request.body = self.request.get('data').encode(
+				'utf8')
 			self.put()
 			return
 
@@ -216,7 +244,8 @@ class PlanOptionsRPC(PlansterRPCHandler):
 
 		if method == 'put':
 			# TODO: accept umlauts & stuff
-			self.request.body = self.request.get('data').encode('utf8')
+			self.request.body = self.request.get('data').encode(
+				'utf8')
 			self.put()
 			return
 

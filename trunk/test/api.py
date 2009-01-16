@@ -2,15 +2,32 @@
 import unittest
 import urllib
 import httplib
+from google.appengine.api import users
 from django.utils import simplejson as json
 
+
 class TestAPI(unittest.TestCase):
+	cookie = None
+
 	def setUp(self):
 		self.__createPlan()
 
+	def __http_post_root(self, url, data):
+		connection = httplib.HTTPConnection('localhost', '8080')
+		headers = {"Content-type": "application/x-www-form-urlencoded",
+			"Accept": "application/json"}
+		if self.cookie:
+			headers['Cookie'] = self.cookie
+		connection.request("POST", url, data, headers)
+		response = connection.getresponse()
+		return response
+
 	def __http_post(self, url, data):
 		connection = httplib.HTTPConnection('localhost', '8080')
-		headers = {"Content-type": "application/x-www-form-urlencoded"}
+		headers = {"Content-type": "application/x-www-form-urlencoded",
+			"Accept": "application/json"}
+		if self.cookie:
+			headers['Cookie'] = self.cookie
 		connection.request("POST", '/rpc/' + url, data, headers)
 		response = connection.getresponse()
 		return response
@@ -21,39 +38,54 @@ class TestAPI(unittest.TestCase):
 			'data': data
 		})
 		connection = httplib.HTTPConnection('localhost', '8080')
-		headers = {"Content-type": "application/x-www-form-urlencoded"}
+		headers = {"Content-type": "application/x-www-form-urlencoded",
+			"Accept": "application/json"}
+		if self.cookie:
+			headers['Cookie'] = self.cookie
 		connection.request("POST", '/rpc/' + url, params, headers)
 		response = connection.getresponse()
 		return response
 
 	def __http_put(self, url, data):
 		connection = httplib.HTTPConnection('localhost', '8080')
-		headers = {"Content-type": "application/x-www-form-urlencoded"}
+		headers = {"Content-type": "application/x-www-form-urlencoded",
+			"Accept": "application/json"}
+		if self.cookie:
+			headers['Cookie'] = self.cookie
 		connection.request("PUT", '/rpc/' + url, data, headers)
 		response = connection.getresponse()
 		return response
 
-	def __http_get(self, url):		
+	def __http_get(self, url):
 		connection = httplib.HTTPConnection('localhost', '8080')
-		connection.request("GET", '/rpc/' + url)
+		headers = {}
+		if self.cookie:
+			headers['Cookie'] = self.cookie
+		connection.request("GET", '/rpc/' + url, '', headers)
 		response = connection.getresponse()
 		return response
 
 	def __createPlan(self):
 		answer = self.__http_put('', json.dumps({}))
 		data = json.loads(answer.read())
-		self.planID = data['key']
+		self.planID = data['id']
+		self.planKey = data['key']
 
 	def testCreatePlan(self):
 		data = json.dumps({})
 		answer = self.__http_put('', data)
 		data = json.loads(answer.read())
+		self.assertTrue(len(data['id']) > 0)
 		self.assertTrue(len(data['key']) > 0)
 		self.assertEquals('Unnamed PLAN', data['title'])
+		self.assertEqual(201, answer.status)
+		self.assertEqual('/rpc/' + data['id'],
+			answer.getheader('Location'))
 
 		data = json.dumps({'title': 'Test PLAN'})
 		answer = self.__http_put('', data)
 		data = json.loads(answer.read())
+		self.assertTrue(len(data['id']) > 0)
 		self.assertTrue(len(data['key']) > 0)
 		self.assertEquals('Test PLAN', data['title'])
 
@@ -159,10 +191,78 @@ class TestAPI(unittest.TestCase):
 
 		self.assertEqual(3, len(data))
 
-	def testSetGetOwner(self):
-		" TODO "
-		pass
-	
+	def __login(self, as='test@example.com'):
+		data = urllib.urlencode({
+			'email': as,
+			'admin': False,
+			'action': 'Login'
+		})
+		answer = self.__http_post_root('/_ah/login', data)
+		self.cookie = answer.getheader('set-cookie')
+
+	def __logout(self):
+		data = urllib.urlencode({
+			'admin': False,
+			'action': 'Logout'
+		})
+		answer = self.__http_post_root('/_ah/login', data)
+		#print answer.read()
+		#print answer.status
+		#print answer.getheaders()
+		#self.cookie = None
+		self.cookie = answer.getheader('set-cookie')
+
+	def testSetOwner(self):
+		answer = self.__http_put(self.planID + '/owner', '')
+		self.assertEqual(answer.status, 401) # not authorized
+
+		self.__login(as = 'testrunner@example.org')
+		answer = self.__http_put(self.planID + '/owner', '')
+		self.assertEqual(answer.status, 400) # illegal request
+
+		data = json.dumps({})
+		answer = self.__http_put(self.planID + '/owner', data)
+		self.assertEqual(answer.status, 400) # illegal request
+
+		data = json.dumps({'key': 'wrong key'})
+		answer = self.__http_put(self.planID + '/owner', data)
+		self.assertEqual(answer.status, 403) # forbidden
+
+		data = json.dumps({'key': self.planKey})
+		answer = self.__http_put(self.planID + '/owner', data)
+		self.assertEqual(answer.status, 200) # OK
+		result = json.loads(answer.read())
+
+		self.assertEquals(answer.status, 200)
+		self.assertEquals('testrunner@example.org', result['owner']) 
+
+		answer = self.__http_put(self.planID + '/owner', data)
+		self.assertEqual(answer.status, 409) # exists
+
+	def testSetOwnerViaPost(self):
+		self.__login(as = 'testrunner@example.org')
+		data = json.dumps({'key': self.planKey})
+		answer = self.__http_post_put(self.planID + '/owner', data)
+		data = json.loads(answer.read())
+
+		self.assertEquals(answer.status, 200)
+		self.assertEquals('testrunner@example.org', data['owner']) 
+
+	def testGetOwner(self):
+		self.__login(as = 'testrunner@example.org')
+		data = json.dumps({'key': self.planKey})
+		answer = self.__http_put(self.planID + '/owner', data)
+		self.assertEqual(answer.status, 200, "PUT failed") # OK
+
+		answer = self.__http_get(self.planID + '/owner')
+		self.assertEqual(answer.status, 200) # OK
+		self.assertEqual('testrunner@example.org', answer.read())
+
+		self.__logout()
+		answer = self.__http_get(self.planID + '/owner')
+		self.assertEqual(answer.status, 401) # not authorized
+		self.assertEqual('', answer.read())
+
 	def testSetGetPermissions(self):
 		" TODO "
 		pass
