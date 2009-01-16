@@ -13,6 +13,20 @@ class NoSuchItemException(Exception):
 	pass
 
 class PlansterRPCHandler(webapp.RequestHandler):
+	def render(self, data):
+		accept = self.request.headers['accept']
+
+		if accept == "application/json":
+			self.renderJSON(data)
+		else:
+			self.renderHTML(data)
+
+	def renderJSON(self, data):
+		self.error(406) # not acceptable
+
+	def renderHTML(self, data):
+		self.error(406) # not acceptable
+
 	def get_plan_from_url(self):
 		key = self.request.path.split('/')[2]
 		plan = Plan.get_by_key_name(key)
@@ -39,6 +53,17 @@ class PlansterRPCHandler(webapp.RequestHandler):
 		values['user'] = user
 
 class PlanRPC(PlansterRPCHandler):
+	def renderJSON(self, plan):
+		data = {
+			'id': str(plan),
+			'title': plan.title,
+			'key': str(plan.key())
+		}
+		self.response.out.write(simplejson.dumps(data))
+
+	def renderHTML(self, plan):
+		self.redirect('/' + str(plan))
+
 	def put(self):
 		" TODO: Most of this should be in the Plan class "
 		data = self.request.body
@@ -60,27 +85,20 @@ class PlanRPC(PlansterRPCHandler):
 		plan = Plan(key_name=id, title=title)
 		plan.put()
 
-		accept = self.request.headers['accept']
-
 		self.response.set_status(201) # created
 
 		url = '/rpc/%s' % (str(plan))
 		self.response.headers.add_header('Location', url)
 
-		if accept == "application/json":
-			data = {
-				'id': str(plan),
-				'title': plan.title,
-				'key': str(plan.key())
-			}
-			self.response.out.write(simplejson.dumps(data))
-		else:
-			self.redirect('/' + str(plan))
+		self.render(plan)
 
 class PlanTitleRPC(PlansterRPCHandler):
+	def render(self, plan):
+		self.response.out.write(plan.title);
+
 	def get(self):
 		plan = self.get_plan_from_url()
-		self.response.out.write(plan.title);
+		self.render(plan)
 
 	def post(self):
 		plan = self.get_plan_from_url()
@@ -91,9 +109,15 @@ class PlanTitleRPC(PlansterRPCHandler):
 			plan.put()
 
 		plan = Plan.get(plan.key())
-		self.response.out.write(plan.title);
+		self.render(plan)
 
 class PlanOwnerRPC(PlansterRPCHandler):
+	def renderJSON(self, plan):
+		json = simplejson.dumps({
+			'owner': str(plan.owner.nickname()),
+		})
+		self.response.out.write(json)
+
 	def get(self):
 		user = users.get_current_user()  
 		if not user:
@@ -101,7 +125,7 @@ class PlanOwnerRPC(PlansterRPCHandler):
 			return
 
 		plan = self.get_plan_from_url()
-		self.response.out.write(plan.owner)
+		self.render(plan)
 
 	" not sure 'put' is the right method for this but what the hell "
 
@@ -137,17 +161,15 @@ class PlanOwnerRPC(PlansterRPCHandler):
 		plan.owner = user
 		plan.put()
 
-		json = simplejson.dumps({
-			'owner': str(plan.owner.nickname()),
-		})
-		self.response.out.write(json)
+		self.render(plan)
 
 	def post(self):
 		# prototype tunnels DELETE and PUT requests via POST
 		method = self.request.get('_method')
+
 		if method == 'put':
-			self.request.body = self.request.get('data').encode(
-				'utf8')
+			data = self.request.get('data')
+			self.request.body = data.encode('utf8')
 			self.put()
 			return
 
@@ -202,6 +224,14 @@ class PlanPermissionsRPC(PlansterRPCHandler):
 		self.response.out.write(json)
 
 class PlanOptionsRPC(PlansterRPCHandler):
+	def renderJSON(self, option):
+		json = simplejson.dumps({
+			'title': option.name,
+			'id': str(option.key())
+		})
+		
+		self.response.out.write(json)
+
 	def put(self):
 		plan = self.get_plan_from_url()
 		data = self.request.body
@@ -216,12 +246,7 @@ class PlanOptionsRPC(PlansterRPCHandler):
 		self.response.set_status(201) # created
 		self.response.headers.add_header('Location', url)
 
-		json = simplejson.dumps({
-			'title': option.name,
-			'id': str(option.key())
-		})
-		
-		self.response.out.write(json)
+		self.render(option)
 
 	def get(self):
 		plan = self.get_plan_from_url()
@@ -243,15 +268,22 @@ class PlanOptionsRPC(PlansterRPCHandler):
 		method = self.request.get('_method')
 
 		if method == 'put':
-			# TODO: accept umlauts & stuff
-			self.request.body = self.request.get('data').encode(
-				'utf8')
+			data = self.request.get('data')
+			self.request.body = data.encode('utf8')
 			self.put()
 			return
 
 		self.error(405)
 
 class PlanOptionRPC(PlansterRPCHandler):
+	def renderJSON(self, item):
+		json = simplejson.dumps({
+			'title': item.name,
+			'id': str(item.key())
+		})
+		
+		self.response.out.write(json)
+		
 	def get_option_from_url(self):
 		key = self.request.path.split('/')[4]
 		option = Option.get(key)
@@ -266,17 +298,12 @@ class PlanOptionRPC(PlansterRPCHandler):
 
 	def get(self):
 		option = self.get_option_from_url()
-
-		json = simplejson.dumps({
-			'title': item.name,
-			'id': str(item.key())
-		})
-		
-		self.response.out.write(json)
+		self.render()
 
 	def post(self):
 		# prototype tunnels DELETE and PUT requests via POST
 		method = self.request.get('_method')
+
 		if method == 'delete':
 			self.delete()
 			return
@@ -285,7 +312,6 @@ class PlanOptionRPC(PlansterRPCHandler):
 
 """
 	These form handlers should probably be moved to some other file
-
 	Also, they're all pretty much identical. Should fix that.
 """
 

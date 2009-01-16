@@ -12,6 +12,23 @@ class TestAPI(unittest.TestCase):
 	def setUp(self):
 		self.__createPlan()
 
+	def __login(self, as='test@example.com'):
+		data = urllib.urlencode({
+			'email': as,
+			'admin': False,
+			'action': 'Login'
+		})
+		answer = self.__http_post_root('/_ah/login', data)
+		self.cookie = answer.getheader('set-cookie')
+
+	def __logout(self):
+		data = urllib.urlencode({
+			'admin': False,
+			'action': 'Logout'
+		})
+		answer = self.__http_post_root('/_ah/login', data)
+		self.cookie = answer.getheader('set-cookie')
+
 	def __http_post_root(self, url, data):
 		connection = httplib.HTTPConnection('localhost', '8080')
 		headers = {"Content-type": "application/x-www-form-urlencoded",
@@ -95,22 +112,24 @@ class TestAPI(unittest.TestCase):
 		self.assertEqual('Unnamed PLAN', title)
 
 	def testSetTitle(self):
-		" TODO: make the 'title=' part go away "
 		data = urllib.urlencode({'title': 'Some new title'})
 		answer = self.__http_post(self.planID + '/title', data)
+		self.assertEqual(200, answer.status)
 		self.assertEqual('Some new title', answer.read())
 
 		answer = self.__http_get(self.planID + '/title')
+		self.assertEqual(200, answer.status)
 		self.assertEqual('Some new title', answer.read())
 
-		title = 'Some new<a href=""> title'
-		data = "title=" + title
+		data = urllib.urlencode({'title': 'Some new<a href=""> title'})
 		answer = self.__http_post(self.planID + '/title', data)
-		self.assertEqual('Some new&lt;a href=""&gt; title', answer.read())
+		self.assertEqual(200, answer.status)
+		title = answer.read()
+		self.assertEqual('Some new&lt;a href=""&gt; title', title)
 
 	def testUnicodeTitle(self):
 		title = u'fünf'
-		data = "title=" + title.encode('utf8')
+		data = urllib.urlencode({'title': title.encode('utf8')})
 		answer = self.__http_post(self.planID + '/title', data)
 		self.assertEqual(title, answer.read().decode('utf8'))
 
@@ -120,8 +139,6 @@ class TestAPI(unittest.TestCase):
 		self.assertEquals("", instructions)
 
 	def testSetInstructions(self):
-		" TODO: make the 'instructions=' part go away "
-		" also, test unicode "
 		data = 'instructions=Do <b>bar\n\nand foo'
 		answer = self.__http_post(self.planID + '/instructions', data)
 		self.assertEquals('Do &lt;b&gt;bar<br />\n<br />\nand foo',
@@ -130,6 +147,13 @@ class TestAPI(unittest.TestCase):
 		answer = self.__http_get(self.planID + '/instructions')
 		self.assertEquals('Do &lt;b&gt;bar<br />\n<br />\nand foo',
 			answer.read())
+
+	def testUnicodeInstructions(self):
+		instructions = u'fünf instructions are enough'
+		data = urllib.urlencode({'instructions': instructions.encode(
+			'utf8')})
+		answer = self.__http_post(self.planID + '/instructions', data)
+		self.assertEqual(instructions, answer.read().decode('utf8'))
 
 	def testPutItem(self):
 		" TODO: this should be /items "
@@ -179,7 +203,6 @@ class TestAPI(unittest.TestCase):
 		self.assertEqual(u'fünf', new_title)
 
 	def testPutItems(self):
-		" TODO: include test for POST bypass "
 		items = ['Pizza', 'Pasta', 'Meat']
 
 		for item in items:
@@ -191,26 +214,17 @@ class TestAPI(unittest.TestCase):
 
 		self.assertEqual(3, len(data))
 
-	def __login(self, as='test@example.com'):
-		data = urllib.urlencode({
-			'email': as,
-			'admin': False,
-			'action': 'Login'
-		})
-		answer = self.__http_post_root('/_ah/login', data)
-		self.cookie = answer.getheader('set-cookie')
+	def testPutItemsViaPost(self):
+		items = ['Pizza', 'Pasta']
 
-	def __logout(self):
-		data = urllib.urlencode({
-			'admin': False,
-			'action': 'Logout'
-		})
-		answer = self.__http_post_root('/_ah/login', data)
-		#print answer.read()
-		#print answer.status
-		#print answer.getheaders()
-		#self.cookie = None
-		self.cookie = answer.getheader('set-cookie')
+		for item in items:
+			data = json.dumps({'title': item})
+			self.__http_post_put(self.planID + '/options', data)
+
+		answer = self.__http_get(self.planID + '/options')
+		data = json.loads(answer.read())
+
+		self.assertEqual(2, len(data))
 
 	def testSetOwner(self):
 		answer = self.__http_put(self.planID + '/owner', '')
@@ -232,8 +246,6 @@ class TestAPI(unittest.TestCase):
 		answer = self.__http_put(self.planID + '/owner', data)
 		self.assertEqual(answer.status, 200) # OK
 		result = json.loads(answer.read())
-
-		self.assertEquals(answer.status, 200)
 		self.assertEquals('testrunner@example.org', result['owner']) 
 
 		answer = self.__http_put(self.planID + '/owner', data)
@@ -255,8 +267,9 @@ class TestAPI(unittest.TestCase):
 		self.assertEqual(answer.status, 200, "PUT failed") # OK
 
 		answer = self.__http_get(self.planID + '/owner')
+		result = json.loads(answer.read())
 		self.assertEqual(answer.status, 200) # OK
-		self.assertEqual('testrunner@example.org', answer.read())
+		self.assertEqual('testrunner@example.org', result['owner'])
 
 		self.__logout()
 		answer = self.__http_get(self.planID + '/owner')
