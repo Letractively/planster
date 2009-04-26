@@ -56,7 +56,6 @@ class PlansterPlanRPCHandler(PlansterRPCHandler):
 
 class PlansterAttributeRPCHandler(PlansterRPCHandler):
 	def __init__(self, plan_hash):
-		self.hash = plan_hash
 		self.plan = Plan.objects.get(hash=plan_hash)
 
 class PlansterItemsRPCHandler(PlansterAttributeRPCHandler):
@@ -89,9 +88,7 @@ class PlansterItemsRPCHandler(PlansterAttributeRPCHandler):
 
 		json = simplejson.dumps(data)
 
-		response = HttpResponse()
-		response.content = simplejson.dumps(data)
-		return response
+		return HttpResponse(simplejson.dumps(data))
 
 class PlansterInstructionsRPCHandler(PlansterAttributeRPCHandler):
 	def get(self):
@@ -136,8 +133,8 @@ def plan(request):
 	handler = PlansterPlanRPCHandler()
 	return handler.handle(request)
 
-def items(request, plan_hash):
-	return HttpResponse("foo")
+"""def items(request, plan_hash):
+	return HttpResponse("foo")"""
 
 def options(request, plan_hash):
 	handler = PlansterItemsRPCHandler(plan_hash)
