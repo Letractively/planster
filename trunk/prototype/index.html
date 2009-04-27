@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html>
+	<head>
+		<title>planster</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<link rel="stylesheet" type="text/css" href="planster.css" title="style" />
+		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+		<script src="js/prototype/prototype.js" type="text/javascript"></script>
+		<script src="js/prototype/scriptaculous.js" type="text/javascript"></script>
+		<script src="js/planster.js" type="text/javascript"></script>
+		<link rel="stylesheet" type="text/css" media="all" href="js/calendar/calendar-planster.css" />
+		<script type="text/javascript" src="js/calendar/calendar.js"></script>
+		<script type="text/javascript" src="js/calendar/lang/calendar-en.js"></script>
+		<script type="text/javascript" src="js/calendar/calendar-setup.js"></script>
+
+	</head>
+	<body>
+		<div id="responsePopup" style="display: none" class="popup">
+			<div class="title"><a href="#" onClick="javascript:closeResponsePopup(); return false"><img class="close" src="close.png" alt="close" title="close"></a></span>Select Response</div>
+			<div class="selection">
+				<img onMouseOver="javascript:setSelection(this);return false" onClick="javascript:setResponse('yes');return false" src="yes.png" />
+				<img onMouseOver="javascript:setSelection(this);return false" onClick="javascript:setResponse('maybe');return false" src="maybe.png" />
+				<img onMouseOver="javascript:setSelection(this);return false" onClick="javascript:setResponse('no');return false" src="no.png" />
+			</div>
+			<img src="triangle.png" class="handle" alt="" />
+			<img src="selection.png" class="selection" id="responseSelector" style="display: none" alt="" />
+		</div>
+		<div id="newItemPopup" style="display: none" class="popup">
+			<div class="title"><a href="#" onClick="javascript:closeAddItemPopup(); return false"><img class="close" src="close.png" alt="close" title="close"></a></span>Add an item</div>
+			<div class="content">
+				<form>
+					<input name="title" value="write some text" id="addItemInput" />
+					<div id="calendar" style="padding: 10px 0">
+						<script type="text/javascript"><!--
+						var cal = Calendar.setup ({
+							flat : 'calendar',
+							firstDay : 1,
+							weekNumbers: false,
+							ifFormat: '%Y',
+							flatCallback: addItemDateChanged
+						});
+						--></script>
+					</div>
+					<div>
+						<input type="submit" value="save" style="float: right" />
+						<a href="#" onClick="javascript:toggleCalendar(); return false" id="showCalendarLink" style="display: none">show calendar</a>
+						<a href="#" onClick="javascript:toggleCalendar(); return false" id="hideCalendarLink">hide calendar</a>
+					</div>
+				</form>
+			</div>
+			<img src="triangle.png" class="handle" alt="" />
+		</div>
+		<div id="options" style="display: none">
+			<ul class="category">
+				<form>
+					<li><input type="radio" name="count" value="none" /> Hide totals</li>
+					<li><input type="radio" name="count" value="yes" /> Count only [yes]</li>
+					<li><input type="radio" name="count" value="both" /> Count [m] as half [y]</li>
+				</form>
+			</ul>
+			<ul class="category" style="list-style-image: url(arrow.png); margin-left: 10px;">
+				<li><a href="#" onClick="javascript:editTitle(); return false;">Edit title</a></li>
+				<li><a href="#" onClick="javascript:editInstructions(); return false">Edit comment</a></li>
+			</ul>
+			<div class="category">&nbsp;</div>
+		</div>
+		<div id="toolbar" class="closed">
+			<a href="#" onclick="javascript:toggleOptions(); return false"><img src="options.png" alt="options" title="Edit options" /></a>
+		</div>
+		<img src="logo.png" alt="planster" title="" id="logo" />
+		<div id="padding">&nbsp;</div>
+		<div id="content">
+			<h1>
+				<span id="title">Books to read</span>
+				<span id="titleForm" style="display: none">
+					<form>
+						<input name="title" value="Books to read" id="titleInput" />
+					</form>
+				</span>
+			</h1>
+			<div id="instructions">
+				<span id="instructionsText">Please choose the books or texts that you have read. We will be discussing them on Monday.</span>
+				<div id="instructionsForm" style="display: none">
+					<form>
+						<textarea name="instructions" id="instructionsInput">Please choose the books or texts that you have read. We will be discussing them on Monday.</textarea>
+					</form>
+				</div>
+			</div>
+			<table class="responses">
+				<col />
+				<col class="odd" />
+				<col class="even" />
+				<col class="odd" />
+				<col class="even" />
+				<tr>
+					<th />
+					<th>Philipp</th>
+					<th>Stefan</th>
+					<th>Claudia</th>
+					<th>Reto</th>
+				</tr><tr>
+					<td class="option">Applications = Components + Scripts - Tour of Piccola</td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="yes.png" alt="yes" title="yes" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="yes.png" alt="yes" title="yes" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="yes.png" alt="yes" title="yes" /></a></td>
+				</tr><tr>
+					<td class="option">Forms, Agents and Channels - Defining Composition Abstraction with Style</td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="yes.png" alt="yes" title="yes" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="maybe.png" alt="maybe" title="maybe" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="maybe.png" alt="maybe" title="maybe" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td></td>
+				</tr><tr>
+					<td class="option">Meta-Driver Browsers</td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="no.png" alt="no" title="no" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="no.png" alt="no" title="no" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="no.png" alt="no" title="no" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="no.png" alt="no" title="no" /></a></td>
+				</tr><tr>
+					<td class="option">Creating Sophisticated Development Tools with MoniBrowser</td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
+				</tr><tr>
+					<td class="option">Design Patterns: Elements of Reusable Object-Oriented Software</td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
+				</tr><tr>
+					<td class="option">Smalltalk-80: The Language</td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
+				</tr><tr>
+				<td class="addItem"><a href="#" onClick="javascript:askNewItem(); return false" id="addItemLink">Click to add an item</a></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>
