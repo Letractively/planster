@@ -59,6 +59,12 @@ table.responses td.answer {
 	text-align: center;
 }
 
+table.responses td.option a,
+table.responses th.person a {
+	text-decoration: none;
+	color: #555753;
+}
+
 #options {
 	height: 56px;
 	background-color: #555753;
