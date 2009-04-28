@@ -200,4 +200,17 @@ function saveInstructions(form, plan) {
 }
 
 function savePerson(form, plan) {
+	var data = new Hash();
+	data.set('name', form.name.value);
+
+	new Ajax.Request('rpc/' + plan + '/people', {
+		method: 'put',
+		parameters: { 'data': data.toJSON() },
+		onSuccess: function(transport){
+			var response = transport.responseText || "no response text";
+			data = response.evalJSON();
+			window.location = plan;
+		},
+		onFailure: function(){ error() }
+	});
 }

@@ -34,8 +34,13 @@ class Plan(models.Model):
 		chars = string.letters + string.digits
 		return ''.join([choice(chars) for i in range(15)])
 
+	def __get_people(self):
+		return Participant.objects.filter(plan=self)
+
 	def __unicode__(self):
 		return self.title;
+
+	people = property(fget=__get_people)
 
 class Participant(models.Model):
 	name = models.CharField(max_length=100)
