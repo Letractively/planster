@@ -1,4 +1,5 @@
 var responseElement;
+var activeItem;
 
 function toggleOptions() {
 	$('options').toggle();
@@ -20,18 +21,92 @@ function editInstructions() {
 	$('instructionsInput').activate();
 }
 
-function askResponse(element) {
-	responseElement = element;
-
-	$('responsePopup').clonePosition(element, {
+function setSelection(element) {
+	$('responseSelector').clonePosition(element, {
 		'setWidth': false,
 		'setHeight': false,
-		'offsetLeft': 50,
-		'offsetTop': -70
+		'offsetLeft': -2,
+		'offsetTop': 23
 	});
+	$('responseSelector').show();
+}
+
+function setResponse(response) {
+	closeResponsePopup();
+	responseElement.childNodes[0].src = response + '.png';
+}
+
+function toggleCalendar() {
+	$('calendar').toggle();
+	$('showCalendarLink').toggle();
+	$('hideCalendarLink').toggle();
+	askNewItem(activeItem)
+}
+
+function itemDateChanged(calendar) {
+	var months = new Array ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+	var days = new Array ('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
+
+	var date = days[calendar.date.getDay()] + ', ' +months[calendar.date.getMonth()] + ' ' + calendar.date.getDate() + ' ' + calendar.date.getFullYear();
+	$('itemTitle').value = date;
+}
+
+function showPopup(popup, where) {
+	popup.clonePosition(where, {
+		'setWidth': false,
+		'setHeight': false,
+		'offsetLeft': where.getWidth() + 25,
+		'offsetTop': where.getHeight() - popup.getHeight()
+	});
+	popup.show();
+}
+
+function askItem(item) {
+	closeResponsePopup();
+	closePersonPopup();
+
+	activeItem = item
+
+	if (item.parentNode.className == 'addItem') {
+		$('itemTitle').value = '';
+		$('editItemTitle').hide();
+		$('addItemTitle').show();
+	} else {
+		$('itemTitle').value = item.innerHTML;
+		$('editItemTitle').show();
+		$('addItemTitle').hide();
+	}
+
+	showPopup($('itemPopup'), item);
+	$('itemTitle').activate();
+}
+
+function askPerson(person) {
+	closeResponsePopup();
+	closeItemPopup();
+
+	if (person.parentNode.className == 'addItem') {
+		$('personName').value = '';
+		$('editPersonTitle').hide();
+		$('addPersonTitle').show();
+	} else {
+		$('personName').value = person.innerHTML;
+		$('addPersonTitle').hide();
+		$('editPersonTitle').show();
+	}
+
+	showPopup($('personPopup'), person);
+	$('personName').activate();
+}
+
+function askResponse(element) {
+	closePersonPopup();
+	closeItemPopup();
+
+	responseElement = element;
 
 	$('responseSelector').hide();
-	$('responsePopup').show();
+	showPopup($('responsePopup'), element);
 
 	// set the currently selected response in the popup
 	var popup = $('responsePopup');
@@ -48,53 +123,15 @@ function askResponse(element) {
 	}
 }
 
+function closeItemPopup() {
+	$('itemPopup').hide();
+}
+
+function closePersonPopup() {
+	$('personPopup').hide();
+}
+
 function closeResponsePopup() {
 	$('responsePopup').hide();
 }
 
-function setSelection(element) {
-	$('responseSelector').clonePosition(element, {
-		'setWidth': false,
-		'setHeight': false,
-		'offsetLeft': -2,
-		'offsetTop': 23
-	});
-	$('responseSelector').show();
-}
-
-function setResponse(response) {
-	closeResponsePopup();
-	responseElement.childNodes[0].src = response + '.png';
-}
-
-function askNewItem() {
-	var height = $('newItemPopup').getHeight();
-
-	$('newItemPopup').clonePosition($('addItemLink'), {
-		'setWidth': false,
-		'setHeight': false,
-		'offsetLeft': 200,
-		'offsetTop': 7 - height
-	});
-	$('newItemPopup').show();
-	$('addItemInput').activate();
-}
-
-function closeAddItemPopup() {
-	$('newItemPopup').hide();
-}
-
-function toggleCalendar() {
-	$('calendar').toggle();
-	$('showCalendarLink').toggle();
-	$('hideCalendarLink').toggle();
-	askNewItem()
-}
-
-function addItemDateChanged(calendar) {
-	var months = new Array ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
-	var days = new Array ('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
-
-	var date = days[calendar.date.getDay()] + ', ' +months[calendar.date.getMonth()] + ' ' + calendar.date.getDate() + ' ' + calendar.date.getFullYear();
-	$('addItemInput').value = date;
-}

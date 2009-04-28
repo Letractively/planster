@@ -13,24 +13,26 @@
 		<script type="text/javascript" src="js/calendar/calendar.js"></script>
 		<script type="text/javascript" src="js/calendar/lang/calendar-en.js"></script>
 		<script type="text/javascript" src="js/calendar/calendar-setup.js"></script>
-
 	</head>
 	<body>
 		<div id="responsePopup" style="display: none" class="popup">
 			<div class="title"><a href="#" onClick="javascript:closeResponsePopup(); return false"><img class="close" src="close.png" alt="close" title="close"></a></span>Select Response</div>
 			<div class="selection">
-				<img onMouseOver="javascript:setSelection(this);return false" onClick="javascript:setResponse('yes');return false" src="yes.png" />
-				<img onMouseOver="javascript:setSelection(this);return false" onClick="javascript:setResponse('maybe');return false" src="maybe.png" />
-				<img onMouseOver="javascript:setSelection(this);return false" onClick="javascript:setResponse('no');return false" src="no.png" />
+				<img onMouseOver="javascript:setSelection(this); return false" onClick="javascript:setResponse('yes'); return false" src="yes.png" />
+				<img onMouseOver="javascript:setSelection(this); return false" onClick="javascript:setResponse('maybe'); return false" src="maybe.png" />
+				<img onMouseOver="javascript:setSelection(this); return false" onClick="javascript:setResponse('no'); return false" src="no.png" />
 			</div>
 			<img src="triangle.png" class="handle" alt="" />
 			<img src="selection.png" class="selection" id="responseSelector" style="display: none" alt="" />
 		</div>
-		<div id="newItemPopup" style="display: none" class="popup">
-			<div class="title"><a href="#" onClick="javascript:closeAddItemPopup(); return false"><img class="close" src="close.png" alt="close" title="close"></a></span>Add an item</div>
-			<div class="content">
+		<div id="itemPopup" style="display: none" class="popup">
+			<div class="title">
+				<a href="#" onClick="javascript:closeItemPopup(); return false"><img class="close" src="close.png" alt="close" title="close"></a></span>
+				<span id="addItemTitle">Add an item</span>
+				<span id="editItemTitle" style="display: none">Edit item</span>
+			</div><div class="content">
 				<form>
-					<input name="title" value="write some text" id="addItemInput" />
+					<input name="title" id="itemTitle" />
 					<div id="calendar" style="padding: 10px 0">
 						<script type="text/javascript"><!--
 						var cal = Calendar.setup ({
@@ -38,7 +40,7 @@
 							firstDay : 1,
 							weekNumbers: false,
 							ifFormat: '%Y',
-							flatCallback: addItemDateChanged
+							flatCallback: itemDateChanged
 						});
 						--></script>
 					</div>
@@ -47,6 +49,18 @@
 						<a href="#" onClick="javascript:toggleCalendar(); return false" id="showCalendarLink" style="display: none">show calendar</a>
 						<a href="#" onClick="javascript:toggleCalendar(); return false" id="hideCalendarLink">hide calendar</a>
 					</div>
+				</form>
+			</div>
+			<img src="triangle.png" class="handle" alt="" />
+		</div>
+		<div id="personPopup" style="display: none" class="popup">
+			<div class="title">
+				<a href="#" onClick="javascript:closePersonPopup(); return false"><img class="close" src="close.png" alt="close" title="close"></a></span>
+				<span id="addPersonTitle">Add a</span>
+				<span id="editPersonTitle" style="display: none">Edit</span> Person
+			</div><div class="content">
+				<form>
+					<input name="name" id="personName" />
 				</form>
 			</div>
 			<img src="triangle.png" class="handle" alt="" />
@@ -95,49 +109,56 @@
 				<col class="even" />
 				<tr>
 					<th />
-					<th>Philipp</th>
-					<th>Stefan</th>
-					<th>Claudia</th>
-					<th>Reto</th>
+					<th class="person"><a href=#" onClick="javascript:askPerson(this); return false">Philipp</a></th>
+					<th class="person"><a href=#" onClick="javascript:askPerson(this); return false">Stefan</a></th>
+					<th class="person"><a href=#" onClick="javascript:askPerson(this); return false">Claudia</a></th>
+					<th class="person"><a href=#" onClick="javascript:askPerson(this); return false">Reto</a></th>
+					<th class="addItem"><a href="#" onClick="javascript:askPerson(this); return false">Click to add a person</a></th>
 				</tr><tr>
-					<td class="option">Applications = Components + Scripts - Tour of Piccola</td>
+					<td class="option"><a href="#" onclick="javascript:askItem(this); return false">Applications = Components + Scripts - Tour of Piccola</a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="yes.png" alt="yes" title="yes" /></a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="yes.png" alt="yes" title="yes" /></a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="yes.png" alt="yes" title="yes" /></a></td>
+					<td></td>
 				</tr><tr>
-					<td class="option">Forms, Agents and Channels - Defining Composition Abstraction with Style</td>
+					<td class="option"><a href="#" onclick="javascript:askItem(this); return false">Forms, Agents and Channels - Defining Composition Abstraction with Style</a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="yes.png" alt="yes" title="yes" /></a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="maybe.png" alt="maybe" title="maybe" /></a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="maybe.png" alt="maybe" title="maybe" /></a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
 					<td></td>
 				</tr><tr>
-					<td class="option">Meta-Driver Browsers</td>
+					<td class="option"><a href="#" onclick="javascript:askItem(this); return false">Meta-Driver Browsers</a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="no.png" alt="no" title="no" /></a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="no.png" alt="no" title="no" /></a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="no.png" alt="no" title="no" /></a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="no.png" alt="no" title="no" /></a></td>
+					<td></td>
 				</tr><tr>
-					<td class="option">Creating Sophisticated Development Tools with MoniBrowser</td>
+					<td class="option"><a href="#" onclick="javascript:askItem(this); return false">Creating Sophisticated Development Tools with MoniBrowser</a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td></td>
 				</tr><tr>
-					<td class="option">Design Patterns: Elements of Reusable Object-Oriented Software</td>
+				<td class="option"><a href="#" onclick="javascript:askItem(this); return false">Design Patterns: Elements of Reusable Object-Oriented Software</a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td></td>
 				</tr><tr>
-					<td class="option">Smalltalk-80: The Language</td>
+					<td class="option"><a href="#" onclick="javascript:askItem(this); return false">Smalltalk-80: The Language</a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
 					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td></td>
 				</tr><tr>
-				<td class="addItem"><a href="#" onClick="javascript:askNewItem(); return false" id="addItemLink">Click to add an item</a></td>
+					<td class="addItem"><a href="#" onClick="javascript:askItem(this); return false" id="addItemLink">Click to add an item</a></td>
+					<td></td>
 					<td></td>
 					<td></td>
 					<td></td>
