@@ -139,10 +139,8 @@ class PlansterPeopleRPCHandler(PlansterAttributeRPCHandler):
 		return response
 
 	def get(self):
-		people = Participant.objects.filter(plan=self.plan)
-
 		data = []
-		for person in people:
+		for person in self.plan.people:
 			data.append({
 				'name': person.name,
 				'id': person.id
