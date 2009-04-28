@@ -115,6 +115,40 @@ class PlansterTitleRPCHandler(PlansterAttributeRPCHandler):
 
 		return HttpResponse(self.plan.title)
 
+class PlansterPeopleRPCHandler(PlansterAttributeRPCHandler):
+	def put(self, data):
+		try:
+			args = simplejson.loads(data)
+		except:
+			return HttpResponseBadRequest()
+
+		if not 'name' in data:
+			return HttpResponseBadRequest()
+
+		name = args['name']
+
+		person = Participant(name=name, plan=self.plan)
+		person.save()
+
+		response = HttpResponseCreated('/rpc/%s/people/%d' % (
+			self.plan.hash, person.id))
+		response.content = simplejson.dumps({
+			'name': person.name,
+			'id': person.id
+		});
+		return response
+
+	def get(self):
+		people = Participant.objects.filter(plan=self.plan)
+
+		data = []
+		for person in people:
+			data.append({
+				'name': person.name,
+				'id': person.id
+			})
+		return HttpResponse(simplejson.dumps(data))
+
 """class PlansterOwnerRPCHandler(PlansterRPCHandler):
 	def __init__(self, plan_hash):
 		self.hash = plan_hash
@@ -146,6 +180,10 @@ def instructions(request, plan_hash):
 
 def title(request, plan_hash):
 	handler = PlansterTitleRPCHandler(plan_hash)
+	return handler.handle(request)
+
+def people(request, plan_hash):
+	handler = PlansterPeopleRPCHandler(plan_hash)
 	return handler.handle(request)
 
 """def owner(request, plan_hash):
