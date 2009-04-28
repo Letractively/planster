@@ -230,7 +230,27 @@ class TestAPI(unittest.TestCase):
 	def testAddPerson(self):
 		person = 'Peter P. Rat';
 		answer = self.__http_put(self.planID + '/people', person);
+		self.assertEqual(answer.status, 400) # Illegal request
+
+		data = json.dumps({'name': person})
+		answer = self.__http_put(self.planID + '/people', data);
 		self.assertEqual(answer.status, 201) # Created
+
+		peter = json.loads(answer.read())
+		self.assertTrue(peter['id'] > 0)
+		self.assertEqual('Peter P. Rat', peter['name'])
+		self.assertTrue(answer.getheader('Location').endswith(
+			'/rpc/' + self.planID + '/people/' + str(peter['id'])))
+
+		data = json.dumps({'name': 'Frank'})
+		answer = self.__http_put(self.planID + '/people', data);
+		frank = json.loads(answer.read())
+
+		answer = self.__http_get(self.planID + '/people')
+		data = json.loads(answer.read())
+		self.assertEqual(2, len(data))
+		self.assertTrue(peter in data)
+		self.assertTrue(frank in data)
 
 """	def testSetOwner(self):
 		answer = self.__http_put(self.planID + '/owner', '')
