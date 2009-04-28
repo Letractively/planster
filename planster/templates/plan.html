@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block precontent %}
+		<div id="responsePopup" style="display: none" class="popup">
+			<div class="title"><a href="#" onClick="javascript:closeResponsePopup(); return false"><img class="close" src="{{ MEDIA_URL }}/img/close.png" alt="close" title="close"></a></span>Select Response</div>
+			<div class="selection">
+				<img onMouseOver="javascript:setSelection(this); return false" onClick="javascript:setResponse('yes'); return false" src="{{ MEDIA_URL }}/img/yes.png" />
+				<img onMouseOver="javascript:setSelection(this); return false" onClick="javascript:setResponse('maybe'); return false" src="{{ MEDIA_URL }}/img/maybe.png" />
+				<img onMouseOver="javascript:setSelection(this); return false" onClick="javascript:setResponse('no'); return false" src="{{ MEDIA_URL }}/img/no.png" />
+			</div>
+			<img src="{{ MEDIA_URL }}/img/triangle.png" class="handle" alt="" />
+			<img src="{{ MEDIA_URL }}/img/selection.png" class="selection" id="responseSelector" style="display: none" alt="" />
+		</div>
+		<div id="itemPopup" style="display: none" class="popup">
+			<div class="title">
+				<a href="#" onClick="javascript:closeItemPopup(); return false"><img class="close" src="{{ MEDIA_URL }}/img/close.png" alt="close" title="close"></a></span>
+				<span id="addItemTitle">Add an item</span>
+				<span id="editItemTitle" style="display: none">Edit item</span>
+			</div><div class="content">
+				<form>
+					<input name="title" id="itemTitle" />
+					<div id="calendar" style="padding: 10px 0">
+						<script type="text/javascript"><!--
+						var cal = Calendar.setup ({
+							flat : 'calendar',
+							firstDay : 1,
+							weekNumbers: false,
+							ifFormat: '%Y',
+							flatCallback: itemDateChanged
+						});
+						--></script>
+					</div>
+					<div>
+						<input type="submit" value="save" style="float: right" />
+						<a href="#" onClick="javascript:toggleCalendar(); return false" id="showCalendarLink" style="display: none">show calendar</a>
+						<a href="#" onClick="javascript:toggleCalendar(); return false" id="hideCalendarLink">hide calendar</a>
+					</div>
+				</form>
+			</div>
+			<img src="{{ MEDIA_URL }}/img/triangle.png" class="handle" alt="" />
+		</div>
+		<div id="personPopup" style="display: none" class="popup">
+			<div class="title">
+				<a href="#" onClick="javascript:closePersonPopup(); return false"><img class="close" src="{{ MEDIA_URL }}/img/close.png" alt="close" title="close"></a></span>
+				<span id="addPersonTitle">Add a</span>
+				<span id="editPersonTitle" style="display: none">Edit</span> Person
+			</div><div class="content">
+				<form onSubmit="javascript:savePerson(this, '{{ form.hash }}');return false">
+					<input name="name" id="personName" />
+				</form>
+			</div>
+			<img src="{{ MEDIA_URL }}/img/triangle.png" class="handle" alt="" />
+		</div>
+		<div id="options" style="display: none">
+			<ul class="category">
+				<form>
+					<li><input type="radio" name="count" value="none" /> Hide totals</li>
+					<li><input type="radio" name="count" value="yes" /> Count only [yes]</li>
+					<li><input type="radio" name="count" value="both" /> Count [m] as half [y]</li>
+				</form>
+			</ul>
+			<ul class="category" style="list-style-image: url({{ MEDIA_URL }}/img/arrow.png); margin-left: 10px;">
+				<li><a href="#" onClick="javascript:editTitle(); return false;">Edit title</a></li>
+				<li><a href="#" onClick="javascript:editInstructions(); return false">Edit comment</a></li>
+			</ul>
+			<div class="category">&nbsp;</div>
+		</div>
+		<div id="toolbar" class="closed">
+			<a href="#" onclick="javascript:toggleOptions(); return false"><img src="{{ MEDIA_URL }}/img/options.png" alt="options" title="Edit options" /></a>
+		</div>
+{% endblock %}
+{% block content %}
+		<div id="content">
+			<h1>
+				<span id="title">{{ plan.title }}</span>
+				<span id="titleForm" style="display: none">
+					<form onSubmit="javascript:saveTitle(this, '{{ plan.hash }}');return false">
+						<input name="title" value="" id="titleInput" />
+					</form>
+				</span>
+			</h1>
+			<div id="instructions">
+				<span id="instructionsText">{{ plan.instructions }}</span>
+				<div id="instructionsForm" style="display: none">
+					<form onSubmit="javascript:saveInstructions(this, '{{ plan.hash }}');return false">
+						<textarea name="instructions" id="instructionsInput">Please choose the books or texts that you have read. We will be discussing them on Monday.</textarea>
+						<input type="submit" value="save" />
+					</form>
+				</div>
+			</div>
+			<table class="responses">
+				<col />
+				<col class="odd" />
+				<col class="even" />
+				<col class="odd" />
+				<col class="even" />
+				<tr>
+					<th />
+					<th class="person"><a href=#" onClick="javascript:askPerson(this); return false">Philipp</a></th>
+					<th class="person"><a href=#" onClick="javascript:askPerson(this); return false">Stefan</a></th>
+					<th class="person"><a href=#" onClick="javascript:askPerson(this); return false">Claudia</a></th>
+					<th class="person"><a href=#" onClick="javascript:askPerson(this); return false">Reto</a></th>
+					<th class="addItem"><a href="#" onClick="javascript:askPerson(this); return false">Click to add a person</a></th>
+				</tr><tr>
+					<td class="option"><a href="#" onclick="javascript:askItem(this); return false">Applications = Components + Scripts - Tour of Piccola</a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/yes.png" alt="yes" title="yes" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/yes.png" alt="yes" title="yes" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/yes.png" alt="yes" title="yes" /></a></td>
+					<td></td>
+				</tr><tr>
+					<td class="option"><a href="#" onclick="javascript:askItem(this); return false">Forms, Agents and Channels - Defining Composition Abstraction with Style</a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/yes.png" alt="yes" title="yes" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/maybe.png" alt="maybe" title="maybe" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/maybe.png" alt="maybe" title="maybe" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td></td>
+				</tr><tr>
+					<td class="option"><a href="#" onclick="javascript:askItem(this); return false">Meta-Driver Browsers</a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/no.png" alt="no" title="no" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/no.png" alt="no" title="no" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/no.png" alt="no" title="no" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/no.png" alt="no" title="no" /></a></td>
+					<td></td>
+				</tr><tr>
+					<td class="option"><a href="#" onclick="javascript:askItem(this); return false">Creating Sophisticated Development Tools with MoniBrowser</a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td></td>
+				</tr><tr>
+				<td class="option"><a href="#" onclick="javascript:askItem(this); return false">Design Patterns: Elements of Reusable Object-Oriented Software</a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td></td>
+				</tr><tr>
+					<td class="option"><a href="#" onclick="javascript:askItem(this); return false">Smalltalk-80: The Language</a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
+					<td></td>
+				</tr><tr>
+					<td class="addItem"><a href="#" onClick="javascript:askItem(this); return false" id="addItemLink">Click to add an item</a></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+			</table>
+		</div>
+{% endblock %}

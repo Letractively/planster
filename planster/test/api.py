@@ -227,7 +227,12 @@ class TestAPI(unittest.TestCase):
 
 		self.assertEqual(2, len(data))
 
-	def testSetOwner(self):
+	def testAddPerson(self):
+		person = 'Peter P. Rat';
+		answer = self.__http_put(self.planID + '/people', person);
+		self.assertEqual(answer.status, 201) # Created
+
+"""	def testSetOwner(self):
 		answer = self.__http_put(self.planID + '/owner', '')
 		self.assertEqual(answer.status, 401) # not authorized
 
@@ -287,7 +292,7 @@ class TestAPI(unittest.TestCase):
 
 	def testSetGetPermissions(self):
 		" TODO "
-		pass
+		pass"""
 
 if __name__ == '__main__':
 	unittest.main()

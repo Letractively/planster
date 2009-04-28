@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>Things we need to know</h1>
+<form method="post" action="nojs" onSubmit="javascript:createPlan(this); return false">
+	<p>First, please think of a name for your plan:</p>
+	<input name="title" value="{{ plan.title }}" />
+	<p>Now, if you would like to give a few instructions to your users, put them in the following box (you can always change them later):</p>
+	<textarea name="instructions" id="instructionsInput">{{ plan.instructions }}</textarea>
+	<p>And we're almost there. All you need to do now is choose how long you want your plan to live before we delete it:</p>
+	<select name="expires">
+		<option>1</option>
+		<option>2</option>
+		<option>3</option>
+		<option>4</option>
+		<option>5</option>
+		<option>6</option>
+	</select> months
+	<p>That's it. Now click the 'create' button.</p>
+	<input type="submit" value="create" />
+</form>
+{% endblock %}

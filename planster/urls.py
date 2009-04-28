@@ -14,6 +14,12 @@ urlpatterns = patterns('',
 	(r'^rpc/(?P<plan_hash>\w{15})/owner', 'planster.main.rpc.owner'),
 	#(r'^rpc/.{15}/items', 'planster.main.rpc.items'),
 	(r'^rpc', 'planster.main.rpc.plan'),
+	(r'^(?P<plan_id>\w{15})', 'planster.main.views.plan'),
+	(r'^$', 'planster.main.views.index'),
+	(r'^create$', 'planster.main.views.create'),
+	(r'^media/(?P<path>.*)$', 'django.views.static.serve',
+		{'document_root': '/home/stefan/projects/planster/trunk/planster/media'}),
+
 	# Example:
 	# (r'^planster/', include('planster.foo.urls')),
 

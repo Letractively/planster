@@ -19,7 +19,8 @@ class Planster(object):
 
 class Plan(models.Model):
 	title = models.CharField(max_length=50, default='Unnamed PLAN')
-	instructions = models.TextField()
+	instructions = models.TextField(
+		default='Please choose your preferred options')
 	created = models.DateTimeField(auto_now_add=True)
 	expires = models.DateTimeField()
 	owner = models.EmailField()
