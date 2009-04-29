@@ -1,14 +1,10 @@
 #summary Important information about planster
-
-Get the latest version of this file at http://tools.desire.ch/planster/
-===============================================================================
+#labels Featured,Phase-Deploy
 
 PLANster is a free software which allows you to coordinate virtually anything
 (meetings, events, food taste, ...) with your friends.
 
-
-REQUIREMENTS
-------------
+== Requirements ==
 
 In order to run PLANster, you'll need to have the ADOdb Database Abstraction
 Library for PHP installed on your system. That library can be downlaoded from
@@ -22,8 +18,7 @@ As for the apache web-server, make sure you have mod_rewrite loaded,
 will not work.
 
 
-INSTALLATION
-------------
+== Installation ==
 
 When ADOdb is installed, change to PLANster's config directory, rename
 site.conf.php-dist to site.conf.php and configure your database connection in
@@ -42,9 +37,3 @@ Now, if you'd like to import the demo-events, there's a "Reset demo events"
 link in the setup tool. Just click it and they will be created.
 
 That's it.
-
-
-CONTACT
--------
-
-If you wish to contact me, see http://www.desire.ch/contact/
