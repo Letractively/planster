@@ -1,13 +1,14 @@
 {% extends "base.html" %}
+{% load planster_tags %}
 {% load i18n %}
 
 {% block precontent %}
 		<div id="responsePopup" style="display: none" class="popup">
 			<div class="title"><a href="#" onClick="javascript:closeResponsePopup(); return false"><img class="close" src="{{ MEDIA_URL }}/img/close.png" alt="close" title="close"></a></span>Select Response</div>
 			<div class="selection">
-				<img onMouseOver="javascript:setSelection(this); return false" onClick="javascript:setResponse('yes'); return false" src="{{ MEDIA_URL }}/img/yes.png" />
-				<img onMouseOver="javascript:setSelection(this); return false" onClick="javascript:setResponse('maybe'); return false" src="{{ MEDIA_URL }}/img/maybe.png" />
-				<img onMouseOver="javascript:setSelection(this); return false" onClick="javascript:setResponse('no'); return false" src="{{ MEDIA_URL }}/img/no.png" />
+				<img onMouseOver="javascript:setSelection(this); return false" onClick="javascript:setResponse(1, '{{ plan.hash }}'); return false" src="{{ MEDIA_URL }}/img/yes.png" />
+				<img onMouseOver="javascript:setSelection(this); return false" onClick="javascript:setResponse(3, '{{ plan.hash }}'); return false" src="{{ MEDIA_URL }}/img/maybe.png" />
+				<img onMouseOver="javascript:setSelection(this); return false" onClick="javascript:setResponse(2, '{{ plan.hash }}'); return false" src="{{ MEDIA_URL }}/img/no.png" />
 			</div>
 			<img src="{{ MEDIA_URL }}/img/triangle.png" class="handle" alt="" />
 			<img src="{{ MEDIA_URL }}/img/selection.png" class="selection" id="responseSelector" style="display: none" alt="" />
@@ -18,7 +19,7 @@
 				<span id="addItemTitle">Add an item</span>
 				<span id="editItemTitle" style="display: none">Edit item</span>
 			</div><div class="content">
-				<form>
+				<form onSubmit="javascript:saveItem(this, '{{ plan.hash }}'); return false">
 					<input name="title" id="itemTitle" />
 					<div id="calendar" style="padding: 10px 0">
 						<script type="text/javascript"><!--
@@ -100,49 +101,16 @@
 					<th class="person" id="person-{{ person.id }}"><a href=#" onClick="javascript:askPerson(this); return false">{{ person }}</a></th>
 					{% endfor %}
 					<th class="addItem"><a href="#" onClick="javascript:askPerson(this); return false">Click to add a person</a></th>
-				</tr><tr>
-					<td class="option"><a href="#" onclick="javascript:askItem(this); return false">Applications = Components + Scripts - Tour of Piccola</a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/yes.png" alt="yes" title="yes" /></a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/yes.png" alt="yes" title="yes" /></a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/yes.png" alt="yes" title="yes" /></a></td>
-					<td></td>
-				</tr><tr>
-					<td class="option"><a href="#" onclick="javascript:askItem(this); return false">Forms, Agents and Channels - Defining Composition Abstraction with Style</a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/yes.png" alt="yes" title="yes" /></a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/maybe.png" alt="maybe" title="maybe" /></a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/maybe.png" alt="maybe" title="maybe" /></a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
-					<td></td>
-				</tr><tr>
-					<td class="option"><a href="#" onclick="javascript:askItem(this); return false">Meta-Driver Browsers</a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/no.png" alt="no" title="no" /></a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/no.png" alt="no" title="no" /></a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/no.png" alt="no" title="no" /></a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/no.png" alt="no" title="no" /></a></td>
-					<td></td>
-				</tr><tr>
-					<td class="option"><a href="#" onclick="javascript:askItem(this); return false">Creating Sophisticated Development Tools with MoniBrowser</a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
-					<td></td>
-				</tr><tr>
-				<td class="option"><a href="#" onclick="javascript:askItem(this); return false">Design Patterns: Elements of Reusable Object-Oriented Software</a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
-					<td></td>
-				</tr><tr>
-					<td class="option"><a href="#" onclick="javascript:askItem(this); return false">Smalltalk-80: The Language</a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
-					<td class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/unknown.png" alt="unknown" title="unknown" /></a></td>
-					<td></td>
-				</tr><tr>
+				</tr>
+				{% for option in plan.options %}
+				<tr>
+					<td class="option"><a href="#" onclick="javascript:askItem(this); return false">{{ option.name }}</a></td>
+					{% for person in plan.people %}
+					<td id="response-{{ person.id }}-{{ option.id }}" class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/{% get_status option person %}.png" alt="unknown" title="unknown" /></a></td>
+					{% endfor %}
+				</tr>
+				{% endfor %}
+				<tr>
 					<td class="addItem"><a href="#" onClick="javascript:askItem(this); return false" id="addItemLink">Click to add an item</a></td>
 					<td></td>
 					<td></td>

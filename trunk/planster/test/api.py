@@ -252,6 +252,36 @@ class TestAPI(unittest.TestCase):
 		self.assertTrue(peter in data)
 		self.assertTrue(frank in data)
 
+	def testSetResponse(self):
+		jack = json.dumps({'name': 'Jack'})
+		john = json.dumps({'name': 'John'})
+
+		answer = self.__http_put(self.planID + '/people', jack);
+		jackid = json.loads(answer.read())['id']
+
+		answer = self.__http_put(self.planID + '/people', john);
+		john_id = json.loads(answer.read())['id']
+
+		meat = json.dumps({'title': 'meat'})
+		fish = json.dumps({'title': 'fish'})
+
+		answer = self.__http_post_put(self.planID + '/options', meat)
+		meat_id = json.loads(answer.read())['id']
+
+		answer = self.__http_post_put(self.planID + '/options', fish)
+		fish_id = json.loads(answer.read())['id']
+
+		answer = self.__http_post('%s/people/%s/responses' % (
+			self.planID, str(jackid)), json.dumps({
+				meat_id: 1,
+				fish_id: 3
+			}))
+		self.assertEquals(answer.status, 200)
+
+		result = answer.read()
+		self.assertEqual('{"%s": 1, "%s": 3}' % (meat_id, fish_id),
+			result)
+
 """	def testSetOwner(self):
 		answer = self.__http_put(self.planID + '/owner', '')
 		self.assertEqual(answer.status, 401) # not authorized

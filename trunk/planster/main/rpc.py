@@ -25,7 +25,9 @@ class PlansterRPCHandler(object):
 				data = request.POST['data']
 				return self.put(data)
 			else:
-				return self.post(request.POST)
+				#return self.post(request.POST)
+				#return self.post(request.raw_post_data)
+				return self.post(request)
 
 		elif request.method == 'GET':
 			return self.get()
@@ -94,7 +96,8 @@ class PlansterInstructionsRPCHandler(PlansterAttributeRPCHandler):
 	def get(self):
 		return HttpResponse(self.plan.instructions)
 
-	def post(self, data):
+	def post(self, request):
+		data = request.POST
 		instructions = data['instructions']
 
 		self.plan.instructions = cgi.escape(instructions).replace(
@@ -107,7 +110,8 @@ class PlansterTitleRPCHandler(PlansterAttributeRPCHandler):
 	def get(self):
 		return HttpResponse(self.plan.title)
 
-	def post(self, data):
+	def post(self, request):
+		data = request.POST
 		title = data['title']
 
 		self.plan.title = cgi.escape(title).replace("\n", "<br />\n")
@@ -147,6 +151,29 @@ class PlansterPeopleRPCHandler(PlansterAttributeRPCHandler):
 			})
 		return HttpResponse(simplejson.dumps(data))
 
+class PlansterResponsesRPCHandler(PlansterAttributeRPCHandler):
+	def __init__(self, plan_hash, person_id):
+		super(PlansterResponsesRPCHandler, self).__init__(plan_hash)
+		self.person = Participant(id=person_id)
+
+	def post(self, request):
+		data = request.raw_post_data
+		args = simplejson.loads(data)
+
+		for option in args:
+			value = args[option]
+			self.person.setResponse(Option(id=option), value)
+
+		return self.get()
+
+	def get(self):
+		data = Response.objects.filter(participant=self.person)
+
+		responses = {}
+		for item in data:
+			responses[item.option.id] = item.value
+		return HttpResponse(simplejson.dumps(responses))
+
 """class PlansterOwnerRPCHandler(PlansterRPCHandler):
 	def __init__(self, plan_hash):
 		self.hash = plan_hash
@@ -183,6 +210,11 @@ def title(request, plan_hash):
 def people(request, plan_hash):
 	handler = PlansterPeopleRPCHandler(plan_hash)
 	return handler.handle(request)
+
+def responses(request, plan_hash, person_id):
+	handler = PlansterResponsesRPCHandler(plan_hash, person_id)
+	return handler.handle(request)
+
 
 """def owner(request, plan_hash):
 	handler = PlansterOwnerRPCHandler(plan_hash)
