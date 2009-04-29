@@ -19,5 +19,7 @@ def create(request):
 
 def plan(request, plan_id):
 	plan = Plan.objects.get(hash=plan_id)
-	return render_to_response('plan.html', {'plan': plan},
+	response = render_to_response('plan.html', {'plan': plan},
 		context_instance = RequestContext(request))
+	response['Cache-Control'] = 'no-cache'
+	return response
