@@ -37,11 +37,6 @@ function setSelection(element) {
 	$('responseSelector').show();
 }
 
-function setResponse(response) {
-	closeResponsePopup();
-	responseElement.childNodes[0].src = response + '.png';
-}
-
 function toggleCalendar() {
 	$('calendar').toggle();
 	$('showCalendarLink').toggle();
@@ -214,3 +209,45 @@ function savePerson(form, plan) {
 		onFailure: function(){ error() }
 	});
 }
+
+function saveItem(form, plan) {
+	var data = new Hash();
+	data.set('title', form.title.value);
+
+	new Ajax.Request('rpc/' + plan + '/options', {
+		method: 'put',
+		parameters: { 'data': data.toJSON() },
+		onSuccess: function(transport){
+			var response = transport.responseText || "no response text";
+			data = response.evalJSON();
+			window.location = plan;
+		},
+		onFailure: function(){ error() }
+	});
+}
+
+function setResponse(response, plan) {
+	var id = responseElement.parentNode.id.split('-');
+	var person = id[1];
+	var option = id[2];
+
+	var data = new Hash();
+	data.set(option, response);
+
+	new Ajax.Request('rpc/' + plan + '/people/' + person + '/responses', {
+		method: 'post',
+		postBody: data.toJSON(),
+		onSuccess: function(transport){
+			var response = transport.responseText || "no response text";
+			data = response.evalJSON();
+
+			var values = Array('unknown', 'yes', 'no', 'maybe');
+			var value = values[data[option]];
+
+			closeResponsePopup();
+			responseElement.childNodes[0].src = responseElement.childNodes[0].src.gsub(/[a-z]+.png/, value + '.png');
+		},
+		onFailure: function(){ error() }
+	});
+}
+

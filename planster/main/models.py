@@ -37,10 +37,14 @@ class Plan(models.Model):
 	def __get_people(self):
 		return Participant.objects.filter(plan=self)
 
+	def __get_options(self):
+		return Option.objects.filter(plan=self)
+
 	def __unicode__(self):
 		return self.title;
 
 	people = property(fget=__get_people)
+	options = property(fget=__get_options)
 
 class Participant(models.Model):
 	name = models.CharField(max_length=100)
@@ -48,6 +52,21 @@ class Participant(models.Model):
 
 	def __unicode__(self):
 		return self.name;
+
+	def setResponse(self, option, value):
+		response, created = Response.objects.get_or_create(
+			participant=self, option=option,
+			defaults={'value' : value})
+		response.value = value
+		response.save()
+
+	def getResponse(self, option):
+		try:
+			response = Response.objects.get(
+				participant=self, option=option)
+			return response.value
+		except:
+			return 0
 
 class Option(models.Model):
 	name = models.CharField(max_length=100)
