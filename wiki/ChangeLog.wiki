@@ -1,15 +1,13 @@
 #summary planster change log
+#labels Featured
 
-Get the latest version of this file at http://tools.desire.ch/planster/
-===============================================================================
+==v0.4.0.1 (17 Sep 2007)==
 
-v0.4.0.1 (17 Sep 2007)
-======================
  * Fixes a CSS issue which would make the PLANster link unclickable
  * Put the message area to a reasonable position
 
-v0.4.0 (31 Aug 2007)
-====================
+==v0.4.0 (31 Aug 2007)==
+
  * Updated the database layout (see README.upgrade)
  * Should now work with PHP 5
  * Added note about apache mod_rewrite and MultiViews to README
@@ -29,8 +27,8 @@ v0.4.0 (31 Aug 2007)
  * Bumped libdesire version
  * Thanks to Florian Ostermair for his various suggestions
 
-v0.3.0 (16 Mar 2007)
-====================
+==v0.3.0 (16 Mar 2007)==
+
  * Now using JSON for data transport (see README.upgrade)
  * Items can now be categorized, eg. to offer several time slots at some date
  * Recreated large parts of the UI
@@ -44,15 +42,15 @@ v0.3.0 (16 Mar 2007)
  * Updated the documentation (README and README.upgrade)
  * Fixed a typo in the ChangeLog :)
 
-v0.2.2 (19 May 2006)
-====================
+==v0.2.2 (19 May 2006)==
+
  * Made inviting/adding people more clear
  * Fixed a caching issue with IE6
  * Made db-field sizes configurable and limited input field sizes accordingly
  * Dynamically requested input fields now receive focus when displayed
 
-v0.2.1 (06 May 2006)
-====================
+==v0.2.1 (06 May 2006)==
+
  * Improved invitations UI
  * Added an option to clone an event
  * Added a javascript calendar when adding/modifying dates
@@ -61,21 +59,21 @@ v0.2.1 (06 May 2006)
  * Dates could not be moved in non-js browsers (fixed)
  * Some internal cleanup
 
-v0.2.0 (26 Apr 2006)
-====================
+==v0.2.0 (26 Apr 2006)==
+
  * Added a cron script to erase expired events
  * Slightly changed some templates
  * Implemented invitations
  * Added RDF feeds to track changes to events
 
-v0.1.1 (12 Apr 2006)
-====================
+==v0.1.1 (12 Apr 2006)==
+
  * Events with insufficient data would be saved despite the warning to
    fill in all required values (fixed).
  * Some database fields were too small (fixed).
  * Event creators now receive an e-mail message with information about the
    newly created event.
 
-v0.1.0 (11 Apr 2006)
-====================
+==v0.1.0 (11 Apr 2006)==
+
  * Initial public release
