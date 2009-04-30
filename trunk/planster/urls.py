@@ -5,8 +5,8 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-	#(r'^rpc/(?P<plan_hash>\w{15})/items', 'planster.main.rpc.items'),
-	# TODO: options? items? wtf?
+	(r'^rpc/(?P<plan_hash>\w{15})/options/(?P<option_id>\d+)',
+		'planster.main.rpc.option'),
 	(r'^rpc/(?P<plan_hash>\w{15})/options', 'planster.main.rpc.options'),
 	(r'^rpc/(?P<plan_hash>\w{15})/instructions',
 		'planster.main.rpc.instructions'),
@@ -14,8 +14,9 @@ urlpatterns = patterns('',
 	(r'^rpc/(?P<plan_hash>\w{15})/owner', 'planster.main.rpc.owner'),
 	(r'^rpc/(?P<plan_hash>\w{15})/people/(?P<person_id>\d+)/responses',
 		'planster.main.rpc.responses'),
+	(r'^rpc/(?P<plan_hash>\w{15})/people/(?P<person_id>\d+)',
+		'planster.main.rpc.person'),
 	(r'^rpc/(?P<plan_hash>\w{15})/people', 'planster.main.rpc.people'),
-	#(r'^rpc/.{15}/items', 'planster.main.rpc.items'),
 	(r'^rpc', 'planster.main.rpc.plan'),
 	(r'^(?P<plan_id>\w{15})', 'planster.main.views.plan'),
 	(r'^$', 'planster.main.views.index'),

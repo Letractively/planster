@@ -70,10 +70,13 @@ function askItem(item) {
 
 	if (item.parentNode.className == 'addItem') {
 		$('itemTitle').value = '';
+		$('itemTitle').parentNode.id.value = '';
 		$('editItemTitle').hide();
 		$('addItemTitle').show();
 	} else {
 		$('itemTitle').value = item.innerHTML;
+		$('itemTitle').parentNode.id.value =
+			item.parentNode.id.split('-')[1];
 		$('editItemTitle').show();
 		$('addItemTitle').hide();
 	}
@@ -88,10 +91,14 @@ function askPerson(person) {
 
 	if (person.parentNode.className == 'addItem') {
 		$('personName').value = '';
+		$('personName').parentNode.id.value = '';
 		$('editPersonTitle').hide();
 		$('addPersonTitle').show();
+		$('personName').personId = -1;
 	} else {
 		$('personName').value = person.innerHTML;
+		$('personName').parentNode.id.value =
+			person.parentNode.id.split('-')[1];
 		$('addPersonTitle').hide();
 		$('editPersonTitle').show();
 	}
@@ -198,9 +205,35 @@ function savePerson(form, plan) {
 	var data = new Hash();
 	data.set('name', form.name.value);
 
-	new Ajax.Request('rpc/' + plan + '/people', {
+	var id = form.id.value;
+
+	if (id == '')
+		saveNewPerson(plan, data);
+	else
+		saveEditedPerson(plan, data, id);
+}
+
+function saveNewPerson(plan, data) {
+	var url = 'rpc/' + plan + '/people';
+
+	new Ajax.Request(url, {
 		method: 'put',
 		parameters: { 'data': data.toJSON() },
+		onSuccess: function(transport){
+			var response = transport.responseText || "no response text";
+			data = response.evalJSON();
+			window.location = plan;
+		},
+		onFailure: function(){ error() }
+	});
+}
+
+function saveEditedPerson(plan, data, id) {
+	var url = 'rpc/' + plan + '/people/' + id;
+
+	new Ajax.Request(url, {
+		method: 'post',
+		postBody: data.toJSON(),
 		onSuccess: function(transport){
 			var response = transport.responseText || "no response text";
 			data = response.evalJSON();
@@ -214,9 +247,31 @@ function saveItem(form, plan) {
 	var data = new Hash();
 	data.set('title', form.title.value);
 
+	var id = form.id.value;
+
+	if (id == '')
+		saveNewItem(plan, data);
+	else
+		saveEditedItem(plan, data, id);
+}
+
+function saveNewItem(plan, data) {
 	new Ajax.Request('rpc/' + plan + '/options', {
 		method: 'put',
 		parameters: { 'data': data.toJSON() },
+		onSuccess: function(transport){
+			var response = transport.responseText || "no response text";
+			data = response.evalJSON();
+			window.location = plan;
+		},
+		onFailure: function(){ error() }
+	});
+}
+
+function saveEditedItem(plan, data, id) {
+	new Ajax.Request('rpc/' + plan + '/options/' + id, {
+		method: 'put',
+		postBody: data.toJSON(),
 		onSuccess: function(transport){
 			var response = transport.responseText || "no response text";
 			data = response.evalJSON();
