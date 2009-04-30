@@ -21,6 +21,7 @@
 			</div><div class="content">
 				<form onSubmit="javascript:saveItem(this, '{{ plan.hash }}'); return false">
 					<input name="title" id="itemTitle" />
+					<input name="id" type="hidden" value="" />
 					<div id="calendar" style="padding: 10px 0">
 						<script type="text/javascript"><!--
 						var cal = Calendar.setup ({
@@ -49,6 +50,7 @@
 			</div><div class="content">
 				<form onSubmit="javascript:savePerson(this, '{{ plan.hash }}');return false">
 					<input name="name" id="personName" />
+					<input name="id" type="hidden" value="" />
 				</form>
 			</div>
 			<img src="{{ MEDIA_URL }}/img/triangle.png" class="handle" alt="" />
@@ -104,7 +106,7 @@
 				</tr>
 				{% for option in plan.options %}
 				<tr>
-					<td class="option"><a href="#" onclick="javascript:askItem(this); return false">{{ option.name }}</a></td>
+					<td class="option" id="option-{{ option.id }}"><a href="#" onclick="javascript:askItem(this); return false">{{ option.name }}</a></td>
 					{% for person in plan.people %}
 					<td id="response-{{ person.id }}-{{ option.id }}" class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/{% get_status option person %}.png" alt="unknown" title="unknown" /></a></td>
 					{% endfor %}

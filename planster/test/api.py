@@ -137,7 +137,8 @@ class TestAPI(unittest.TestCase):
 	def testGetInstructions(self):
 		answer = self.__http_get(self.planID + '/instructions')
 		instructions = answer.read()
-		self.assertEquals("", instructions)
+		self.assertEquals('Please choose your preferred options',
+				instructions)
 
 	def testSetInstructions(self):
 		data = 'instructions=Do <b>bar\n\nand foo'
@@ -203,6 +204,37 @@ class TestAPI(unittest.TestCase):
 		self.assertTrue(len(new_id) > 0)
 		self.assertEqual(u'fünf', new_title)
 
+	def testModifyItem(self):
+		bad = {'title': 'Something bad'}
+		good = {'title': 'Something good'}
+
+		answer = self.__http_put(self.planID + '/options',
+				json.dumps(bad))
+		self.assertEqual(201, answer.status)
+		data = json.loads(answer.read())
+		self.assertTrue('title' in data)
+		self.assertTrue('id' in data)
+		self.assertEqual(bad['title'], data['title'])
+		self.assertTrue(data['id'] > 0)
+
+		id = str(data['id'])
+
+		answer = self.__http_get(self.planID + '/options/' + id)
+		self.assertTrue('title' in data)
+		self.assertEqual(bad['title'], data['title'])
+
+		answer = self.__http_post(self.planID + '/options/' + id,
+				json.dumps(good))
+		self.assertEqual(200, answer.status)
+		data = json.loads(answer.read())
+		self.assertTrue('title' in data)
+		self.assertEqual(good['title'], data['title'])
+
+		answer = self.__http_get(self.planID + '/options/' + id)
+		self.assertTrue('title' in data)
+		self.assertEqual(good['title'], data['title'])
+
+
 	def testPutItems(self):
 		items = ['Pizza', 'Pasta', 'Meat']
 
@@ -251,6 +283,32 @@ class TestAPI(unittest.TestCase):
 		self.assertEqual(2, len(data))
 		self.assertTrue(peter in data)
 		self.assertTrue(frank in data)
+
+	def testModifyPerson(self):
+		frank = json.dumps({'name': 'Frank'})
+		answer = self.__http_put(self.planID + '/people', frank)
+		self.assertEqual(answer.status, 201) # Created
+		data = json.loads(answer.read())
+		self.assertEqual(data['name'], 'Frank')
+		self.assertTrue(data['id'] > 0)
+		id = str(data['id'])
+
+		answer = self.__http_get(self.planID + '/people/' + id)
+		data = json.loads(answer.read())
+		self.assertTrue('name' in data)
+		self.assertEqual('Frank', data['name'])
+
+		joe = json.dumps({'name': 'Joe'})
+		answer = self.__http_post(self.planID + '/people/' +
+				str(data['id']), joe)
+		self.assertEqual(answer.status, 200)
+		data = json.loads(answer.read())
+		self.assertEqual(data['name'], 'Joe')
+
+		answer = self.__http_get(self.planID + '/people/' + id)
+		data = json.loads(answer.read())
+		self.assertTrue('name' in data)
+		self.assertEqual('Joe', data['name'])
 
 	def testSetResponse(self):
 		jack = json.dumps({'name': 'Jack'})
