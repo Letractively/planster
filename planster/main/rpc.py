@@ -7,6 +7,11 @@ from planster.main.models import *
 import datetime
 import cgi
 
+# TODO: remove
+import sys
+#print >>sys.stdout, data
+#print >>sys.stdout, request.POST
+
 class HttpResponseCreated(HttpResponse):
 	status_code = 201
 
@@ -15,19 +20,25 @@ class HttpResponseCreated(HttpResponse):
 		self['location'] = url
 
 class PlansterRPCHandler(object):
+	def __handle_data(self, method, data):
+		try:
+			args = simplejson.loads(data)
+			return method(args)
+		except ValueError:
+			return HttpResponseBadRequest()
+
 	def handle(self, request):
 		if request.method == 'PUT':
 			data = request.raw_post_data
-			return self.put(data)
+			return self.__handle_data(self.put, data)
 		elif request.method == 'POST':
 			if ('_method' in request.POST and
 				request.POST['_method'].upper() == 'PUT'):
 				data = request.POST['data']
-				return self.put(data)
+				return self.__handle_data(self.put, data)
 			else:
-				#return self.post(request.POST)
-				#return self.post(request.raw_post_data)
-				return self.post(request)
+				data = request.raw_post_data
+				return self.__handle_data(self.post, data)
 
 		elif request.method == 'GET':
 			return self.get()
@@ -35,14 +46,15 @@ class PlansterRPCHandler(object):
 			return HttpResponseBadRequest()
 
 
-class PlansterPlanRPCHandler(PlansterRPCHandler):
-	def put(self, data):
-		args = simplejson.loads(data)
+class PlansterPlansRPCHandler(PlansterRPCHandler):
+	def put(self, args):
 		plan = Plan()
 		plan.expires = datetime.date.today()
 
 		if 'title' in args:
 			plan.title = args['title']
+		if 'instructions' in args:
+			plan.instructions = args['instructions']
 
 		plan.save()
 		response = HttpResponseCreated('/rpc/%s' % plan.hash)
@@ -50,8 +62,7 @@ class PlansterPlanRPCHandler(PlansterRPCHandler):
 		data = {
 			'id': plan.hash,
 			'title': plan.title,
-			'key': plan.hash,
-			# remove 'key'
+			'instructions': plan.instructions,
 		}
 		response.content = simplejson.dumps(data)
 		return response
@@ -60,9 +71,33 @@ class PlansterAttributeRPCHandler(PlansterRPCHandler):
 	def __init__(self, plan_hash):
 		self.plan = Plan.objects.get(hash=plan_hash)
 
+class PlansterPlanRPCHandler(PlansterAttributeRPCHandler):
+	def __clean(self, string):
+		return cgi.escape(string).replace("\n", "<br />\n")
+
+	def post(self, args):
+		if 'title' in args:
+			self.plan.title = self.__clean(args['title'])
+			self.plan.save()
+		if 'instructions' in args:
+			self.plan.instructions = self.__clean(
+					args['instructions'])
+			self.plan.save()
+
+		return self.get()
+
+	def get(self):
+		return HttpResponse(simplejson.dumps({
+			'id': self.plan.hash,
+			'title': self.plan.title,
+			'instructions': self.plan.instructions,
+		}))
+
 class PlansterOptionsRPCHandler(PlansterAttributeRPCHandler):
-	def put(self, data):
-		args = simplejson.loads(data)
+	def put(self, args):
+		if not 'title' in args:
+			return HttpResponseBadRequest()
+
 		title = args['title']
 
 		item = Option(name=title, plan=self.plan)
@@ -97,14 +132,8 @@ class PlansterOptionRPCHandler(PlansterAttributeRPCHandler):
 		super(PlansterOptionRPCHandler, self).__init__(plan_hash)
 		self.option = Option.objects.get(id=option_id)
 
-	def post(self, request):
-		data = request.raw_post_data
-		try:
-			args = simplejson.loads(data)
-		except:
-			return HttpResponseBadRequest()
-
-		if 'title' in data:
+	def post(self, args):
+		if 'title' in args:
 			self.option.name = args['title']
 			self.option.save()
 
@@ -116,41 +145,9 @@ class PlansterOptionRPCHandler(PlansterAttributeRPCHandler):
 			'id': self.option.id
 		}))
 
-class PlansterInstructionsRPCHandler(PlansterAttributeRPCHandler):
-	def get(self):
-		return HttpResponse(self.plan.instructions)
-
-	def post(self, request):
-		data = request.POST
-		instructions = data['instructions']
-
-		self.plan.instructions = cgi.escape(instructions).replace(
-			"\n", "<br />\n")
-		self.plan.save()
-
-		return HttpResponse(self.plan.instructions)
-
-class PlansterTitleRPCHandler(PlansterAttributeRPCHandler):
-	def get(self):
-		return HttpResponse(self.plan.title)
-
-	def post(self, request):
-		data = request.POST
-		title = data['title']
-
-		self.plan.title = cgi.escape(title).replace("\n", "<br />\n")
-		self.plan.save()
-
-		return HttpResponse(self.plan.title)
-
 class PlansterPeopleRPCHandler(PlansterAttributeRPCHandler):
-	def put(self, data):
-		try:
-			args = simplejson.loads(data)
-		except:
-			return HttpResponseBadRequest()
-
-		if not 'name' in data:
+	def put(self, args):
+		if not 'name' in args:
 			return HttpResponseBadRequest()
 
 		name = args['name']
@@ -180,14 +177,8 @@ class PlansterPersonRPCHandler(PlansterAttributeRPCHandler):
 		super(PlansterPersonRPCHandler, self).__init__(plan_hash)
 		self.person = Participant.objects.get(id=person_id)
 
-	def post(self, request):
-		data = request.raw_post_data
-		try:
-			args = simplejson.loads(data)
-		except:
-			return HttpResponseBadRequest()
-
-		if 'name' in data:
+	def post(self, args):
+		if 'name' in args:
 			self.person.name = args['name']
 			self.person.save()
 
@@ -208,10 +199,7 @@ class PlansterResponsesRPCHandler(PlansterAttributeRPCHandler):
 		super(PlansterResponsesRPCHandler, self).__init__(plan_hash)
 		self.person = Participant(id=person_id)
 
-	def post(self, request):
-		data = request.raw_post_data
-		args = simplejson.loads(data)
-
+	def post(self, args):
 		for option in args:
 			value = args[option]
 			self.person.setResponse(Option(id=option), value)
@@ -226,26 +214,13 @@ class PlansterResponsesRPCHandler(PlansterAttributeRPCHandler):
 			responses[item.option.id] = item.value
 		return HttpResponse(simplejson.dumps(responses))
 
-"""class PlansterOwnerRPCHandler(PlansterRPCHandler):
-	def __init__(self, plan_hash):
-		self.hash = plan_hash
-
-	def get(self):
-		plan = Plan.objects.get(hash=self.hash)
-		return HttpResponse(plan.owner)
-
-	def put(self, data):
-		plan = Plan.objects.get(hash=self.hash)
-		print "DATA="
-		print data
-		return HttpResponse()"""
-
-def plan(request):
-	handler = PlansterPlanRPCHandler()
+def plans(request):
+	handler = PlansterPlansRPCHandler()
 	return handler.handle(request)
 
-"""def items(request, plan_hash):
-	return HttpResponse("foo")"""
+def plan(request, plan_hash):
+	handler = PlansterPlanRPCHandler(plan_hash)
+	return handler.handle(request)
 
 def options(request, plan_hash):
 	handler = PlansterOptionsRPCHandler(plan_hash)
@@ -253,14 +228,6 @@ def options(request, plan_hash):
 
 def option(request, plan_hash, option_id):
 	handler = PlansterOptionRPCHandler(plan_hash, option_id)
-	return handler.handle(request)
-
-def instructions(request, plan_hash):
-	handler = PlansterInstructionsRPCHandler(plan_hash)
-	return handler.handle(request)
-
-def title(request, plan_hash):
-	handler = PlansterTitleRPCHandler(plan_hash)
 	return handler.handle(request)
 
 def people(request, plan_hash):
@@ -274,8 +241,3 @@ def person(request, plan_hash, person_id):
 def responses(request, plan_hash, person_id):
 	handler = PlansterResponsesRPCHandler(plan_hash, person_id)
 	return handler.handle(request)
-
-
-"""def owner(request, plan_hash):
-	handler = PlansterOwnerRPCHandler(plan_hash)
-	return handler.handle(request)"""

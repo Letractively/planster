@@ -174,12 +174,13 @@ function saveTitle(form, plan) {
 	var data = new Hash();
 	data.set('title', form.title.value);
 
-	new Ajax.Request('rpc/' + plan + '/title', {
+	new Ajax.Request('rpc/' + plan, {
 		method: 'post',
-		parameters: { 'title': form.title.value },
+		postBody: data.toJSON(),
 		onSuccess: function(transport){
 			var response = transport.responseText || "no response text";
-			$('title').innerHTML = response;
+			data = response.evalJSON();
+			$('title').innerHTML = data.title;
 			$('titleForm').hide();
 			$('title').show();
 		},
@@ -188,12 +189,16 @@ function saveTitle(form, plan) {
 }
 
 function saveInstructions(form, plan) {
-	new Ajax.Request('rpc/' + plan + '/instructions', {
+	var data = new Hash();
+	data.set('instructions', form.instructions.value);
+
+	new Ajax.Request('rpc/' + plan, {
 		method: 'post',
-		parameters: { 'instructions': form.instructions.value },
+		postBody: data.toJSON(),
 		onSuccess: function(transport){
 			var response = transport.responseText || "no response text";
-			$('instructions').innerHTML = response;
+			data = response.evalJSON();
+			$('instructions').innerHTML = data.instructions;
 			$('instructionsForm').hide();
 			$('instructions').show();
 		},
