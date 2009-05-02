@@ -15,23 +15,25 @@
 		</div>
 		<div id="itemPopup" style="display: none" class="popup">
 			<div class="title">
-				<a href="#" onclick="javascript:closeItemPopup(); return false"><img class="close" src="{{ MEDIA_URL }}/img/close.png" alt="close" title="close" /></a></span>
+				<a href="#" onclick="javascript:closeItemPopup(); return false"><img class="close" src="{{ MEDIA_URL }}/img/close.png" alt="close" title="close" /></a>
 				<span id="addItemTitle">Add an item</span>
 				<span id="editItemTitle" style="display: none">Edit item</span>
 			</div><div class="content">
-				<form onsubmit="javascript:saveItem(this, '{{ plan.hash }}'); return false">
-					<input name="title" id="itemTitle" />
-					<input name="id" type="hidden" value="" />
-					<div id="calendar" style="padding: 10px 0">
-						<script type="text/javascript"><!--
-						var cal = Calendar.setup ({
-							flat : 'calendar',
-							firstDay : 1,
-							weekNumbers: false,
-							ifFormat: '%Y',
-							flatCallback: itemDateChanged
-						});
-						--></script>
+				<form onsubmit="javascript:saveItem(this, '{{ plan.hash }}'); return false" action="$">
+					<div>
+						<input name="title" id="itemTitle" />
+						<input name="id" type="hidden" value="" />
+						<div id="calendar" style="padding: 10px 0">
+							<script type="text/javascript"><!--
+							var cal = Calendar.setup ({
+								flat : 'calendar',
+								firstDay : 1,
+								weekNumbers: false,
+								ifFormat: '%Y',
+								flatCallback: itemDateChanged
+							});
+							--></script>
+						</div>
 					</div>
 					<div>
 						<input type="submit" value="save" style="float: right" />
@@ -44,25 +46,27 @@
 		</div>
 		<div id="personPopup" style="display: none" class="popup">
 			<div class="title">
-				<a href="#" onclick="javascript:closePersonPopup(); return false"><img class="close" src="{{ MEDIA_URL }}/img/close.png" alt="close" title="close" /></a></span>
+				<a href="#" onclick="javascript:closePersonPopup(); return false"><img class="close" src="{{ MEDIA_URL }}/img/close.png" alt="close" title="close" /></a>
 				<span id="addPersonTitle">Add a</span>
 				<span id="editPersonTitle" style="display: none">Edit</span> Person
 			</div><div class="content">
-				<form onsubmit="javascript:savePerson(this, '{{ plan.hash }}');return false">
-					<input name="name" id="personName" />
-					<input name="id" type="hidden" value="" />
+				<form onsubmit="javascript:savePerson(this, '{{ plan.hash }}');return false" action="$">
+					<div>
+						<input name="name" id="personName" />
+						<input name="id" type="hidden" value="" />
+					</div>
 				</form>
 			</div>
 			<img src="{{ MEDIA_URL }}/img/triangle.png" class="handle" alt="" />
 		</div>
 		<div id="options" style="display: none">
-			<ul class="category">
-				<form>
+			<form action="$">
+				<ul class="category">
 					<li><input type="radio" name="count" value="none" /> Hide totals</li>
 					<li><input type="radio" name="count" value="yes" /> Count only [yes]</li>
 					<li><input type="radio" name="count" value="both" /> Count [m] as half [y]</li>
-				</form>
-			</ul>
+				</ul>
+			</form>
 			<ul class="category" style="list-style-image: url({{ MEDIA_URL }}/img/arrow.png); margin-left: 10px;">
 				<li><a href="#" onclick="javascript:editTitle(); return false;">Edit title</a></li>
 				<li><a href="#" onclick="javascript:editInstructions(); return false">Edit comment</a></li>
@@ -74,19 +78,20 @@
 		</div>
 {% endblock %}
 {% block content %}
-		<div id="content">
 			<h1>
 				<span id="title">{{ plan.title }}</span>
 				<span id="titleForm" style="display: none">
-					<form onsubmit="javascript:saveTitle(this, '{{ plan.hash }}');return false">
-						<input name="title" value="" id="titleInput" />
+					<form onsubmit="javascript:saveTitle(this, '{{ plan.hash }}');return false" action="#">
+						<div>
+							<input name="title" value="" id="titleInput" />
+						</div>
 					</form>
 				</span>
 			</h1>
 			<div id="instructions">
 				<span id="instructionsText">{{ plan.instructions }}</span>
 				<div id="instructionsForm" style="display: none">
-					<form onsubmit="javascript:saveInstructions(this, '{{ plan.hash }}');return false">
+					<form onsubmit="javascript:saveInstructions(this, '{{ plan.hash }}');return false" action="$">
 						<textarea name="instructions" id="instructionsInput">Please choose the books or texts that you have read. We will be discussing them on Monday.</textarea>
 						<input type="submit" value="save" />
 					</form>
@@ -121,5 +126,4 @@
 					<td></td>
 				</tr>
 			</table>
-		</div>
 {% endblock %}
