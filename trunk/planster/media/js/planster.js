@@ -225,8 +225,6 @@ function saveNewPerson(plan, data) {
 		method: 'put',
 		parameters: { 'data': data.toJSON() },
 		onSuccess: function(transport){
-			var response = transport.responseText || "no response text";
-			data = response.evalJSON();
 			window.location = plan;
 		},
 		onFailure: function(){ error() }
@@ -242,7 +240,8 @@ function saveEditedPerson(plan, data, id) {
 		onSuccess: function(transport){
 			var response = transport.responseText || "no response text";
 			data = response.evalJSON();
-			window.location = plan;
+			$('person-' + id).childNodes[0].innerHTML = data.name;
+			closePersonPopup();
 		},
 		onFailure: function(){ error() }
 	});
@@ -265,8 +264,6 @@ function saveNewItem(plan, data) {
 		method: 'put',
 		parameters: { 'data': data.toJSON() },
 		onSuccess: function(transport){
-			var response = transport.responseText || "no response text";
-			data = response.evalJSON();
 			window.location = plan;
 		},
 		onFailure: function(){ error() }
@@ -280,7 +277,8 @@ function saveEditedItem(plan, data, id) {
 		onSuccess: function(transport){
 			var response = transport.responseText || "no response text";
 			data = response.evalJSON();
-			window.location = plan;
+			$('option-' + id).childNodes[0].innerHTML = data.title;
+			closeItemPopup();
 		},
 		onFailure: function(){ error() }
 	});

@@ -28,13 +28,11 @@ img {
 
 #logo {
 	position: absolute;
-	top: 23px;
+	top: 18px;
 	left: 33px;
 }
 
 #content {
-/*	margin: 90px;
-	margin-top: 24px;*/
 	margin: 24px 0 0 90px;
 }
 
