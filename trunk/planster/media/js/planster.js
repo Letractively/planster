@@ -70,12 +70,12 @@ function askItem(item) {
 
 	if (item.parentNode.className == 'addItem') {
 		$('itemTitle').value = '';
-		$('itemTitle').parentNode.id.value = '';
+		$('itemTitle').parentNode.parentNode.id.value = '';
 		$('editItemTitle').hide();
 		$('addItemTitle').show();
 	} else {
 		$('itemTitle').value = item.innerHTML;
-		$('itemTitle').parentNode.id.value =
+		$('itemTitle').parentNode.parentNode.id.value =
 			item.parentNode.id.split('-')[1];
 		$('editItemTitle').show();
 		$('addItemTitle').hide();
@@ -91,13 +91,13 @@ function askPerson(person) {
 
 	if (person.parentNode.className == 'addItem') {
 		$('personName').value = '';
-		$('personName').parentNode.id.value = '';
+		$('personName').parentNode.parentNode.id.value = '';
 		$('editPersonTitle').hide();
 		$('addPersonTitle').show();
 		$('personName').personId = -1;
 	} else {
 		$('personName').value = person.innerHTML;
-		$('personName').parentNode.id.value =
+		$('personName').parentNode.parentNode.id.value =
 			person.parentNode.id.split('-')[1];
 		$('addPersonTitle').hide();
 		$('editPersonTitle').show();
