@@ -4,22 +4,22 @@
 
 {% block precontent %}
 		<div id="responsePopup" style="display: none" class="popup">
-			<div class="title"><a href="#" onClick="javascript:closeResponsePopup(); return false"><img class="close" src="{{ MEDIA_URL }}/img/close.png" alt="close" title="close"></a></span>Select Response</div>
+			<div class="title"><a href="#" onclick="javascript:closeResponsePopup(); return false"><img class="close" src="{{ MEDIA_URL }}/img/close.png" alt="close" title="close" /></a>Select Response</div>
 			<div class="selection">
-				<img onMouseOver="javascript:setSelection(this); return false" onClick="javascript:setResponse(1, '{{ plan.hash }}'); return false" src="{{ MEDIA_URL }}/img/yes.png" />
-				<img onMouseOver="javascript:setSelection(this); return false" onClick="javascript:setResponse(3, '{{ plan.hash }}'); return false" src="{{ MEDIA_URL }}/img/maybe.png" />
-				<img onMouseOver="javascript:setSelection(this); return false" onClick="javascript:setResponse(2, '{{ plan.hash }}'); return false" src="{{ MEDIA_URL }}/img/no.png" />
+				<img onmouseover="javascript:setSelection(this); return false" onclick="javascript:setResponse(1, '{{ plan.hash }}'); return false" src="{{ MEDIA_URL }}/img/yes.png" alt="yes" />
+				<img onmouseover="javascript:setSelection(this); return false" onclick="javascript:setResponse(3, '{{ plan.hash }}'); return false" src="{{ MEDIA_URL }}/img/maybe.png" alt="maybe" />
+				<img onmouseover="javascript:setSelection(this); return false" onclick="javascript:setResponse(2, '{{ plan.hash }}'); return false" src="{{ MEDIA_URL }}/img/no.png" alt="no" />
 			</div>
 			<img src="{{ MEDIA_URL }}/img/triangle.png" class="handle" alt="" />
 			<img src="{{ MEDIA_URL }}/img/selection.png" class="selection" id="responseSelector" style="display: none" alt="" />
 		</div>
 		<div id="itemPopup" style="display: none" class="popup">
 			<div class="title">
-				<a href="#" onClick="javascript:closeItemPopup(); return false"><img class="close" src="{{ MEDIA_URL }}/img/close.png" alt="close" title="close"></a></span>
+				<a href="#" onclick="javascript:closeItemPopup(); return false"><img class="close" src="{{ MEDIA_URL }}/img/close.png" alt="close" title="close" /></a></span>
 				<span id="addItemTitle">Add an item</span>
 				<span id="editItemTitle" style="display: none">Edit item</span>
 			</div><div class="content">
-				<form onSubmit="javascript:saveItem(this, '{{ plan.hash }}'); return false">
+				<form onsubmit="javascript:saveItem(this, '{{ plan.hash }}'); return false">
 					<input name="title" id="itemTitle" />
 					<input name="id" type="hidden" value="" />
 					<div id="calendar" style="padding: 10px 0">
@@ -35,8 +35,8 @@
 					</div>
 					<div>
 						<input type="submit" value="save" style="float: right" />
-						<a href="#" onClick="javascript:toggleCalendar(); return false" id="showCalendarLink" style="display: none">show calendar</a>
-						<a href="#" onClick="javascript:toggleCalendar(); return false" id="hideCalendarLink">hide calendar</a>
+						<a href="#" onclick="javascript:toggleCalendar(); return false" id="showCalendarLink" style="display: none">show calendar</a>
+						<a href="#" onclick="javascript:toggleCalendar(); return false" id="hideCalendarLink">hide calendar</a>
 					</div>
 				</form>
 			</div>
@@ -44,11 +44,11 @@
 		</div>
 		<div id="personPopup" style="display: none" class="popup">
 			<div class="title">
-				<a href="#" onClick="javascript:closePersonPopup(); return false"><img class="close" src="{{ MEDIA_URL }}/img/close.png" alt="close" title="close"></a></span>
+				<a href="#" onclick="javascript:closePersonPopup(); return false"><img class="close" src="{{ MEDIA_URL }}/img/close.png" alt="close" title="close" /></a></span>
 				<span id="addPersonTitle">Add a</span>
 				<span id="editPersonTitle" style="display: none">Edit</span> Person
 			</div><div class="content">
-				<form onSubmit="javascript:savePerson(this, '{{ plan.hash }}');return false">
+				<form onsubmit="javascript:savePerson(this, '{{ plan.hash }}');return false">
 					<input name="name" id="personName" />
 					<input name="id" type="hidden" value="" />
 				</form>
@@ -64,8 +64,8 @@
 				</form>
 			</ul>
 			<ul class="category" style="list-style-image: url({{ MEDIA_URL }}/img/arrow.png); margin-left: 10px;">
-				<li><a href="#" onClick="javascript:editTitle(); return false;">Edit title</a></li>
-				<li><a href="#" onClick="javascript:editInstructions(); return false">Edit comment</a></li>
+				<li><a href="#" onclick="javascript:editTitle(); return false;">Edit title</a></li>
+				<li><a href="#" onclick="javascript:editInstructions(); return false">Edit comment</a></li>
 			</ul>
 			<div class="category">&nbsp;</div>
 		</div>
@@ -78,7 +78,7 @@
 			<h1>
 				<span id="title">{{ plan.title }}</span>
 				<span id="titleForm" style="display: none">
-					<form onSubmit="javascript:saveTitle(this, '{{ plan.hash }}');return false">
+					<form onsubmit="javascript:saveTitle(this, '{{ plan.hash }}');return false">
 						<input name="title" value="" id="titleInput" />
 					</form>
 				</span>
@@ -86,7 +86,7 @@
 			<div id="instructions">
 				<span id="instructionsText">{{ plan.instructions }}</span>
 				<div id="instructionsForm" style="display: none">
-					<form onSubmit="javascript:saveInstructions(this, '{{ plan.hash }}');return false">
+					<form onsubmit="javascript:saveInstructions(this, '{{ plan.hash }}');return false">
 						<textarea name="instructions" id="instructionsInput">Please choose the books or texts that you have read. We will be discussing them on Monday.</textarea>
 						<input type="submit" value="save" />
 					</form>
@@ -100,20 +100,20 @@
 				<tr>
 					<th />
 					{% for person in plan.people %}
-					<th class="person" id="person-{{ person.id }}"><a href=#" onClick="javascript:askPerson(this); return false">{{ person }}</a></th>
+					<th class="person" id="person-{{ person.id }}"><a href=#" onclick="javascript:askPerson(this); return false">{{ person }}</a></th>
 					{% endfor %}
-					<th class="addItem"><a href="#" onClick="javascript:askPerson(this); return false">Click to add a person</a></th>
+					<th class="addItem"><a href="#" onclick="javascript:askPerson(this); return false">Click to add a person</a></th>
 				</tr>
 				{% for option in plan.options %}
 				<tr>
 					<td class="option" id="option-{{ option.id }}"><a href="#" onclick="javascript:askItem(this); return false">{{ option.name }}</a></td>
 					{% for person in plan.people %}
-					<td id="response-{{ person.id }}-{{ option.id }}" class="answer" id=""><a href="#" onClick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/{% get_status option person %}.png" alt="unknown" title="unknown" /></a></td>
+					<td id="response-{{ person.id }}-{{ option.id }}" class="answer" id=""><a href="#" onclick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/{% get_status option person %}.png" alt="unknown" title="unknown" /></a></td>
 					{% endfor %}
 				</tr>
 				{% endfor %}
 				<tr>
-					<td class="addItem"><a href="#" onClick="javascript:askItem(this); return false" id="addItemLink">Click to add an item</a></td>
+					<td class="addItem"><a href="#" onclick="javascript:askItem(this); return false" id="addItemLink">Click to add an item</a></td>
 					<td></td>
 					<td></td>
 					<td></td>
