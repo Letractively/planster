@@ -5,6 +5,10 @@ from django.db import models
 from random import seed, choice
 import string
 
+COUNT_TYPE_NONE = 1
+COUNT_TYPE_ONLY_YES = 2
+COUNT_TYPE_BOTH = 3
+
 class Callable:
 	def __init__(self, anycallable):
 		self.__call__ = anycallable
@@ -24,10 +28,15 @@ class Plan(models.Model):
 	created = models.DateTimeField(auto_now_add=True)
 	expires = models.DateTimeField()
 	owner = models.EmailField()
-	participants_locked = models.BooleanField(default=False)
-	settings_locked = models.BooleanField(default=False)
+	#participants_locked = models.BooleanField(default=False)
+	#settings_locked = models.BooleanField(default=False)
 	hash = models.CharField(max_length=15, unique=True,
 		default=Planster.hash)
+	count_type = models.IntegerField(choices=(
+		(COUNT_TYPE_NONE, 'Hide totals'),
+		(COUNT_TYPE_ONLY_YES, 'Count only "yes"'),
+		(COUNT_TYPE_BOTH, 'Count "maybe" as half "yes"')
+	), default=COUNT_TYPE_BOTH)
 
 	def generate_hash(self):
 		seed()
@@ -74,6 +83,19 @@ class Option(models.Model):
 
 	def __unicode__(self):
 		return self.name
+
+	def count(self):
+		sum = 0
+
+		responses = Response.objects.filter(option=self, value=1)
+		sum += len(responses)
+
+		if self.plan.count_type == COUNT_TYPE_BOTH:
+			responses = Response.objects.filter(option=self,
+					value=3)
+			sum += len(responses)/2.0
+
+		return sum
 
 class Response(models.Model):
 	option = models.ForeignKey(Option)
