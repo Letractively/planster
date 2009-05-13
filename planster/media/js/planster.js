@@ -1,34 +1,41 @@
 var responseElement;
 var activeItem;
 
-function toggleOptions() {
+function toggleOptions()
+{
 	$('options').toggle();
 	$('padding').toggle();
 
-	if ($('options').visible()) {
-		$('logo').src = $('logo').src.replace('logo.png', 'logo-dark.png');
-	} else {
-		$('logo').src = $('logo').src.replace('logo-dark.png', 'logo.png');
-	}
+	var logo = $('logo');
+
+	if ($('options').visible())
+		logo.src = logo.src.replace('logo.png', 'logo-dark.png');
+	else
+		logo.src = logo.src.replace('logo-dark.png', 'logo.png');
+
 	$('toolbar').className = $('options').visible() ? 'open' : 'closed';
 }
 
-function editTitle() {
+function editTitle()
+{
 	$('title').hide();
 	$('titleInput').value = $('title').innerHTML;
 	$('titleForm').show();
 	$('titleInput').activate();
 }
 
-function editInstructions() {
+function editInstructions()
+{
 	$('instructionsText').hide();
 	$('instructionsInput').value = $('instructionsText').innerHTML;
 	$('instructionsForm').show();
 	$('instructionsInput').activate();
 }
 
-function setSelection(element) {
-	$('responseSelector').clonePosition(element, {
+function setSelection(element)
+{
+	$('responseSelector').clonePosition(element,
+	{
 		'setWidth': false,
 		'setHeight': false,
 		'offsetLeft': -2,
@@ -37,23 +44,32 @@ function setSelection(element) {
 	$('responseSelector').show();
 }
 
-function toggleCalendar() {
+function toggleCalendar()
+{
 	$('calendar').toggle();
 	$('showCalendarLink').toggle();
 	$('hideCalendarLink').toggle();
-	askItem(activeItem)
+	askItem(activeItem);
 }
 
-function itemDateChanged(calendar) {
-	var months = new Array ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+function itemDateChanged(calendar)
+{
+	var months = new Array ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+			'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
 	var days = new Array ('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
 
-	var date = days[calendar.date.getDay()] + ', ' +months[calendar.date.getMonth()] + ' ' + calendar.date.getDate() + ' ' + calendar.date.getFullYear();
+	var date = days[calendar.date.getDay()] + ', '
+		+ months[calendar.date.getMonth()] + ' '
+		+ calendar.date.getDate() + ' '
+		+ calendar.date.getFullYear();
+
 	$('itemTitle').value = date;
 }
 
-function showPopup(popup, where) {
-	popup.clonePosition(where, {
+function showPopup(popup, where)
+{
+	popup.clonePosition(where,
+	{
 		'setWidth': false,
 		'setHeight': false,
 		'offsetLeft': where.getWidth() + 25,
@@ -62,18 +78,22 @@ function showPopup(popup, where) {
 	popup.show();
 }
 
-function askItem(item) {
+function askItem(item)
+{
 	closeResponsePopup();
 	closePersonPopup();
 
 	activeItem = item
 
-	if (item.parentNode.className == 'addItem') {
+	if (item.parentNode.className == 'addItem')
+	{
 		$('itemTitle').value = '';
 		$('itemTitle').parentNode.parentNode.id.value = '';
 		$('editItemTitle').hide();
 		$('addItemTitle').show();
-	} else {
+	}
+	else
+	{
 		$('itemTitle').value = item.innerHTML;
 		$('itemTitle').parentNode.parentNode.id.value =
 			item.parentNode.id.split('-')[1];
@@ -85,17 +105,21 @@ function askItem(item) {
 	$('itemTitle').activate();
 }
 
-function askPerson(person) {
+function askPerson(person)
+{
 	closeResponsePopup();
 	closeItemPopup();
 
-	if (person.parentNode.className == 'addItem') {
+	if (person.parentNode.className == 'addItem')
+	{
 		$('personName').value = '';
 		$('personName').parentNode.parentNode.id.value = '';
 		$('editPersonTitle').hide();
 		$('addPersonTitle').show();
 		$('personName').personId = -1;
-	} else {
+	}
+	else
+	{
 		$('personName').value = person.innerHTML;
 		$('personName').parentNode.parentNode.id.value =
 			person.parentNode.id.split('-')[1];
@@ -107,70 +131,74 @@ function askPerson(person) {
 	$('personName').activate();
 }
 
-function askResponse(element) {
+function askResponse(element)
+{
+	var current = element.childElements()[0];
+	responseElement = element;
+
 	closePersonPopup();
 	closeItemPopup();
-
-	responseElement = element;
 
 	$('responseSelector').hide();
 	showPopup($('responsePopup'), element);
 
 	// set the currently selected response in the popup
-	var popup = $('responsePopup');
-	for (var i=0; i < popup.childNodes.length; i++) {
-		var child = popup.childNodes[i];
-		if (child.className == 'selection') {
-			for (var j=0; j < child.childNodes.length; j++) {
-				var img = child.childNodes[j];
-				if (img.src == element.childNodes[0].src) {
-					setSelection(img);
-				}
-			}
-		}
-	}
+	var div = $('responsePopup').select('.selection');
+
+	div[0].childElements().each(function(img)
+	{
+		if (img.src == current.src)
+			setSelection(img);
+	});
 }
 
-function closeItemPopup() {
+function closeItemPopup()
+{
 	$('itemPopup').hide();
 }
 
-function closePersonPopup() {
+function closePersonPopup()
+{
 	$('personPopup').hide();
 }
 
-function closeResponsePopup() {
+function closeResponsePopup()
+{
 	$('responsePopup').hide();
 }
 
-function error() {
+function error()
+{
 	alert('Something went wrong...');
 }
 
-function createPlan(form) {
-	var title = form.title.value;
-	var instructions = form.instructions.value;
-	var expires = form.expires.value;
-	var captcha_id = form.captcha_id.value;
-	var captcha_value = form.captcha_value.value;
+function createPlan(form)
+{
+	var title = $F(form.title);
+	var instructions = $F(form.instructions);
+	var expires = $F(form.expires);
+	var captcha_id = $F(form.captcha_id);
+	var captcha_value = $F(form.captcha_value);
 
-	var data = new Hash();
+	var data = $H({
+		'title': title,
+		'instructions': instructions,
+		'expires': expires,
+		'captcha-id': captcha_id,
+		'captcha-value': captcha_value
+	});
 
-	data.set('title', title);
-	data.set('instructions', instructions);
-	data.set('expires', expires);
-	data.set('captcha-id', captcha_id);
-	data.set('captcha-value', captcha_value);
-
-	new Ajax.Request('rpc', {
+	new Ajax.Request('rpc',
+	{
 		method: 'put',
 		parameters: { 'data': data.toJSON() },
-		onSuccess: function(transport){
-			var response = transport.responseText || "no response text";
-			data = response.evalJSON();
+		onSuccess: function(transport)
+		{
+			var data = transport.responseJSON;
 			window.location = data.id;
 		},
-		onFailure: function(transport){
+		onFailure: function(transport)
+		{
 			switch (transport.status)
 			{
 				case 400:
@@ -193,25 +221,27 @@ function createPlan(form) {
 	});
 }
 
-function saveTitle(form, plan) {
-	var data = new Hash();
-	data.set('title', form.title.value);
+function saveTitle(form, plan)
+{
+	var data = $H({'title': $F(form.title)});
 
-	new Ajax.Request('rpc/' + plan, {
+	new Ajax.Request('rpc/' + plan,
+	{
 		method: 'post',
 		postBody: data.toJSON(),
-		onSuccess: function(transport){
-			var response = transport.responseText || "no response text";
-			data = response.evalJSON();
-			$('title').innerHTML = data.title;
+		onSuccess: function(transport)
+		{
+			var data = transport.responseJSON;
+			$('title').update(data.title);
 			$('titleForm').hide();
 			$('title').show();
 		},
-		onFailure: function(){ error() }
+		onFailure: function() { error() }
 	});
 }
 
-function getCount(plan, option) {
+function getCount(plan, option)
+{
 	new Ajax.Request('rpc/' + plan + '/options/' + option,
 	{
 		method: 'get',
@@ -224,25 +254,25 @@ function getCount(plan, option) {
 	});
 }
 
-function getCounts(plan) {
+function getCounts(plan)
+{
 	new Ajax.Request('rpc/' + plan + '/options',
 	{
 		method: 'get',
 		onSuccess: function(transport)
 		{
 			var data = transport.responseJSON;
-
-			for (var i=0; i < data.length; i++)
+			data.each(function(item)
 			{
-				var item = data[i];
 				$(item.id + '-count').update(item.count);
-			}
+			});
 		},
 		onFailure: function() { error() }
 	});
 }
 
-function hideCounts() {
+function hideCounts()
+{
 	var items = $$('.count');
 	items.each(function(item)
 	{
@@ -250,7 +280,8 @@ function hideCounts() {
 	});
 }
 
-function showCounts() {
+function showCounts()
+{
 	var items = $$('.count');
 	items.each(function(item)
 	{
@@ -258,7 +289,8 @@ function showCounts() {
 	});
 }
 
-function setCountType(type, plan) {
+function setCountType(type, plan)
+{
 	var data = $H({'count_type': $F(type)});
 
 	new Ajax.Request('rpc/' + plan,
@@ -281,29 +313,29 @@ function setCountType(type, plan) {
 	});
 }
 
-function saveInstructions(form, plan) {
-	var data = new Hash();
-	data.set('instructions', form.instructions.value);
+function saveInstructions(form, plan)
+{
+	var data = $H({'instructions': $F(form.instructions)});
 
-	new Ajax.Request('rpc/' + plan, {
+	new Ajax.Request('rpc/' + plan,
+	{
 		method: 'post',
 		postBody: data.toJSON(),
-		onSuccess: function(transport){
-			var response = transport.responseText || "no response text";
-			data = response.evalJSON();
-			$('instructions').innerHTML = data.instructions;
+		onSuccess: function(transport)
+		{
+			var data = transport.responseJSON;
+			$('instructions').update(data.instructions);
 			$('instructionsForm').hide();
 			$('instructions').show();
 		},
-		onFailure: function(){ error() }
+		onFailure: function() { error() }
 	});
 }
 
-function savePerson(form, plan) {
-	var data = new Hash();
-	data.set('name', form.name.value);
-
-	var id = form.id.value;
+function savePerson(form, plan)
+{
+	var data = $H({'name': $F(form.name)});
+	var id = $F(form.id);
 
 	if (id == '')
 		saveNewPerson(plan, data);
@@ -311,40 +343,40 @@ function savePerson(form, plan) {
 		saveEditedPerson(plan, data, id);
 }
 
-function saveNewPerson(plan, data) {
-	var url = 'rpc/' + plan + '/people';
-
-	new Ajax.Request(url, {
+function saveNewPerson(plan, data)
+{
+	new Ajax.Request('rpc/' + plan + '/people',
+	{
 		method: 'put',
 		parameters: { 'data': data.toJSON() },
-		onSuccess: function(transport){
+		onSuccess: function(transport)
+		{
 			window.location = plan;
 		},
-		onFailure: function(){ error() }
+		onFailure: function() { error() }
 	});
 }
 
-function saveEditedPerson(plan, data, id) {
-	var url = 'rpc/' + plan + '/people/' + id;
-
-	new Ajax.Request(url, {
+function saveEditedPerson(plan, data, id)
+{
+	new Ajax.Request('rpc/' + plan + '/people/' + id,
+	{
 		method: 'post',
 		postBody: data.toJSON(),
-		onSuccess: function(transport){
-			var response = transport.responseText || "no response text";
-			data = response.evalJSON();
-			$('person-' + id).childNodes[0].innerHTML = data.name;
+		onSuccess: function(transport)
+		{
+			data = transport.responseJSON;
+			$('person-' + id).childNodes[0].update(data.name);
 			closePersonPopup();
 		},
-		onFailure: function(){ error() }
+		onFailure: function() { error() }
 	});
 }
 
-function saveItem(form, plan) {
-	var data = new Hash();
-	data.set('title', form.title.value);
-
-	var id = form.id.value;
+function saveItem(form, plan)
+{
+	var data = $H({'title': $F(form.title)});
+	var id = $F(form.id);
 
 	if (id == '')
 		saveNewItem(plan, data);
@@ -352,32 +384,38 @@ function saveItem(form, plan) {
 		saveEditedItem(plan, data, id);
 }
 
-function saveNewItem(plan, data) {
-	new Ajax.Request('rpc/' + plan + '/options', {
+function saveNewItem(plan, data)
+{
+	new Ajax.Request('rpc/' + plan + '/options',
+	{
 		method: 'put',
 		parameters: { 'data': data.toJSON() },
-		onSuccess: function(transport){
+		onSuccess: function(transport)
+		{
 			window.location = plan;
 		},
-		onFailure: function(){ error() }
+		onFailure: function() { error() }
 	});
 }
 
-function saveEditedItem(plan, data, id) {
-	new Ajax.Request('rpc/' + plan + '/options/' + id, {
+function saveEditedItem(plan, data, id)
+{
+	new Ajax.Request('rpc/' + plan + '/options/' + id,
+	{
 		method: 'put',
 		postBody: data.toJSON(),
-		onSuccess: function(transport){
-			var response = transport.responseText || "no response text";
-			data = response.evalJSON();
-			$('option-' + id).childNodes[0].innerHTML = data.title;
+		onSuccess: function(transport)
+		{
+			var data = transport.responseJSON;
+			$('option-' + id).childNodes[0].update(data.title);
 			closeItemPopup();
 		},
-		onFailure: function(){ error() }
+		onFailure: function() { error() }
 	});
 }
 
-function setResponse(response, plan) {
+function setResponse(response, plan)
+{
 	var id = responseElement.parentNode.id.split('-');
 	var person = id[1];
 	var option = id[2];
@@ -385,13 +423,13 @@ function setResponse(response, plan) {
 	var data = new Hash();
 	data.set(option, response);
 
-	new Ajax.Request('rpc/' + plan + '/people/' + person + '/responses', {
+	new Ajax.Request('rpc/' + plan + '/people/' + person + '/responses',
+	{
 		method: 'post',
 		postBody: data.toJSON(),
-		onSuccess: function(transport){
-			var response = transport.responseText || "no response text";
-			data = response.evalJSON();
-
+		onSuccess: function(transport)
+		{
+			var data = transport.responseJSON;
 			var values = Array('unknown', 'yes', 'no', 'maybe');
 			var value = values[data[option]];
 
@@ -399,7 +437,7 @@ function setResponse(response, plan) {
 			responseElement.childNodes[0].src = responseElement.childNodes[0].src.gsub(/[a-z]+.png/, value + '.png');
 			getCount(plan, option);
 		},
-		onFailure: function(){ error() }
+		onFailure: function() { error() }
 	});
 }
 

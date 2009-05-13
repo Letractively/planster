@@ -87,6 +87,7 @@ class PlansterPlansRPCHandler(PlansterRPCHandler):
 			'instructions': plan.instructions,
 		}
 		response.content = simplejson.dumps(data)
+		response['Content-type'] = 'application/json'
 		return response
 
 class PlansterAttributeRPCHandler(PlansterRPCHandler):
@@ -118,7 +119,7 @@ class PlansterPlanRPCHandler(PlansterAttributeRPCHandler):
 			'instructions': self.plan.instructions,
 			'count_type': self.plan.count_type
 		}))
-		response['Content-type'] = 'application/json';
+		response['Content-type'] = 'application/json'
 		return response
 
 class PlansterOptionsRPCHandler(PlansterAttributeRPCHandler):
@@ -155,7 +156,7 @@ class PlansterOptionsRPCHandler(PlansterAttributeRPCHandler):
 		json = simplejson.dumps(data)
 
 		response = HttpResponse(simplejson.dumps(data))
-		response['Content-type'] = 'application/json';
+		response['Content-type'] = 'application/json'
 		return response
 
 class PlansterOptionRPCHandler(PlansterAttributeRPCHandler):
@@ -176,7 +177,7 @@ class PlansterOptionRPCHandler(PlansterAttributeRPCHandler):
 			'id': self.option.id,
 			'count': self.option.count()
 		}))
-		response['Content-type'] = 'application/json';
+		response['Content-type'] = 'application/json'
 		return response
 
 class PlansterPeopleRPCHandler(PlansterAttributeRPCHandler):
@@ -194,7 +195,8 @@ class PlansterPeopleRPCHandler(PlansterAttributeRPCHandler):
 		response.content = simplejson.dumps({
 			'name': person.name,
 			'id': person.id
-		});
+		})
+		response['Content-type'] = 'application/json'
 		return response
 
 	def get(self):
@@ -216,11 +218,13 @@ class PlansterPersonRPCHandler(PlansterAttributeRPCHandler):
 			self.person.name = args['name']
 			self.person.save()
 
-		content = simplejson.dumps({
+		response = HttpResponse(simplejson.dumps({
 			'name': self.person.name,
 			'id': self.person.id
-		})
-		return HttpResponse(content)
+		}))
+
+		response['Content-type'] = 'application/json'
+		return response
 
 	def get(self):
 		return HttpResponse(simplejson.dumps({
@@ -246,7 +250,10 @@ class PlansterResponsesRPCHandler(PlansterAttributeRPCHandler):
 		responses = {}
 		for item in data:
 			responses[item.option.id] = item.value
-		return HttpResponse(simplejson.dumps(responses))
+
+		response = HttpResponse(simplejson.dumps(responses))
+		response['Content-type'] = 'application/json'
+		return response
 
 def plans(request):
 	handler = PlansterPlansRPCHandler()
