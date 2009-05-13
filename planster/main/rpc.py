@@ -107,8 +107,10 @@ class PlansterPlanRPCHandler(PlansterAttributeRPCHandler):
 					args['instructions'])
 			self.plan.save()
 		if 'count_type' in args:
-			self.plan.count_type = args['count_type']
-			self.plan.save()
+			count_type = int(args['count_type'])
+			if count_type in range(1,4):
+				self.plan.count_type = args['count_type']
+				self.plan.save()
 
 		return self.get()
 
@@ -140,6 +142,7 @@ class PlansterOptionsRPCHandler(PlansterAttributeRPCHandler):
 			'title': item.name
 		}
 		response.content = simplejson.dumps(data)
+		response['Content-type'] = 'application/json'
 		return response
 
 	def get(self):
@@ -206,7 +209,9 @@ class PlansterPeopleRPCHandler(PlansterAttributeRPCHandler):
 				'name': person.name,
 				'id': person.id
 			})
-		return HttpResponse(simplejson.dumps(data))
+		response = HttpResponse(simplejson.dumps(data))
+		response['Content-type'] = 'application/json'
+		return response
 
 class PlansterPersonRPCHandler(PlansterAttributeRPCHandler):
 	def __init__(self, plan_hash, person_id):
@@ -227,10 +232,12 @@ class PlansterPersonRPCHandler(PlansterAttributeRPCHandler):
 		return response
 
 	def get(self):
-		return HttpResponse(simplejson.dumps({
+		response = HttpResponse(simplejson.dumps({
 			'name': self.person.name,
 			'id': self.person.id
 		}))
+		response['Content-type'] = 'application/json'
+		return response
 
 class PlansterResponsesRPCHandler(PlansterAttributeRPCHandler):
 	def __init__(self, plan_hash, person_id):
