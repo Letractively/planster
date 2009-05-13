@@ -1,9 +1,11 @@
 #
 # Copyright (C) 2009 Stefan Ott, all rights reserved
 #
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.utils import simplejson
 from planster.main.models import *
+from djaptcha.models import CaptchaRequest, CAPTCHA_ANSWER_OK
+from djaptcha.examples import generate_sum_captcha
 import datetime
 import cgi
 
@@ -50,6 +52,26 @@ class PlansterPlansRPCHandler(PlansterRPCHandler):
 	def put(self, args):
 		plan = Plan()
 		plan.expires = datetime.date.today()
+
+		if not 'captcha-id' in args:
+			return HttpResponseBadRequest('Weird')
+		if not 'captcha-value' in args:
+			return HttpResponseBadRequest('Please enter a value')
+
+		captcha_id = args['captcha-id']
+		captcha_value = args['captcha-value']
+
+		if not captcha_value.isdigit():
+			return HttpResponseBadRequest('Please enter a number')
+
+		captcha_value = int(captcha_value)
+		answer = CaptchaRequest.validate(captcha_id, captcha_value)
+
+		if answer != CAPTCHA_ANSWER_OK:
+			captcha = generate_sum_captcha()
+			response = HttpResponseForbidden('Wrong answer')
+			response['location'] = captcha.uid
+			return response
 
 		if 'title' in args:
 			plan.title = args['title']

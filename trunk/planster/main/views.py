@@ -7,9 +7,12 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from planster.main.models import Plan
 from django.template import RequestContext
+from djaptcha.examples import generate_sum_captcha
 
 def index(request):
-	return render_to_response('welcome.html', {},
+	plan = Plan()
+	req = generate_sum_captcha()
+	return render_to_response('welcome.html', {'plan': plan, 'req': req},
 		context_instance = RequestContext(request))
 
 def create(request):

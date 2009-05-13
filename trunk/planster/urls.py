@@ -5,6 +5,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
+	(r'(?P<token_uid>\w+).jpg$','djaptcha.views.captcha_image'),
 	(r'^rpc/(?P<plan_hash>\w{15})/options/(?P<option_id>\d+)',
 		'planster.main.rpc.option'),
 	(r'^rpc/(?P<plan_hash>\w{15})/options', 'planster.main.rpc.options'),

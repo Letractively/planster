@@ -2,7 +2,31 @@
 {% load i18n %}
 
 {% block content %}
+
 <h1>Welcome to planster</h1>
 planster is a free online service which allows you to coordinate virtually anything with your pals.
-<p><a href="create">Try it</a>!</p>
+
+<h2>Try it!</h2>
+<form method="post" action="nojs" onSubmit="javascript:createPlan(this); return false">
+	<p>First, please think of a name for your plan:</p>
+	<input name="title" value="{{ plan.title }}" />
+	<p>Now, if you would like to give a few instructions to your users, put them<br />in the following box (you can always change them later):</p>
+	<textarea name="instructions" id="instructionsInput">{{ plan.instructions }}</textarea>
+	<p>And we're almost there. All you need to do now is choose how long you<br />want your plan to live before we delete it:</p>
+	<select name="expires">
+		<option>1</option>
+		<option>2</option>
+		<option>3</option>
+		<option>4</option>
+		<option>5</option>
+		<option>6</option>
+	</select> months
+	<p>And prove that you're a human by answering this:</p>
+	<img src="/{{ req.uid }}.jpg" alt="" title="" id="captcha" />
+	<input name="captcha_value" value="" size="2" />
+	<input type="hidden" name="captcha_id" value="{{ req.uid }}" />
+
+	<p>That's it. Now click the 'create' button.</p>
+	<input type="submit" value="create" />
+</form>
 {% endblock %}
