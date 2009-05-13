@@ -4,8 +4,8 @@
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.utils import simplejson
 from planster.main.models import *
-from djaptcha.models import CaptchaRequest, CAPTCHA_ANSWER_OK
-from djaptcha.examples import generate_sum_captcha
+from planster.djaptcha.models import CaptchaRequest, CAPTCHA_ANSWER_OK
+from planster.djaptcha.examples import generate_sum_captcha
 import datetime
 import cgi
 
