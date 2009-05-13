@@ -105,15 +105,21 @@ class PlansterPlanRPCHandler(PlansterAttributeRPCHandler):
 			self.plan.instructions = self.__clean(
 					args['instructions'])
 			self.plan.save()
+		if 'count_type' in args:
+			self.plan.count_type = args['count_type']
+			self.plan.save()
 
 		return self.get()
 
 	def get(self):
-		return HttpResponse(simplejson.dumps({
+		response = HttpResponse(simplejson.dumps({
 			'id': self.plan.hash,
 			'title': self.plan.title,
 			'instructions': self.plan.instructions,
+			'count_type': self.plan.count_type
 		}))
+		response['Content-type'] = 'application/json';
+		return response
 
 class PlansterOptionsRPCHandler(PlansterAttributeRPCHandler):
 	def put(self, args):
@@ -142,12 +148,15 @@ class PlansterOptionsRPCHandler(PlansterAttributeRPCHandler):
 		for option in options:
 			data.append({
 				'title': option.name,
-				'id': str(option.id)
+				'id': str(option.id),
+				'count': option.count()
 			})
 
 		json = simplejson.dumps(data)
 
-		return HttpResponse(simplejson.dumps(data))
+		response = HttpResponse(simplejson.dumps(data))
+		response['Content-type'] = 'application/json';
+		return response
 
 class PlansterOptionRPCHandler(PlansterAttributeRPCHandler):
 	def __init__(self, plan_hash, option_id):
@@ -162,10 +171,13 @@ class PlansterOptionRPCHandler(PlansterAttributeRPCHandler):
 		return self.get()
 
 	def get(self):
-		return HttpResponse(simplejson.dumps({
+		response = HttpResponse(simplejson.dumps({
 			'title': self.option.name,
-			'id': self.option.id
+			'id': self.option.id,
+			'count': self.option.count()
 		}))
+		response['Content-type'] = 'application/json';
+		return response
 
 class PlansterPeopleRPCHandler(PlansterAttributeRPCHandler):
 	def put(self, args):

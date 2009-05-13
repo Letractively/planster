@@ -63,8 +63,14 @@ table.responses td {
 	padding: 4px 0 4px 0;
 }
 
-table.responses td.answer {
+table.responses td.answer,
+table.responses td.count {
 	text-align: center;
+}
+
+table.responses th.count {
+	font-size: x-small;
+	color: #c8ccc6;
 }
 
 table.responses td.option a,

@@ -62,9 +62,9 @@
 	<div id="options" style="display: none">
 		<form action="$">
 			<ul class="category">
-				<li><input type="radio" name="count" value="none" /> Hide totals</li>
-				<li><input type="radio" name="count" value="yes" /> Count only [yes]</li>
-				<li><input type="radio" name="count" value="both" /> Count [m] as half [y]</li>
+				<li><input type="radio" name="count" value="1" {% ifequal 1 plan.count_type %}checked="checked" {% endifequal %} onclick="javascript:setCountType(this, '{{ plan.hash }}')" /> Hide totals</li>
+				<li><input type="radio" name="count" value="2" {% ifequal 2 plan.count_type %}checked="checked" {% endifequal %} onclick="javascript:setCountType(this, '{{ plan.hash }}')" /> Count only <img src="{{ MEDIA_URL }}/img/yes-sample.png" alt="yes" title="yes" /></li>
+				<li><input type="radio" name="count" value="3" {% ifequal 3 plan.count_type %}checked="checked" {% endifequal %} onclick="javascript:setCountType(this, '{{ plan.hash }}')" /> Count <img src="{{ MEDIA_URL }}/img/maybe-sample.png" alt="maybe" title="maybe" /> as half <img src="{{ MEDIA_URL }}/img/yes-sample.png" alt="yes" title="yes" /></li>
 			</ul>
 		</form>
 		<ul class="category" style="list-style-image: url({{ MEDIA_URL }}/img/arrow.png); margin-left: 10px;">
@@ -107,6 +107,7 @@
 				{% for person in plan.people %}
 				<th class="person" id="person-{{ person.id }}"><a href="#" onclick="javascript:askPerson(this); return false">{{ person }}</a></th>
 				{% endfor %}
+				<th class="count" id="count" {% ifequal plan.count_type 1 %}style="display: none" {% endifequal %}>Total</th>
 				<th class="addItem"><a href="#" onclick="javascript:askPerson(this); return false">Click to add a person</a></th>
 			</tr>
 				{% for option in plan.options %}
@@ -115,6 +116,8 @@
 					{% for person in plan.people %}
 					<td id="response-{{ person.id }}-{{ option.id }}" class="answer"><a href="#" onclick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/{% get_status option person %}.png" alt="unknown" title="unknown" /></a></td>
 					{% endfor %}
+					<td class="count" id="{{ option.id }}-count" {% ifequal plan.count_type 1 %}style="display: none" {% endifequal %}>{{ option.count }}</td>
+					<td></td>
 				</tr>
 				{% endfor %}
 				<tr>

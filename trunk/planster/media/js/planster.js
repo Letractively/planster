@@ -211,6 +211,76 @@ function saveTitle(form, plan) {
 	});
 }
 
+function getCount(plan, option) {
+	new Ajax.Request('rpc/' + plan + '/options/' + option,
+	{
+		method: 'get',
+		onSuccess: function(transport)
+		{
+			var data = transport.responseJSON;
+			$(data.id + '-count').update(data.count);
+		},
+		onFailure: function() { error() }
+	});
+}
+
+function getCounts(plan) {
+	new Ajax.Request('rpc/' + plan + '/options',
+	{
+		method: 'get',
+		onSuccess: function(transport)
+		{
+			var data = transport.responseJSON;
+
+			for (var i=0; i < data.length; i++)
+			{
+				var item = data[i];
+				$(item.id + '-count').update(item.count);
+			}
+		},
+		onFailure: function() { error() }
+	});
+}
+
+function hideCounts() {
+	var items = $$('.count');
+	items.each(function(item)
+	{
+		item.hide();
+	});
+}
+
+function showCounts() {
+	var items = $$('.count');
+	items.each(function(item)
+	{
+		item.show();
+	});
+}
+
+function setCountType(type, plan) {
+	var data = $H({'count_type': $F(type)});
+
+	new Ajax.Request('rpc/' + plan,
+	{
+		method: 'post',
+		postBody: data.toJSON(),
+		onSuccess: function(transport)
+		{
+			data = transport.responseJSON;
+
+			if (data.count_type == 1)
+				hideCounts()
+			else
+			{
+				getCounts(plan);
+				showCounts();
+			}
+		},
+		onFailure: function() { error() }
+	});
+}
+
 function saveInstructions(form, plan) {
 	var data = new Hash();
 	data.set('instructions', form.instructions.value);
@@ -327,6 +397,7 @@ function setResponse(response, plan) {
 
 			closeResponsePopup();
 			responseElement.childNodes[0].src = responseElement.childNodes[0].src.gsub(/[a-z]+.png/, value + '.png');
+			getCount(plan, option);
 		},
 		onFailure: function(){ error() }
 	});
