@@ -151,12 +151,16 @@ function createPlan(form) {
 	var title = form.title.value;
 	var instructions = form.instructions.value;
 	var expires = form.expires.value;
+	var captcha_id = form.captcha_id.value;
+	var captcha_value = form.captcha_value.value;
 
 	var data = new Hash();
 
 	data.set('title', title);
 	data.set('instructions', instructions);
 	data.set('expires', expires);
+	data.set('captcha-id', captcha_id);
+	data.set('captcha-value', captcha_value);
 
 	new Ajax.Request('rpc', {
 		method: 'put',
@@ -166,7 +170,26 @@ function createPlan(form) {
 			data = response.evalJSON();
 			window.location = data.id;
 		},
-		onFailure: function(){ error() }
+		onFailure: function(transport){
+			switch (transport.status)
+			{
+				case 400:
+					alert(transport.responseText);
+					form.captcha_value.activate();
+					break;
+				case 403:
+					alert(transport.responseText);
+					var url = transport.getHeader('location');
+					var parts = url.split('/');
+					var id = parts[parts.length - 1];
+
+					$('captcha').src = url + '.jpg';
+
+					form.captcha_id.value = id;
+					form.captcha_value.activate();
+					break;
+			}
+		}
 	});
 }
 

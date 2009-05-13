@@ -40,6 +40,15 @@ h1 {
 	font-size: large;
 }
 
+h2 {
+	margin-top: 3em;
+	font-size: medium;
+}
+
+img, input {
+	vertical-align: middle;
+}
+
 table.responses {
 	border-collapse: collapse;
 }

@@ -1,0 +1,25 @@
+=== A Django Captcha ===
+
+Yes, I know the name is not nice, but anyway you can change the name :)
+It's licensed under the DWYWL (Do Whatever You Want License) you can modify the code to build weapons of mass destruction, turn it into an SUV, obliretare it, charge a bazillion dollars, anything you want.
+
+It provides a way to create custom Captcha requests and validate them, and also:
+  - An expiration timeout you can change as you wish
+  - An UID for each request
+  - A request model you can change as you wish. 
+  - A function to remove all expired requests.
+  - A view that renders the captcha text into a JPEG image.
+
+It does not do:
+  - Set the image size according to the text size. That's a TODO.
+  - Cache request images. Requests aren't used twice, so that would be useless.
+
+I'm currently under 
+
+The provided captcha method (in djaptchatests) is a simple sum of one-digit numbers, with a 15-minute expiration timeout.
+
+To use Djaptcha, you will need:
+  - Python (oh, really?)
+  - Django 0.95 or later
+  - PIL. Unfortunately I couldn't make Djaptcha work in OSX, because of issues with FreeType.
+
