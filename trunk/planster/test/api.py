@@ -95,9 +95,11 @@ class TestAPI(unittest.TestCase):
 		self.planID = data['id']
 
 	def testCreatePlan(self):
-		data = {}
-		answer = self.__http_put('', data)
+		plan = {}
+		answer = self.__http_put('', plan)
 		self.assertEqual(201, answer.status)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 
 		data = json.loads(answer.read())
 		self.assertTrue('id' in data)
@@ -111,6 +113,9 @@ class TestAPI(unittest.TestCase):
 
 		plan = {'title': 'Test PLAN', 'instructions': 'do this!'}
 		answer = self.__http_put('', plan)
+		self.assertEqual(201, answer.status)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		data = json.loads(answer.read())
 		self.assertTrue(len(data['id']) > 0)
 		self.assertEquals(plan['title'], data['title'])
@@ -119,6 +124,8 @@ class TestAPI(unittest.TestCase):
 	def testGetPlan(self):
 		answer = self.__http_get(self.planID)
 		self.assertEqual(200, answer.status)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		data = json.loads(answer.read())
 
 		self.assertTrue('id' in data)
@@ -134,19 +141,46 @@ class TestAPI(unittest.TestCase):
 		mydata = {'title': 'some new title, totally different'}
 		answer = self.__http_post(self.planID, mydata)
 		self.assertEqual(200, answer.status)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		data = json.loads(answer.read())
 
 		self.assertTrue('title' in data)
 		self.assertEquals(mydata['title'], data['title'])
 
 		answer = self.__http_get(self.planID)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		data = json.loads(answer.read())
 		self.assertEquals(mydata['title'], data['title'])
+
+	def testEditCountType(self):
+		mydata = {'count_type': 1}
+		answer = self.__http_post(self.planID, mydata)
+		self.assertEqual(200, answer.status)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
+		data = json.loads(answer.read())
+
+		self.assertTrue('count_type' in data)
+		self.assertEqual(1, data['count_type'])
+
+		mydata['count_type'] = 2
+		answer = self.__http_post(self.planID, mydata)
+		data = json.loads(answer.read())
+		self.assertEqual(2, data['count_type'])
+
+		mydata['count_type'] = 4
+		answer = self.__http_post(self.planID, mydata)
+		data = json.loads(answer.read())
+		self.assertEqual(2, data['count_type'])
 
 	def testTitleSpecialCharacters(self):
 		mydata = {'title': 'Some new<a href=""> t'}
 		answer = self.__http_post(self.planID, mydata)
 		self.assertEqual(200, answer.status)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		data = json.loads(answer.read())
 
 		self.assertEquals('Some new&lt;a href=""&gt; t', data['title'])
@@ -155,12 +189,16 @@ class TestAPI(unittest.TestCase):
 		mydata = {'title': u'fünf'}
 		answer = self.__http_post(self.planID, mydata)
 		self.assertEqual(200, answer.status)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		data = json.loads(answer.read())
 
 		self.assertTrue('title' in data)
 		self.assertEquals(mydata['title'], data['title'])
 
 		answer = self.__http_get(self.planID)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		data = json.loads(answer.read())
 		self.assertEquals(mydata['title'], data['title'])
 
@@ -168,12 +206,16 @@ class TestAPI(unittest.TestCase):
 		mydata = {'instructions': 'yada yada'}
 		answer = self.__http_post(self.planID, mydata)
 		self.assertEqual(200, answer.status)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		data = json.loads(answer.read())
 
 		self.assertTrue('instructions' in data)
 		self.assertEquals(mydata['instructions'], data['instructions'])
 
 		answer = self.__http_get(self.planID)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		data = json.loads(answer.read())
 		self.assertEquals(mydata['instructions'], data['instructions'])
 
@@ -181,6 +223,8 @@ class TestAPI(unittest.TestCase):
 		mydata = {'instructions': 'Do <b>bar\n\nand foo' }
 		answer = self.__http_post(self.planID, mydata)
 		self.assertEqual(200, answer.status)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		data = json.loads(answer.read())
 
 		self.assertEquals(data['instructions'],
@@ -190,6 +234,8 @@ class TestAPI(unittest.TestCase):
 		mydata = {'instructions': u'fünf instructions are enough'}
 		answer = self.__http_post(self.planID, mydata)
 		self.assertEqual(200, answer.status)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		data = json.loads(answer.read())
 
 		self.assertEquals(mydata['instructions'], data['instructions'])
@@ -198,6 +244,8 @@ class TestAPI(unittest.TestCase):
 		mydata = {'title': 'Pizza'}
 		answer = self.__http_put(self.planID + '/options', mydata)
 		self.assertEqual(201, answer.status)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		data = json.loads(answer.read())
 
 		self.assertTrue(data['id'] > 0)
@@ -208,32 +256,37 @@ class TestAPI(unittest.TestCase):
 	def testPutUnicodeItem(self):
 		mydata = {'title': u'fünf'}
 		answer = self.__http_put(self.planID + '/options', mydata)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		data = json.loads(answer.read())
 		self.assertEqual(mydata['title'], data['title'])
 
 	def testPutItemViaPost(self):
 		data = {'title': 'Orange juice'}
 		answer = self.__http_post_put(self.planID + '/options', data)
-		data = answer.read()
-		new_item = json.loads(data)
-		new_id = new_item['id']
-
 		self.assertEqual(201, answer.status)
-		self.assertTrue(len(new_id) > 0)
-		self.assertEqual('Orange juice', new_item['title'])
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
+
+		data = json.loads(answer.read())
+		id = data['id']
+
+		self.assertTrue(len(id) > 0)
+		self.assertEqual('Orange juice', data['title'])
 		self.assertTrue(answer.getheader('Location').endswith(
-			'/rpc/' + self.planID + '/options/' + new_id))
+			'/rpc/' + self.planID + '/options/' + id))
 
 		data = {'title': u'fünf'}
 		answer = self.__http_post_put(self.planID + '/options', data)
-		data = answer.read()
-		new_item = json.loads(data)
-		new_id = new_item['id']
-		new_title = new_item['title']
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
+		data = json.loads(answer.read())
+		id = data['id']
+		title = data['title']
 
 		self.assertEqual(201, answer.status)
-		self.assertTrue(len(new_id) > 0)
-		self.assertEqual(u'fünf', new_title)
+		self.assertTrue(len(id) > 0)
+		self.assertEqual(u'fünf', title)
 
 	def testModifyItem(self):
 		bad = {'title': 'Something bad'}
@@ -241,6 +294,9 @@ class TestAPI(unittest.TestCase):
 
 		answer = self.__http_put(self.planID + '/options', bad)
 		self.assertEqual(201, answer.status)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
+
 		data = json.loads(answer.read())
 		self.assertTrue('title' in data)
 		self.assertTrue('id' in data)
@@ -250,16 +306,22 @@ class TestAPI(unittest.TestCase):
 		id = str(data['id'])
 
 		answer = self.__http_get(self.planID + '/options/' + id)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		self.assertTrue('title' in data)
 		self.assertEqual(bad['title'], data['title'])
 
 		answer = self.__http_post(self.planID + '/options/' + id, good)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		self.assertEqual(200, answer.status)
 		data = json.loads(answer.read())
 		self.assertTrue('title' in data)
 		self.assertEqual(good['title'], data['title'])
 
 		answer = self.__http_get(self.planID + '/options/' + id)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		self.assertTrue('title' in data)
 		self.assertEqual(good['title'], data['title'])
 
@@ -272,6 +334,8 @@ class TestAPI(unittest.TestCase):
 			self.__http_put(self.planID + '/options', data)
 
 		answer = self.__http_get(self.planID + '/options')
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		data = json.loads(answer.read())
 
 		self.assertEqual(3, len(data))
@@ -284,6 +348,8 @@ class TestAPI(unittest.TestCase):
 			self.__http_post_put(self.planID + '/options', data)
 
 		answer = self.__http_get(self.planID + '/options')
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		data = json.loads(answer.read())
 
 		self.assertEqual(2, len(data))
@@ -292,6 +358,8 @@ class TestAPI(unittest.TestCase):
 		mydata = {'name': 'Peter P. Rat'}
 		answer = self.__http_put(self.planID + '/people', mydata)
 		self.assertEqual(answer.status, 201) # Created
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 
 		peter = json.loads(answer.read())
 		self.assertTrue(peter['id'] > 0)
@@ -301,9 +369,13 @@ class TestAPI(unittest.TestCase):
 
 		frank = {'name': 'Frank'}
 		answer = self.__http_put(self.planID + '/people', frank)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		frank = json.loads(answer.read())
 
 		answer = self.__http_get(self.planID + '/people')
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		data = json.loads(answer.read())
 		self.assertEqual(2, len(data))
 		self.assertTrue(peter in data)
@@ -313,12 +385,17 @@ class TestAPI(unittest.TestCase):
 		frank = {'name': 'Frank'}
 		answer = self.__http_put(self.planID + '/people', frank)
 		self.assertEqual(answer.status, 201) # Created
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
+
 		data = json.loads(answer.read())
 		self.assertEqual(frank['name'], data['name'])
 		self.assertTrue(data['id'] > 0)
 		id = str(data['id'])
 
 		answer = self.__http_get(self.planID + '/people/' + id)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		data = json.loads(answer.read())
 		self.assertTrue('name' in data)
 		self.assertEqual(frank['name'], data['name'])
@@ -327,6 +404,8 @@ class TestAPI(unittest.TestCase):
 		answer = self.__http_post(self.planID + '/people/' +
 				str(data['id']), joe)
 		self.assertEqual(answer.status, 200)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		data = json.loads(answer.read())
 		self.assertEqual(joe['name'], data['name'])
 
@@ -340,18 +419,26 @@ class TestAPI(unittest.TestCase):
 		john = {'name': 'John'}
 
 		answer = self.__http_put(self.planID + '/people', jack)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		jack['id'] = json.loads(answer.read())['id']
 
 		answer = self.__http_put(self.planID + '/people', john)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		john['id'] = json.loads(answer.read())['id']
 
 		meat = {'title': 'meat'}
 		fish = {'title': 'fish'}
 
 		answer = self.__http_post_put(self.planID + '/options', meat)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		meat['id'] = json.loads(answer.read())['id']
 
 		answer = self.__http_post_put(self.planID + '/options', fish)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 		fish['id'] = json.loads(answer.read())['id']
 
 		answer = self.__http_post('%s/people/%s/responses' % (
@@ -360,6 +447,8 @@ class TestAPI(unittest.TestCase):
 				fish['id']: 3
 			})
 		self.assertEquals(answer.status, 200)
+		self.assertEqual('application/json',
+				answer.getheader('Content-type'))
 
 		result = answer.read()
 		data = json.loads(result)
