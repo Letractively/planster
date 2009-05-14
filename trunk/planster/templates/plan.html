@@ -78,24 +78,22 @@
 	</div>
 {% endblock %}
 {% block content %}
-		<h1>
-			<span id="title">{{ plan.title }}</span>
-			<span id="titleForm" style="display: none">
-				<form onsubmit="javascript:saveTitle(this, '{{ plan.hash }}');return false" action="#">
-					<div>
-						<input name="title" value="" id="titleInput" />
-					</div>
-				</form>
-			</span>
-		</h1>
+		<form onsubmit="javascript:saveTitle(this, '{{ plan.hash }}');return false" action="#">
+			<h1>
+				<span id="title">{{ plan.title }}</span>
+				<span id="titleForm" style="display: none">
+					<input name="title" value="" id="titleInput" />
+				</span>
+			</h1>
+		</form>
 		<div id="instructions">
-			<span id="instructionsText">{{ plan.instructions }}</span>
-			<div id="instructionsForm" style="display: none">
-				<form onsubmit="javascript:saveInstructions(this, '{{ plan.hash }}');return false" action="$">
-					<textarea name="instructions" id="instructionsInput">Please choose the books or texts that you have read. We will be discussing them on Monday.</textarea>
+			<form onsubmit="javascript:saveInstructions(this, '{{ plan.hash }}');return false" action="$">
+				<div id="instructionsText">{{ plan.instructions }}</div>
+				<div id="instructionsForm" style="display: none">
+					<textarea name="instructions" id="instructionsInput" rows="3" cols="70">Please choose the books or texts that you have read. We will be discussing them on Monday.</textarea>
 					<input type="submit" value="save" />
-				</form>
-			</div>
+				</div>
+			</form>
 		</div>
 		<table class="responses">
 			<col />
