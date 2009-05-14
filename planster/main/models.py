@@ -22,7 +22,7 @@ class Planster(object):
 	hash = Callable(generate_hash)
 
 class Plan(models.Model):
-	title = models.CharField(max_length=50, default='Unnamed PLAN')
+	title = models.CharField(max_length=50, default='Cunning plan')
 	instructions = models.TextField(
 		default='Please choose your preferred options')
 	created = models.DateTimeField(auto_now_add=True)
