@@ -86,6 +86,10 @@ table.responses th.person a {
 	color: white;
 }
 
+#options form {
+	margin: 0;
+}
+
 #options .category {
 	float: right;
 	border-right: 2px #6e706c solid;
