@@ -133,7 +133,7 @@ function askPerson(person)
 
 function askResponse(element)
 {
-	var current = element.childElements()[0];
+	var current = element.select('img')[0];
 	responseElement = element;
 
 	closePersonPopup();
@@ -143,9 +143,7 @@ function askResponse(element)
 	showPopup($('responsePopup'), element);
 
 	// set the currently selected response in the popup
-	var div = $('responsePopup').select('.selection');
-
-	div[0].childElements().each(function(img)
+	$$('#responsePopup .selection img').each(function(img)
 	{
 		if (img.src == current.src)
 			setSelection(img);
@@ -261,8 +259,7 @@ function getCounts(plan)
 		method: 'get',
 		onSuccess: function(transport)
 		{
-			var data = transport.responseJSON;
-			data.each(function(item)
+			transport.responseJSON.each(function(item)
 			{
 				$(item.id + '-count').update(item.count);
 			});
@@ -273,20 +270,12 @@ function getCounts(plan)
 
 function hideCounts()
 {
-	var items = $$('.count');
-	items.each(function(item)
-	{
-		item.hide();
-	});
+	$$('.count').invoke('hide');
 }
 
 function showCounts()
 {
-	var items = $$('.count');
-	items.each(function(item)
-	{
-		item.show();
-	});
+	$$('.count').invoke('show');
 }
 
 function setCountType(type, plan)
