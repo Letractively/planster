@@ -9,9 +9,13 @@ function toggleOptions()
 	var logo = $('logo');
 
 	if ($('options').visible())
+	{
 		logo.src = logo.src.replace('logo.png', 'logo-dark.png');
+	}
 	else
+	{
 		logo.src = logo.src.replace('logo-dark.png', 'logo.png');
+	}
 
 	$('toolbar').className = $('options').visible() ? 'open' : 'closed';
 }
@@ -44,28 +48,6 @@ function setSelection(element)
 	$('responseSelector').show();
 }
 
-function toggleCalendar()
-{
-	$('calendar').toggle();
-	$('showCalendarLink').toggle();
-	$('hideCalendarLink').toggle();
-	askItem(activeItem);
-}
-
-function itemDateChanged(calendar)
-{
-	var months = new Array ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-			'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
-	var days = new Array ('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
-
-	var date = days[calendar.date.getDay()] + ', '
-		+ months[calendar.date.getMonth()] + ' '
-		+ calendar.date.getDate() + ' '
-		+ calendar.date.getFullYear();
-
-	$('itemTitle').value = date;
-}
-
 function showPopup(popup, where)
 {
 	popup.clonePosition(where,
@@ -78,12 +60,28 @@ function showPopup(popup, where)
 	popup.show();
 }
 
+function closeItemPopup()
+{
+	$('itemPopup').hide();
+}
+
+function closePersonPopup()
+{
+	$('personPopup').hide();
+}
+
+function closeResponsePopup()
+{
+	$('responsePopup').hide();
+}
+
+
 function askItem(item)
 {
 	closeResponsePopup();
 	closePersonPopup();
 
-	activeItem = item
+	activeItem = item;
 
 	if (item.parentNode.className == 'addItem')
 	{
@@ -103,6 +101,29 @@ function askItem(item)
 
 	showPopup($('itemPopup'), item);
 	$('itemTitle').activate();
+}
+
+
+function toggleCalendar()
+{
+	$('calendar').toggle();
+	$('showCalendarLink').toggle();
+	$('hideCalendarLink').toggle();
+	askItem(activeItem);
+}
+
+function itemDateChanged(calendar)
+{
+	var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+			'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+	var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+	var date = days[calendar.date.getDay()] + ', ' +
+		months[calendar.date.getMonth()] + ' ' +
+		calendar.date.getDate() + ' ' +
+		calendar.date.getFullYear();
+
+	$('itemTitle').value = date;
 }
 
 function askPerson(person)
@@ -146,23 +167,10 @@ function askResponse(element)
 	$$('#responsePopup .selection img').each(function(img)
 	{
 		if (img.src == current.src)
+		{
 			setSelection(img);
+		}
 	});
-}
-
-function closeItemPopup()
-{
-	$('itemPopup').hide();
-}
-
-function closePersonPopup()
-{
-	$('personPopup').hide();
-}
-
-function closeResponsePopup()
-{
-	$('responsePopup').hide();
 }
 
 function error()
@@ -190,31 +198,27 @@ function createPlan(form)
 	{
 		method: 'put',
 		parameters: { 'data': data.toJSON() },
-		onSuccess: function(transport)
+		on201: function(transport)
 		{
 			var data = transport.responseJSON;
 			window.location = data.id;
 		},
-		onFailure: function(transport)
+		on400: function(transport)
 		{
-			switch (transport.status)
-			{
-				case 400:
-					alert(transport.responseText);
-					form.captcha_value.activate();
-					break;
-				case 403:
-					alert(transport.responseText);
-					var url = transport.getHeader('location');
-					var parts = url.split('/');
-					var id = parts[parts.length - 1];
+			alert(transport.responseText);
+			form.captcha_value.activate();
+		},
+		on403: function(transport)
+		{
+			alert(transport.responseText);
+			var url = transport.getHeader('location');
+			var parts = url.split('/');
+			var id = parts[parts.length - 1];
 
-					$('captcha').src = url + '.jpg';
+			$('captcha').src = url + '.jpg';
 
-					form.captcha_id.value = id;
-					form.captcha_value.activate();
-					break;
-			}
+			form.captcha_id.value = id;
+			form.captcha_value.activate();
 		}
 	});
 }
@@ -234,7 +238,7 @@ function saveTitle(form, plan)
 			$('titleForm').hide();
 			$('title').show();
 		},
-		onFailure: function() { error() }
+		onFailure: function() { error(); }
 	});
 }
 
@@ -248,7 +252,7 @@ function getCount(plan, option)
 			var data = transport.responseJSON;
 			$(data.id + '-count').update(data.count);
 		},
-		onFailure: function() { error() }
+		onFailure: function() { error(); }
 	});
 }
 
@@ -264,7 +268,7 @@ function getCounts(plan)
 				$(item.id + '-count').update(item.count);
 			});
 		},
-		onFailure: function() { error() }
+		onFailure: function() { error(); }
 	});
 }
 
@@ -291,14 +295,16 @@ function setCountType(type, plan)
 			data = transport.responseJSON;
 
 			if (data.count_type == 1)
-				hideCounts()
+			{
+				hideCounts();
+			}
 			else
 			{
 				getCounts(plan);
 				showCounts();
 			}
 		},
-		onFailure: function() { error() }
+		onFailure: function() { error(); }
 	});
 }
 
@@ -317,32 +323,7 @@ function saveInstructions(form, plan)
 			$('instructionsForm').hide();
 			$('instructions').show();
 		},
-		onFailure: function() { error() }
-	});
-}
-
-function savePerson(form, plan)
-{
-	var data = $H({'name': $F(form.name)});
-	var id = $F(form.id);
-
-	if (id == '')
-		saveNewPerson(plan, data);
-	else
-		saveEditedPerson(plan, data, id);
-}
-
-function saveNewPerson(plan, data)
-{
-	new Ajax.Request('rpc/' + plan + '/people',
-	{
-		method: 'put',
-		parameters: { 'data': data.toJSON() },
-		onSuccess: function(transport)
-		{
-			window.location = plan;
-		},
-		onFailure: function() { error() }
+		onFailure: function() { error(); }
 	});
 }
 
@@ -358,19 +339,37 @@ function saveEditedPerson(plan, data, id)
 			$('person-' + id).childNodes[0].update(data.name);
 			closePersonPopup();
 		},
-		onFailure: function() { error() }
+		onFailure: function() { error(); }
 	});
 }
 
-function saveItem(form, plan)
+function saveNewPerson(plan, data)
 {
-	var data = $H({'title': $F(form.title)});
+	new Ajax.Request('rpc/' + plan + '/people',
+	{
+		method: 'put',
+		parameters: { 'data': data.toJSON() },
+		onSuccess: function(transport)
+		{
+			window.location = plan;
+		},
+		onFailure: function() { error(); }
+	});
+}
+
+function savePerson(form, plan)
+{
+	var data = $H({'name': $F(form.name)});
 	var id = $F(form.id);
 
-	if (id == '')
-		saveNewItem(plan, data);
+	if (id.empty())
+	{
+		saveNewPerson(plan, data);
+	}
 	else
-		saveEditedItem(plan, data, id);
+	{
+		saveEditedPerson(plan, data, id);
+	}
 }
 
 function saveNewItem(plan, data)
@@ -383,7 +382,7 @@ function saveNewItem(plan, data)
 		{
 			window.location = plan;
 		},
-		onFailure: function() { error() }
+		onFailure: function() { error(); }
 	});
 }
 
@@ -399,8 +398,23 @@ function saveEditedItem(plan, data, id)
 			$('option-' + id).childNodes[0].update(data.title);
 			closeItemPopup();
 		},
-		onFailure: function() { error() }
+		onFailure: function() { error(); }
 	});
+}
+
+function saveItem(form, plan)
+{
+	var data = $H({'title': $F(form.title)});
+	var id = $F(form.id);
+
+	if (id.empty())
+	{
+		saveNewItem(plan, data);
+	}
+	else
+	{
+		saveEditedItem(plan, data, id);
+	}
 }
 
 function setResponse(response, plan)
@@ -426,7 +440,7 @@ function setResponse(response, plan)
 			responseElement.childNodes[0].src = responseElement.childNodes[0].src.gsub(/[a-z]+.png/, value + '.png');
 			getCount(plan, option);
 		},
-		onFailure: function() { error() }
+		onFailure: function() { error(); }
 	});
 }
 
