@@ -4,11 +4,12 @@
 {% block content %}
 
 <h1>Welcome to planster</h1>
-planster is a free online service which allows you to coordinate virtually anything with your pals.
+<p>planster is a free online service which allows you to coordinate virtually anything with your pals.</p>
+<p>Also, planster is <a href="http://en.wikipedia.org/wiki/Open_source">open source</a>. You can find more information on the <a href="http://planster.googlecode.com/">planster project page</a>.</p>
 
 <h2>Try it!</h2>
 <form method="post" action="nojs" onSubmit="javascript:createPlan(this); return false">
-	<p>First, please think of a name for your plan:</p>
+	<p>First, think of a name for your plan:</p>
 	<input name="title" value="{{ plan.title }}" />
 	<p>Now, if you would like to give a few instructions to your users, put them<br />in the following box (you can always change them later):</p>
 	<textarea name="instructions" id="instructionsInput">{{ plan.instructions }}</textarea>
