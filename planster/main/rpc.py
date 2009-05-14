@@ -6,6 +6,7 @@ from django.utils import simplejson
 from planster.main.models import *
 from planster.djaptcha.models import CaptchaRequest, CAPTCHA_ANSWER_OK
 from planster.djaptcha.examples import generate_sum_captcha
+from dateutil.relativedelta import relativedelta
 import datetime
 import cgi
 
@@ -51,8 +52,8 @@ class PlansterRPCHandler(object):
 class PlansterPlansRPCHandler(PlansterRPCHandler):
 	def put(self, args):
 		plan = Plan()
-		plan.expires = datetime.date.today()
 
+#		"""
 		if not 'captcha-id' in args:
 			return HttpResponseBadRequest('Weird')
 		if not 'captcha-value' in args:
@@ -72,11 +73,26 @@ class PlansterPlansRPCHandler(PlansterRPCHandler):
 			response = HttpResponseForbidden('Wrong answer')
 			response['location'] = captcha.uid
 			return response
+#		"""
 
 		if 'title' in args:
 			plan.title = args['title']
 		if 'instructions' in args:
 			plan.instructions = args['instructions']
+		if 'expires' in args:
+			expires = args['expires']
+			if not isinstance(expires, int):
+				if expires.isdigit():
+					expires = int(expires)
+				else:
+					return HttpResponseBadRequest()
+			expires = min(max(expires,1),6)
+		else:
+			expires = 1
+
+		today = datetime.date.today()
+		delta = relativedelta(months=+expires)
+		plan.expires = today + delta
 
 		plan.save()
 		response = HttpResponseCreated('/rpc/%s' % plan.hash)
@@ -85,6 +101,7 @@ class PlansterPlansRPCHandler(PlansterRPCHandler):
 			'id': plan.hash,
 			'title': plan.title,
 			'instructions': plan.instructions,
+			'expires': str(plan.expires),
 		}
 		response.content = simplejson.dumps(data)
 		response['Content-type'] = 'application/json'
@@ -119,7 +136,8 @@ class PlansterPlanRPCHandler(PlansterAttributeRPCHandler):
 			'id': self.plan.hash,
 			'title': self.plan.title,
 			'instructions': self.plan.instructions,
-			'count_type': self.plan.count_type
+			'count_type': self.plan.count_type,
+			'expires': str(self.plan.expires)
 		}))
 		response['Content-type'] = 'application/json'
 		return response

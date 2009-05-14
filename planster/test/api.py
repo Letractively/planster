@@ -2,6 +2,7 @@
 import unittest
 import urllib
 import httplib
+import datetime
 #from google.appengine.api import users
 from django.utils import simplejson as json
 
@@ -105,11 +106,16 @@ class TestAPI(unittest.TestCase):
 		self.assertTrue('id' in data)
 		self.assertTrue('title' in data)
 		self.assertTrue('instructions' in data)
+		self.assertTrue('expires' in data)
+
+		now = datetime.date.today()
 
 		self.assertTrue(len(data['id']) > 0)
-		self.assertEquals('Unnamed PLAN', data['title'])
+		self.assertEquals('Cunning plan', data['title'])
 		self.assertTrue(answer.getheader('Location').endswith(
 			'/rpc/' + data['id']))
+		self.assertEquals('%d-%02d-%02d' % (now.year, now.month+1,
+			now.day), data['expires'])
 
 		plan = {'title': 'Test PLAN', 'instructions': 'do this!'}
 		answer = self.__http_put('', plan)
@@ -136,6 +142,38 @@ class TestAPI(unittest.TestCase):
 		self.assertEquals(self.plan['title'], data['title'])
 		self.assertEquals(self.plan['instructions'],
 				data['instructions'])
+
+	def testExpires(self):
+		answer = self.__http_put('', {'expires': 1 })
+		self.assertEqual(201, answer.status)
+		data = json.loads(answer.read())
+		self.assertTrue('expires' in data)
+
+		now = datetime.date.today()
+
+		self.assertEquals('%d-%02d-%02d' % (now.year, now.month+1,
+			now.day), data['expires'])
+
+		answer = self.__http_put('', {'expires': -1 })
+		self.assertEqual(201, answer.status)
+		data = json.loads(answer.read())
+		self.assertEquals('%d-%02d-%02d' % (now.year, now.month+1,
+			now.day), data['expires'])
+
+		answer = self.__http_put('', {'expires': 7 })
+		self.assertEqual(201, answer.status)
+		data = json.loads(answer.read())
+		self.assertEquals('%d-%02d-%02d' % (now.year, now.month+6,
+			now.day), data['expires'])
+
+		answer = self.__http_put('', {'expires': '3' })
+		self.assertEqual(201, answer.status)
+		data = json.loads(answer.read())
+		self.assertEquals('%d-%02d-%02d' % (now.year, now.month+3,
+			now.day), data['expires'])
+
+		answer = self.__http_put('', {'expires': 'invalid string' })
+		self.assertEqual(400, answer.status)
 
 	def testEditTitle(self):
 		mydata = {'title': 'some new title, totally different'}
