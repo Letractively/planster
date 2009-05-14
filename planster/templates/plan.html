@@ -19,7 +19,7 @@
 			<span id="addItemTitle">Add an item</span>
 			<span id="editItemTitle" style="display: none">Edit item</span>
 		</div><div class="content">
-			<form onsubmit="javascript:saveItem(this, '{{ plan.hash }}'); return false" action="$">
+			<form onsubmit="javascript:saveItem(this, '{{ plan.hash }}'); return false" action="$" onkeypress="javascript:closeItemPopupOnEscape(event); return true">
 				<div>
 					<input name="title" id="itemTitle" />
 					<input name="id" type="hidden" value="" />
@@ -50,7 +50,7 @@
 			<span id="addPersonTitle">Add a</span>
 			<span id="editPersonTitle" style="display: none">Edit</span> Person
 		</div><div class="content">
-			<form onsubmit="javascript:savePerson(this, '{{ plan.hash }}');return false" action="$">
+			<form onsubmit="javascript:savePerson(this, '{{ plan.hash }}');return false" onkeypress="javascript:closePersonPopupOnEscape(event); return true" action="$">
 				<div>
 					<input name="name" id="personName" />
 					<input name="id" type="hidden" value="" />
@@ -78,7 +78,7 @@
 	</div>
 {% endblock %}
 {% block content %}
-		<form onsubmit="javascript:saveTitle(this, '{{ plan.hash }}');return false" action="#">
+		<form onsubmit="javascript:saveTitle(this, '{{ plan.hash }}');return false" action="#" onkeypress="javascript:abortEditingTitleOnEscape(event); return true">
 			<h1>
 				<span id="title">{{ plan.title }}</span>
 				<span id="titleForm" style="display: none">
@@ -87,7 +87,7 @@
 			</h1>
 		</form>
 		<div id="instructions">
-			<form onsubmit="javascript:saveInstructions(this, '{{ plan.hash }}');return false" action="$">
+			<form onsubmit="javascript:saveInstructions(this, '{{ plan.hash }}');return false" action="$" onkeypress="javascript:abortEditingInstructionsOnEscape(event); return true">
 				<div id="instructionsText">{{ plan.instructions }}</div>
 				<div id="instructionsForm" style="display: none">
 					<textarea name="instructions" id="instructionsInput" rows="3" cols="70">Please choose the books or texts that you have read. We will be discussing them on Monday.</textarea>

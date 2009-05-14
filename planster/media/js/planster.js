@@ -28,12 +28,24 @@ function editTitle()
 	$('titleInput').activate();
 }
 
+function abortEditingTitle()
+{
+	$('title').show();
+	$('titleForm').hide();
+}
+
 function editInstructions()
 {
 	$('instructionsText').hide();
 	$('instructionsInput').value = $('instructionsText').innerHTML;
 	$('instructionsForm').show();
 	$('instructionsInput').activate();
+}
+
+function abortEditingInstructions()
+{
+	$('instructionsText').show();
+	$('instructionsForm').hide();
 }
 
 function setSelection(element)
@@ -444,3 +456,56 @@ function setResponse(response, plan)
 	});
 }
 
+// keyboard handlers
+
+function closeItemPopupOnEscape(event)
+{
+	if (event && event.keyCode == 27)
+	{
+		closeItemPopup();
+	}
+}
+
+function closePersonPopupOnEscape(event)
+{
+	if (event && event.keyCode == 27)
+	{
+		closePersonPopup();
+	}
+}
+
+function abortEditingTitleOnEscape(event)
+{
+	if (event && event.keyCode == 27)
+	{
+		if ($F($('titleInput')) != $('title').innerHTML)
+		{
+			if (confirm('Discard your changes?'))
+			{
+				abortEditingTitle();
+			}
+		}
+		else
+		{
+			abortEditingTitle();
+		}
+	}
+}
+
+function abortEditingInstructionsOnEscape(event)
+{
+	if (event && event.keyCode == 27)
+	{
+		if ($F($('instructionsInput')) != $('instructionsText').innerHTML)
+		{
+			if (confirm('Discard your changes?'))
+			{
+				abortEditingInstructions();
+			}
+		}
+		else
+		{
+			abortEditingInstructions();
+		}
+	}
+}
