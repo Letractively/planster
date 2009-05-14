@@ -71,6 +71,9 @@
 			<li><a href="#" onclick="javascript:editTitle(); return false;">Edit title</a></li>
 			<li><a href="#" onclick="javascript:editInstructions(); return false">Edit comment</a></li>
 		</ul>
+		<ul class="category">
+			<li>This plan was created on {{ plan.created|date:"d M Y" }} and expires on {{ plan.expires|date:"d M Y" }}</li>
+		</ul>
 		<div class="category">&nbsp;</div>
 	</div>
 	<div id="toolbar" class="closed">
