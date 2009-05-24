@@ -1,0 +1,53 @@
+Get the latest version of this file at http://tools.desire.ch/planster/
+===============================================================================
+
+v0.3.0 (16 Mar 2007)
+====================
+ * Now using JSON for data transport (see README.upgrade)
+ * Items can now be categorized, eg. to offer several time slots at some date
+ * Recreated large parts of the UI
+ * People, dates and categories can now be deleted by giving them empty names
+ * Using UTF-8 now in order to get rid of encoding issues
+ * Fixed some PHP complaints
+ * Cleaner interface between JavaScript and PHP
+ * Major code cleanup (JavaScript and PHP)
+ * Removed the tooltips
+ * Replaced icons with Mark James' Silk icon set 1.3
+ * Updated the documentation (README and README.upgrade)
+ * Fixed a typo in the ChangeLog :)
+
+v0.2.2 (19 May 2006)
+====================
+ * Made inviting/adding people more clear
+ * Fixed a caching issue with IE6
+ * Made db-field sizes configurable and limited input field sizes accordingly
+ * Dynamically requested input fields now receive focus when displayed
+
+v0.2.1 (06 May 2006)
+====================
+ * Improved invitations UI
+ * Added an option to clone an event
+ * Added a javascript calendar when adding/modifying dates
+ * Made the RDF feed's time representation RFC 2822 compliant
+ * New dates could not be added in non-js browsers (fixed)
+ * Dates could not be moved in non-js browsers (fixed)
+ * Some internal cleanup
+
+v0.2.0 (26 Apr 2006)
+====================
+ * Added a cron script to erase expired events
+ * Slightly changed some templates
+ * Implemented invitations
+ * Added RDF feeds to track changes to events
+
+v0.1.1 (12 Apr 2006)
+====================
+ * Events with insufficient data would be saved despite the warning to
+   fill in all required values (fixed).
+ * Some database fields were too small (fixed).
+ * Event creators now receive an e-mail message with information about the
+   newly created event.
+
+v0.1.0 (11 Apr 2006)
+====================
+ * Initial public release
