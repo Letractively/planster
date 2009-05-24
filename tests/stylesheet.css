@@ -1,0 +1,78 @@
+body {
+	font-family: sans-serif;
+	font-size: normal;
+	color:#000000;
+}
+
+table tr td, table tr th {
+	font-size: small;
+}
+
+table.details tr th{
+	font-weight: bold;
+	text-align:left;
+	background:#a6caf0;
+}
+
+table.details tr{
+	background:#eeeee0;
+}
+
+p {
+	line-height:1.5em;
+	margin-top:0.5em; margin-bottom:1.0em;
+}
+
+h1 {
+	margin: 0px 0px 5px;
+	font-size: x-large;
+}
+
+h2 {
+	margin-top: 1em;
+	margin-bottom: 0.5em;
+	font-size: large;
+}
+
+.Error {
+	font-weight:bold;
+	color:red;
+}
+
+.Failure, .Unexpected {
+	background:#ff0000;
+	font-weight:bold;
+	color:black;
+}
+
+.Unknown {
+	background:#ffff00;
+	font-weight:bold;
+	color:black;
+}
+
+.Pass, .Expected {
+	background:#00ff00;
+	font-weight:bold;
+	color:black;
+}
+
+.Properties {
+	text-align:right;
+}
+
+CODE.expected {
+	color: green;
+	background: none;
+	font-weight: normal;
+}
+
+CODE.actual {
+	color: red;
+	background: none;
+	font-weight: normal;
+}
+
+.typeinfo {
+	color: gray;
+}
