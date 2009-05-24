@@ -1,0 +1,62 @@
+Get the latest version of this file at http://tools.desire.ch/planster/
+===============================================================================
+
+This document contains vital information on how to upgrade from one PLANster
+version to another one. Before you try any such upgrade, make sure to backup
+your database.
+
+It's important that you carefully follow all the steps described here,
+otherwise the upgrade will fail.
+
+==================
+= 0.x.y => 0.3.0 =
+==================
+
+There are several changes in 0.3.0 which require manual intervention when
+upgrading from a 0.2.x or 0.1.x version:
+
+Unicode support
+---------------
+
+As PLANster is now using UTF-8 character encoding, make sure your webserver and
+especially your PHP installation is properly configured (i.e. set
+default_charset = "utf-8" in your php.ini or your virtual host configuration).
+
+You can verify your setup with firefox' "View Page Info" option: "Encoding" has
+to be "UTF-8".
+
+JSON transport layer
+--------------------
+
+In order for the new JSON transport layer to function, you will have to enable
+PHP's always_populate_raw_post_data option - you'll get a corresponding error
+message otherwise.
+
+Database
+--------
+
+The setup script can upgrade your old database scheme to the current one.
+Simply open http://your.planster.url/setup/ in your web-browser and the script
+will offer to do that upgrade.
+
+In case your PLANster installation is not running locally on the machine you're
+working on, you'll have to add your client's IP address to setup/.htaccess in
+order to be allowed to access the setup script.
+
+Make sure to create a full backup of your database before you try any of this,
+though.
+
+
+==================
+= 0.1.x => 0.2.0 =
+==================
+
+Since version 0.2.0, PLANster has a new database table to log changes made
+to events. In order to update your installation, you have two options:
+
+ - Re-run setup: This will destroy all existing events in your database. You
+   might want to dump your database first and reimport the dump after running
+   the setup script.
+
+ - Manually modify your database: This is slightly more work (you can figure
+   out the table layout from the setup script) but will preserve your data.

@@ -1,0 +1,22 @@
+#main {
+	height: 400px;
+}
+
+#navi .corner {
+	display: none;
+}
+
+#message {
+	top: 40px;
+}
+
+#message .corner {
+	display: none;
+}
+
+#navi .submit {
+	float: right;
+	position: relative;
+	bottom: 4px;
+	right: -4px;
+}

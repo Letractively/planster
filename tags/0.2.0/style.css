@@ -1,0 +1,137 @@
+body {
+	padding: 0;
+	border: 0;
+	margin: 0;
+	color: #666666;
+}
+
+img {
+	border: 0;
+}
+
+table.event, #main {
+	margin: 0 auto;
+	border: 1px #eeeeee solid;
+	background: #f7f7f7;
+	padding: 1em;
+}
+
+#main {
+	width: 40em;
+}
+
+.warn {
+	color: red;
+}
+
+h1 {
+	border-bottom: 1px black solid;
+	background: #3d6493;
+	color: white;
+	padding-left: 10px;
+	margin: 0;
+	text-align: center;
+}
+
+h1 a {
+	color: white;
+	text-decoration: none;
+}
+
+.event td {
+	width: 8em;
+	text-align: center;
+	border: 1px #dddddd solid;
+	font-size: small;
+	padding-top: 3px;
+}
+
+.event td.editing {
+	width: 150px;
+	white-space: nowrap;
+}
+
+.event td.clear {
+	border: 0;
+}
+
+.event th {
+	width: 100px;
+	text-align: center;
+	font-weight: normal;
+}
+
+.event th.add {
+	text-align: left;
+	width: 19px;
+	height: 19px;
+}
+
+a {
+	font-weight: bold;
+	color: #666666;
+}
+
+form {
+	margin: 0;
+	display: inline;
+}
+
+#product_note {
+	margin-top: 0;
+	border: 0;
+	padding: 0;
+	text-align: right;
+	font-style: italic;
+	font-size: x-small;
+}
+
+#footer {
+	text-align: center;
+	font-size: x-small;
+	margin-top: 2em;
+}
+
+#invite {
+	margin-top: 2em;
+	text-align: center;
+	font-size: large;
+	margin-left: auto;
+	margin-right: auto;
+	width: 25em;
+	height: 43px;
+	background: #f7f7f7;
+	border: 1px #dddddd solid;
+}
+
+#invite img {
+	vertical-align: middle;
+	padding-right: 1em;
+}
+
+#invite a {
+	text-decoration: none;
+}
+
+.error {
+	font-weight: bold;
+	color: red;
+	border: 1px black dotted;
+	background: #ffdddd;
+}
+
+.STATUS_YES, .STATUS_1 {
+	background: #9cff9c;
+}
+
+.STATUS_MAYBE, .STATUS_3 {
+	background: #feff96;
+}
+
+.STATUS_NO, .STATUS_2 {
+	background: #fdc678;
+}
+
+.STATUS_UNKNOWN, .STATUS_4 {
+	color: #cccccc;
+}

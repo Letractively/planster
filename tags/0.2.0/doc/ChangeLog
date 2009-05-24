@@ -1,0 +1,21 @@
+Get the latest version of this file at http://tools.desire.ch/planster/
+===============================================================================
+
+v0.2.0 (26 Apr 2006)
+====================
+ * Added a cron script to erase expired events
+ * Slightly changed some templates
+ * Implemented invitations
+ * Added RDF feeds to track changes to events
+
+v0.1.1 (12 Apr 2006)
+====================
+ * Events with insufficient data would be saved despite the warning to
+   fill in all required values (fixed).
+ * Some database fields were too small (fixed).
+ * Event creators now receive an e-mail message with information about the
+   newly created event.
+
+v0.1.0 (11 Apr 2006)
+====================
+ * Initial public release

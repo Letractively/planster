@@ -1,0 +1,470 @@
+body {
+	padding: 0;
+	border: 0;
+	margin: 0;
+	color: #666666;
+	text-align: center;
+}
+
+#mainTable {
+	text-align: center;
+}
+
+div {
+	text-align: left;
+}
+
+body, input {
+	font-family: Arial, sans-serif;
+}
+
+img {
+	border: 0;
+	vertical-align: middle;
+}
+
+input {
+	vertical-align: middle;
+}
+
+td {
+	vertical-align: top;
+}
+
+table.event, #main {
+	text-align: left;
+	margin: 0 auto;
+	border: 1px #eeeeee solid;
+	background: #f7f7f7;
+	padding: 1em;
+}
+
+#main {
+	width: 45em;
+	background: #fbfbfb;
+	padding-bottom: 0;
+	min-height: 400px;
+	position: relative;
+	top: 0;
+}
+
+#main .subItems {
+	position: absolute;
+	bottom: 0;
+	font-size: small;
+	list-style-type: none;
+	display: inline;
+}
+
+#main .subItems img {
+	position: relative;
+	left: -6px;
+}
+
+#main .subItems li {
+	padding: 10px;
+	width: 200px;
+	float: left;
+}
+
+#main .left {
+	float: left;
+	height: 250px;
+	width: 16em;
+	padding: 1em;
+	font-size: small;
+	background-image: url(img/1.gif);
+	background-repeat: no-repeat;
+}
+
+#main .center {
+	float: left;
+	height: 250px;
+	width: 16em;
+	padding: 1em;
+	font-size: small;
+	border-right: 1px #dddddd solid;
+	border-left: 1px #dddddd solid;
+	background-image: url(img/2.gif);
+	background-repeat: no-repeat;
+}
+
+#main .right {
+	float: left;
+	height: 250px;
+	width: 16em;
+	padding: 1em;
+	font-size: small;
+	background-image: url(img/3.gif);
+	background-repeat: no-repeat;
+}
+
+.closeButton {
+	float: right;
+	position: relative;
+	width: 16px;
+	height: 16px;
+}
+
+.warn {
+	color: red;
+}
+
+td.clone {
+	vertical-align: top;
+}
+
+input.warn {
+	border-color: red;
+	color: black;
+}
+
+h1 {
+	background: #3d6493;
+	background: #97b6b8;
+	color: white;
+	border-bottom: 1px #789193 solid;
+	margin: 0;
+	font-size: xx-large;
+	padding-left: 9px;
+	text-align: left;
+	font-weight: bold;
+}
+
+h1 a {
+	color: white;
+	text-decoration: none;
+}
+
+h2 {
+	height: 80px;
+	border-bottom: 1px #dddddd solid;
+	margin: 0;
+}
+
+.event td {
+	width: 8em;
+	text-align: center;
+	border: 1px #eeeeee solid;
+	font-size: small;
+	padding: 0;
+	white-space: nowrap;
+}
+
+.event td.editing {
+	width: 150px;
+}
+
+.event td.clear {
+	border: 0;
+	width: 0;
+	height: 0;
+}
+
+.event th {
+	width: 100px;
+	text-align: center;
+	font-weight: normal;
+}
+
+.event th a {
+	font-weight: normal;
+}
+
+.event th.add {
+	text-align: left;
+	width: 0;
+	height: 0;
+}
+
+.event th img.calendar {
+	float: right;
+	margin-top: .2em;
+	border: 0;
+}
+
+a {
+	font-weight: bold;
+	color: #666666;
+}
+
+form {
+	margin: 0;
+	display: inline;
+}
+
+#product_note {
+	margin-top: 0;
+	border: 0;
+	padding: 0;
+	padding-right: 2px;
+	text-align: right;
+	font-size: x-small;
+}
+
+#footer {
+	text-align: center;
+	font-size: x-small;
+	margin-top: 2em;
+}
+
+#eventOptions {
+	background: #f7f7f7;
+	border: 1px #dddddd solid;
+	text-align: center;
+	width: 170px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 2em;
+}
+
+#eventOptions img {
+	vertical-align: middle;
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+#eventOptions a {
+	text-decoration: none;
+}
+
+.error {
+	font-weight: bold;
+	color: red;
+	border: 1px black dotted;
+	background: #ffdddd;
+}
+
+.STATUS_YES, .STATUS_1 {
+	background: #9cff9c;
+}
+
+.STATUS_MAYBE, .STATUS_3 {
+	background: #feff96;
+}
+
+.STATUS_NO, .STATUS_2 {
+	background: #fdc678;
+}
+
+.STATUS_UNKNOWN, .STATUS_4 {
+	color: #cccccc;
+}
+
+#leftBox {
+	float: left;
+	margin-left: 5px;
+	width: 10em;
+}
+
+#rightBox {
+	float: right;
+	margin-right: 5px;
+	width: 10em;
+}
+
+#leftBox, #rightBox {
+	border: 1px #3d6493 solid;
+}
+
+h3 {
+	margin-top: 0;
+	margin-bottom: .5em;
+	background: #3d6493;
+	color: white;
+	padding-left: 5px;
+}
+
+#leftBox ul, #rightBox ul {
+	margin-top: 0;
+	padding-left: 2em;
+}
+
+.hovering {
+	background: #e3e8ef;
+}
+
+.hiddenHandle {
+	margin-top: .3em;
+	float: right;
+	display: none;
+}
+
+.handle {
+	margin-top: .3em;
+	float: right;
+}
+
+.hidden {
+	display: none;
+}
+
+.group {
+	font-size: x-small;
+	color: black;
+	border-top: 1px #bbbbbb solid;
+	border-bottom: 1px #bbbbbb solid;
+}
+
+.dateTitle a {
+	text-decoration: none;
+}
+
+.dateTitle a:hover {
+	text-decoration: underline;
+}
+
+.group a {
+	text-decoration: none;
+}
+
+.group a:hover {
+	text-decoration: underline;
+}
+
+#navi {
+	float: left;
+	background: #e2f2f3;
+	width: 160px;
+	margin: 0 3px 0 0;
+}
+
+#navi ul {
+	padding: 0;
+	margin: 0;
+	list-style-type: none;
+	font-size: small;
+}
+
+#navi li {
+	border-bottom: 2px white solid;
+	padding: 2px 10px 2px 10px;
+	position: relative;
+	top: 0;
+}
+
+#navi ul .toggle {
+	margin: 0;
+	position: relative;
+	left: -8px;
+}
+
+#navi input, #navi select {
+	font-size: x-small;
+	margin-bottom: 2px;
+}
+
+#navi a {
+	text-decoration: none;
+}
+
+#navi .body {
+	margin-top: 5px;
+}
+
+#navi .submit {
+	position: absolute;
+	right: 9px;
+	background: transparent;
+	border: 0;
+	color: #666666;
+	font-size: small;
+	font-weight: bold;
+	padding: 0;
+	cursor: pointer;
+}
+
+#navi .calIcon {
+	position: absolute;
+	right: 9px;
+}
+
+#navi p {
+	margin: 2px 0 2px 0;
+}
+
+.navInput {
+	display: none;
+}
+
+#navi .corner {
+	background-repeat: no-repeat;
+	font-size: 0px;
+	position: absolute;
+	height: 8px;
+	width: 8px;
+}
+
+#navi .tl {
+	display: none;
+	top: 0;
+	left: 0;
+	background-image: url(img/nav-topleft.png);
+}
+
+#navi .tr {
+	top: 0;
+	right: 0;
+	background-image: url(img/nav-topright.png);
+}
+
+#navi .bl {
+	display: none;
+	bottom: 0;
+	left: 0;
+	background-image: url(img/nav-bottomleft.png);
+}
+
+#navi .br {
+	bottom: 0;
+	right: 0;
+	background-image: url(img/nav-bottomright.png);
+}
+
+#navi input.text {
+	width: 115px;
+}
+
+#message {
+	position: absolute;
+	top: 38px;
+	left: 2px;
+	padding: 2px 8px 2px 8px;
+	font-size: small;
+	background-color: #00b000;
+	color: white;
+}
+
+#message .corner {
+	position: absolute;
+	height: 4px;
+	width: 4px;
+}
+
+#message .tl {
+	top: 0;
+	left: 0;
+	background-image: url(img/msg-tl.gif);
+}
+
+#message .tr {
+	top: 0;
+	right: 0;
+	background-image: url(img/msg-tr.gif);
+}
+
+#message .bl {
+	bottom: 0;
+	left: 0;
+	background-image: url(img/msg-bl.gif);
+}
+
+#message .br {
+	bottom: 0;
+	right: 0;
+	background-image: url(img/msg-br.gif);
+}
+
+#message a {
+	color: white;
+}

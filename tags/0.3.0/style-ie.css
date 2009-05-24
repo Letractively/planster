@@ -1,0 +1,15 @@
+#main {
+	height: 400px;
+}
+
+#navi .corner {
+	display: none;
+}
+
+#message {
+	top: 40px;
+}
+
+#message .corner {
+	display: none;
+}

@@ -1,0 +1,23 @@
+RewriteEngine on
+
+RewriteRule ^([0-9a-zA-Z]{12})$ event.php?id=$1 [L]
+RewriteRule ^([0-9a-zA-Z]{12})/title$ title.php?eventID=$1 [L]
+RewriteRule ^([0-9a-zA-Z]{12})/editstatus/(.*)$ editstatus.php?eventID=$1&personID=$2 [L]
+RewriteRule ^([0-9a-zA-Z]{12})/adddate$ date.php?eventID=$1 [L]
+RewriteRule ^([0-9a-zA-Z]{12})/addgroup$ group.php?eventID=$1 [L]
+RewriteRule ^([0-9a-zA-Z]{12})/addgroups$ group.php?eventID=$1 [L]
+RewriteRule ^([0-9a-zA-Z]{12})/invite$ invite.php?eventID=$1 [L]
+RewriteRule ^([0-9a-zA-Z]{12})/status$ status.php?eventID=$1 [L]
+RewriteRule ^([0-9a-zA-Z]{12})/groupboxes$ groupboxes.php?eventID=$1 [L]
+RewriteRule ^group/([0-9]+)/add/([0-9]+)$ addtogroup.php?date=$2&group=$1
+RewriteRule ^group/([0-9]+)$ group.php?group=$1
+RewriteRule ^([0-9a-zA-Z]{12})/clone$ clone.php?eventID=$1 [L]
+RewriteRule ^([0-9a-zA-Z]{12})/switch$ switch.php?eventID=$1 [L]
+RewriteRule ^([0-9a-zA-Z]{12})/rdf feed.php?id=$1 [L]
+RewriteRule ^([0-9a-zA-Z]{12})/feed feed.php?id=$1 [L]
+RewriteRule ^dates$ date.php [L]
+RewriteRule ^dates/(.*)/edit$ date.php?id=$1&edit=true [L]
+RewriteRule ^dates/(.*)$ date.php?id=$1 [L]
+RewriteRule ^plan-it$ register.php [L]
+RewriteRule ^show.php$ event.php
+RewriteRule ^about$ about.php
