@@ -1,0 +1,12 @@
+Get the latest version of this file at http://tools.desire.ch/planster/
+===============================================================================
+
+Since version 0.2.0, PLANster has a new database table to log changes made
+to events. In order to update your installation, you have two options:
+
+ - Re-run setup: This will destroy all existing events in your database. You
+   might want to dump your database first and reimport the dump after running
+   the setup script.
+
+ - Manually modify your database: This is slightly more work (you can figure
+   out the table layout from the setup script) but will preserve your data.
