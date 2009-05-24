@@ -1,0 +1,166 @@
+body {
+	padding: 0;
+	border: 0;
+	margin: 0;
+	color: #666666;
+}
+
+img {
+	border: 0;
+}
+
+table.event, #main {
+	margin: 0 auto;
+	border: 1px #eeeeee solid;
+	background: #f7f7f7;
+	padding: 1em;
+}
+
+#main {
+	width: 40em;
+}
+
+.closeButton {
+	float: right;
+	position: relative;
+	width: 16px;
+	height: 16px;
+}
+
+.warn {
+	color: red;
+}
+
+td.clone {
+	vertical-align: top;
+}
+
+input.warn {
+	border-color: red;
+	color: black;
+}
+
+h1 {
+	border-bottom: 1px black solid;
+	background: #3d6493;
+	color: white;
+	padding-left: 10px;
+	margin: 0;
+	text-align: center;
+}
+
+h1 a {
+	color: white;
+	text-decoration: none;
+}
+
+.event td {
+	width: 8em;
+	text-align: center;
+	border: 1px #dddddd solid;
+	font-size: small;
+	padding-top: 3px;
+}
+
+.event td.editing {
+	width: 150px;
+	white-space: nowrap;
+}
+
+.event td.clear {
+	border: 0;
+}
+
+.event th {
+	width: 100px;
+	text-align: center;
+	white-space: nowrap;
+}
+
+.event th a {
+	font-weight: normal;
+}
+
+.event th.add {
+	text-align: left;
+	width: 19px;
+	height: 19px;
+}
+
+a {
+	font-weight: bold;
+	color: #666666;
+}
+
+form {
+	margin: 0;
+	display: inline;
+}
+
+#product_note {
+	margin-top: 0;
+	border: 0;
+	padding: 0;
+	text-align: right;
+	font-style: italic;
+	font-size: x-small;
+}
+
+#footer {
+	text-align: center;
+	font-size: x-small;
+	margin-top: 2em;
+}
+
+#eventOptions {
+	background: #f7f7f7;
+	border: 1px #dddddd solid;
+	text-align: center;
+	width: 170px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 2em;
+}
+
+#eventOptions img {
+	vertical-align: middle;
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+#eventOptions a {
+	text-decoration: none;
+}
+
+#dialog {
+	padding-left: 1em;
+	margin-top: 2em;
+	margin-left: auto;
+	margin-right: auto;
+	width: 30em;
+	background: #f7f7f7;
+	border: 1px #dddddd solid;
+}
+
+.error {
+	font-weight: bold;
+	color: red;
+	border: 1px black dotted;
+	background: #ffdddd;
+}
+
+.STATUS_YES, .STATUS_1 {
+	background: #9cff9c;
+}
+
+.STATUS_MAYBE, .STATUS_3 {
+	background: #feff96;
+}
+
+.STATUS_NO, .STATUS_2 {
+	background: #fdc678;
+}
+
+.STATUS_UNKNOWN, .STATUS_4 {
+	color: #cccccc;
+}

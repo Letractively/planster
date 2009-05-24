@@ -1,0 +1,45 @@
+Get the latest version of this file at http://tools.desire.ch/planster/
+===============================================================================
+
+PLANster is a free software which allows you to coordinate virtually anything
+(meetings, events, food taste, ...) with your friends.
+
+
+REQUIREMENTS
+------------
+
+In order to run PLANster, you'll need to have the ADOdb Database Abstraction
+Library for PHP installed on your system. That library can be downlaoded from
+http://adodb.sourceforge.net/ (tried with version 4.52).
+
+Some kind of database which is supported by ADOdb (tried with MySQL 4.1).
+
+
+INSTALLATION
+------------
+
+When ADOdb is installed, change to PLANster's config directory, rename
+site.conf.php-dist to site.conf.php and configure your database connection in
+there.
+
+Now, go back to PLANster's main folder, edit setup.php and comment the line
+which says "die('Site already configured');". Afterwards, call setup.php in
+your browser. The script will check whether the smarty template compile
+directory is writable, whether ADOdb is installed and whether you database
+connection works. If everything is OK, click "Initialize database" to have the
+db layout created. Don't forget to remove the setup.php script afterwards or at
+least reactive the "die(..)" line mentioned above - otherwise anyone will be
+able to reset your database.
+
+Now, if you'd like to import the demo-events, use the demo.sql script which
+can be found in this directory. Either just copy & paste its contents into
+your favourite db frontend (eg. phpmyadmin), or use a command-line database
+client (for mysql: mysql YOUR_DATABASE < demo.sql).
+
+That's it.
+
+
+CONTACT
+-------
+
+If you wish to contact me, see http://www.desire.ch/contact.php

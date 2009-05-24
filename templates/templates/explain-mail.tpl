@@ -1,0 +1,1 @@
+Your e-mail address is used to send a message about your newly created event. It will be deleted from our database as soon as your event is over and we are not going to give it out to anyone.<br /><br />Also, you are not going to receive any unsolicited e-mail from us.
