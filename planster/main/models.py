@@ -116,7 +116,7 @@ class Option(models.Model):
 				tags.remove(tag.name)
 
 		for item in tags:
-			tag = Tag(name=item, option=self)
+			tag = Tag(name=item.strip(), option=self)
 			tag.save()
 
 	tags = property(fget=__get_tags, fset=__set_tags)

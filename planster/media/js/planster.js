@@ -99,13 +99,28 @@ function askItem(item)
 	{
 		$('itemID').value = '';
 		$('itemTitle').value = '';
+		$('itemTags').value = '';
 		$('editItemTitle').hide();
 		$('addItemTitle').show();
 	}
 	else
 	{
-		$('itemID').value = item.parentNode.id.split('-')[1];
+		var itemID = item.parentNode.id.split('-')[1];
+		$('itemID').value = itemID;
 		$('itemTitle').value = item.innerHTML;
+		$('itemTags').value = '(please wait)';
+
+		var id = 'sUC53rZrsP76jOX';
+		var url = 'rpc/' + id + '/options/' + itemID;
+		new Ajax.Request(url, {
+			method: 'get',
+			onSuccess: function(transport)
+			{
+				var data = transport.responseJSON;
+				var tags = data['tags'];
+				$('itemTags').value = tags;
+			}
+		});
 		$('editItemTitle').show();
 		$('addItemTitle').hide();
 	}
@@ -460,7 +475,8 @@ function saveEditedItem(plan, data, id)
 function saveItem(form, plan)
 {
 	var title = $F(form.title);
-	var data = $H({'title': title});
+	var tags = $F(form.tags).split(',');
+	var data = $H({'title': title, 'tags': tags});
 	var id = $F(form.id);
 
 	if (id.empty())
