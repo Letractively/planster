@@ -160,11 +160,11 @@ class PlansterOptionsRPCHandler(PlansterAttributeRPCHandler):
 
 		item = Option(name=title, plan=self.plan)
 
-		item.save()
+		if 'category' in args:
+			category = args['category'].strip()
+			item.category = category
 
-		if 'tags' in args:
-			tags = args['tags']
-			item.tags = tags
+		item.save()
 
 		response = HttpResponseCreated('/rpc/%s/options/%s' % (
 			self.plan.hash, item.id))
@@ -172,7 +172,7 @@ class PlansterOptionsRPCHandler(PlansterAttributeRPCHandler):
 		data = {
 			'id': str(item.id),
 			'title': item.name,
-			'tags': item.tags
+			'category': item.category
 		}
 		response.content = simplejson.dumps(data)
 		response['Content-type'] = 'application/json'
@@ -210,9 +210,9 @@ class PlansterOptionRPCHandler(PlansterAttributeRPCHandler):
 			self.option.name = title
 			self.option.save()
 
-		if 'tags' in args:
-			tags = args['tags']
-			self.option.tags = tags
+		if 'category' in args:
+			category = args['category'].strip()
+			self.option.category = category
 			self.option.save()
 
 		return self.get()
@@ -222,7 +222,7 @@ class PlansterOptionRPCHandler(PlansterAttributeRPCHandler):
 			'title': self.option.name,
 			'id': self.option.id,
 			'count': self.option.count(),
-			'tags': self.option.tags
+			'category': self.option.category
 		}))
 		response['Content-type'] = 'application/json'
 		return response
