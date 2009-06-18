@@ -141,6 +141,7 @@ table.responses td.option {
 	opacity: .9;
 	border: 3px #555753 solid;
 	white-space: nowrap;
+	z-index: 10;
 }
 
 .popup .title {
