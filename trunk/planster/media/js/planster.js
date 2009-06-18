@@ -97,16 +97,15 @@ function askItem(item)
 
 	if (item.parentNode.className == 'addItem')
 	{
+		$('itemID').value = '';
 		$('itemTitle').value = '';
-		$('itemTitle').parentNode.parentNode.id.value = '';
 		$('editItemTitle').hide();
 		$('addItemTitle').show();
 	}
 	else
 	{
+		$('itemID').value = item.parentNode.id.split('-')[1];
 		$('itemTitle').value = item.innerHTML;
-		$('itemTitle').parentNode.parentNode.id.value =
-			item.parentNode.id.split('-')[1];
 		$('editItemTitle').show();
 		$('addItemTitle').hide();
 	}

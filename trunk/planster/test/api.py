@@ -450,6 +450,25 @@ class TestAPI(unittest.TestCase):
 		milk = json.loads(answer.read())
 		self.assertEqual(milk['title'], data['title'])
 
+	def testTags(self):
+		tags = ['white', 'goes with cereals']
+		milk = {'title': 'Milk', 'tags': tags}
+		answer = self.__http_put(self.planID + '/options', milk)
+		self.assertEqual(answer.status, HTTP_CREATED)
+		milk = json.loads(answer.read())
+		id = str(milk['id'])
+		self.assertEqual(milk['tags'], tags)
+
+		tags = ['liquid', 'must be cold', 'white']
+		milk['tags'] = tags
+		answer = self.__http_post(self.planID + '/options/' + id, milk)
+		self.assertEqual(answer.status, HTTP_OK)
+
+		milk = json.loads(answer.read())
+		tags.sort()
+		milk['tags'].sort()
+		self.assertEqual(milk['tags'], tags)
+
 	def testPutItems(self):
 		items = ['Pizza', 'Pasta', 'Meat']
 

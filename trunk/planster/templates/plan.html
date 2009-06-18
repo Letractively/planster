@@ -21,8 +21,16 @@
 		</div><div class="content">
 			<form onsubmit="javascript:saveItem(this, '{{ plan.hash }}'); return false" action="$" onkeypress="javascript:closeItemPopupOnEscape(event); return true">
 				<div>
-					<input name="title" id="itemTitle" />
-					<input name="id" type="hidden" value="" />
+					<table>
+						<tr>
+							<td>Title</td>
+							<td><input name="title" id="itemTitle" /></td>
+						</tr><tr>
+							<td>Tags</td>
+							<td><input name="tags" id="itemTags" /></td>
+						</tr>
+					</table>
+					<input name="id" type="hidden" value="" id="itemID" />
 					<div id="calendar" style="padding: 10px 0">
 						<script type="text/javascript"><!--
 						var cal = Calendar.setup ({
