@@ -97,6 +97,34 @@ class Option(models.Model):
 
 		return sum
 
+	def __get_tags(self):
+		tags = Tag.objects.filter(option=self)
+		result = []
+
+		for tag in tags:
+			result.append(tag.name)
+
+		return result
+
+	def __set_tags(self, tags):
+		current_tags = Tag.objects.filter(option=self)
+
+		for tag in current_tags:
+			if tag.name not in tags:
+				tag.delete()
+			else:
+				tags.remove(tag.name)
+
+		for item in tags:
+			tag = Tag(name=item, option=self)
+			tag.save()
+
+	tags = property(fget=__get_tags, fset=__set_tags)
+
+class Tag(models.Model):
+	name = models.CharField(max_length=100)
+	option = models.ForeignKey(Option)
+
 class Response(models.Model):
 	option = models.ForeignKey(Option)
 	participant = models.ForeignKey(Participant)
