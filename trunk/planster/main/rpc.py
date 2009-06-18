@@ -34,11 +34,17 @@ class PlansterRPCHandler(object):
 		if request.method == 'PUT':
 			data = request.raw_post_data
 			return self.__handle_data(self.put, data)
+		elif request.method == 'DELETE':
+			return self.delete()
 		elif request.method == 'POST':
 			if ('_method' in request.POST and
 				request.POST['_method'].upper() == 'PUT'):
 				data = request.POST['data']
 				return self.__handle_data(self.put, data)
+			elif ('_method' in request.POST and
+				request.POST['_method'].upper() == 'DELETE'):
+				return self.delete()
+#				return self.__handle_data(self.delete, data)
 			else:
 				data = request.raw_post_data
 				return self.__handle_data(self.post, data)
@@ -53,7 +59,7 @@ class PlansterPlansRPCHandler(PlansterRPCHandler):
 	def put(self, args):
 		plan = Plan()
 
-#		"""
+		"""
 		if not 'captcha-id' in args:
 			return HttpResponseBadRequest('Weird')
 		if not 'captcha-value' in args:
@@ -73,7 +79,7 @@ class PlansterPlansRPCHandler(PlansterRPCHandler):
 			response = HttpResponseForbidden('Wrong answer')
 			response['location'] = captcha.uid
 			return response
-#		"""
+		"""
 
 		if 'title' in args:
 			plan.title = args['title']
@@ -147,7 +153,10 @@ class PlansterOptionsRPCHandler(PlansterAttributeRPCHandler):
 		if not 'title' in args:
 			return HttpResponseBadRequest()
 
-		title = args['title']
+		title = args['title'].strip()
+
+		if len(title) == 0:
+			return HttpResponseBadRequest()
 
 		item = Option(name=title, plan=self.plan)
 		item.save()
@@ -187,7 +196,12 @@ class PlansterOptionRPCHandler(PlansterAttributeRPCHandler):
 
 	def post(self, args):
 		if 'title' in args:
-			self.option.name = args['title']
+			title = args['title'].strip()
+
+			if len(title) == 0:
+				return HttpResponseBadRequest()
+
+			self.option.name = title
 			self.option.save()
 
 		return self.get()
@@ -201,12 +215,19 @@ class PlansterOptionRPCHandler(PlansterAttributeRPCHandler):
 		response['Content-type'] = 'application/json'
 		return response
 
+	def delete(self):
+		self.option.delete()
+		return HttpResponse()
+
 class PlansterPeopleRPCHandler(PlansterAttributeRPCHandler):
 	def put(self, args):
 		if not 'name' in args:
 			return HttpResponseBadRequest()
 
-		name = args['name']
+		name = args['name'].strip()
+
+		if len(name) == 0:
+			return HttpResponseBadRequest()
 
 		person = Participant(name=name, plan=self.plan)
 		person.save()
@@ -238,7 +259,11 @@ class PlansterPersonRPCHandler(PlansterAttributeRPCHandler):
 
 	def post(self, args):
 		if 'name' in args:
-			self.person.name = args['name']
+			name = args['name'].strip()
+			if len(name) == 0:
+				return HttpResponseBadRequest()
+
+			self.person.name = name
 			self.person.save()
 
 		response = HttpResponse(simplejson.dumps({
@@ -256,6 +281,10 @@ class PlansterPersonRPCHandler(PlansterAttributeRPCHandler):
 		}))
 		response['Content-type'] = 'application/json'
 		return response
+
+	def delete(self):
+		self.person.delete()
+		return HttpResponse()
 
 class PlansterResponsesRPCHandler(PlansterAttributeRPCHandler):
 	def __init__(self, plan_hash, person_id):
