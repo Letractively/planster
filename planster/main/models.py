@@ -49,11 +49,31 @@ class Plan(models.Model):
 	def __get_options(self):
 		return Option.objects.filter(plan=self)
 
+	def __by_category(self):
+		options = Option.objects.filter(plan=self)
+
+		categories = {}
+
+		for option in options:
+			category = option.category
+			if not category in categories:
+				categories[category] = Category(category)
+
+			categories[category].add(option)
+
+		result = []
+		for category in categories:
+			result.append(categories[category])
+
+		print result
+		return result
+
 	def __unicode__(self):
 		return self.title;
 
 	people = property(fget=__get_people)
 	options = property(fget=__get_options)
+	by_category = property(fget=__by_category)
 
 class Participant(models.Model):
 	name = models.CharField(max_length=100)
@@ -77,9 +97,18 @@ class Participant(models.Model):
 		except:
 			return 0
 
+class Category(object):
+	def __init__(self, name):
+		self.name = name
+		self.items = []
+
+	def add(self, item):
+		self.items.append(item)
+
 class Option(models.Model):
 	name = models.CharField(max_length=100)
 	plan = models.ForeignKey(Plan)
+	category = models.CharField(max_length=100, default='')
 
 	def __unicode__(self):
 		return self.name

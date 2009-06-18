@@ -87,6 +87,24 @@ function closeResponsePopup()
 	$('responsePopup').hide();
 }
 
+function getCategoryForOption(option)
+{
+	var item = $('option-' + option);
+	var other = item.parentNode;
+
+	while (other = other.previous())
+	{
+		var td = other.select('td')[0];
+		if (!td)
+			continue;
+
+		if (td.className == 'category')
+		{
+			return td.innerHTML;
+		}
+	}
+	return '';
+}
 
 function askItem(item)
 {
@@ -98,8 +116,8 @@ function askItem(item)
 	if (item.parentNode.className == 'addItem')
 	{
 		$('itemID').value = '';
+		$('itemCategory').value = '';
 		$('itemTitle').value = '';
-		$('itemTags').value = '';
 		$('editItemTitle').hide();
 		$('addItemTitle').show();
 	}
@@ -108,19 +126,7 @@ function askItem(item)
 		var itemID = item.parentNode.id.split('-')[1];
 		$('itemID').value = itemID;
 		$('itemTitle').value = item.innerHTML;
-		$('itemTags').value = '(please wait)';
-
-		var id = 'sUC53rZrsP76jOX';
-		var url = 'rpc/' + id + '/options/' + itemID;
-		new Ajax.Request(url, {
-			method: 'get',
-			onSuccess: function(transport)
-			{
-				var data = transport.responseJSON;
-				var tags = data['tags'];
-				$('itemTags').value = tags;
-			}
-		});
+		$('itemCategory').value = getCategoryForOption(itemID)
 		$('editItemTitle').show();
 		$('addItemTitle').hide();
 	}
@@ -128,7 +134,6 @@ function askItem(item)
 	showPopup($('itemPopup'), item);
 	$('itemTitle').activate();
 }
-
 
 function toggleCalendar()
 {
@@ -464,6 +469,13 @@ function saveEditedItem(plan, data, id)
 			{
 				var data = transport.responseJSON;
 				var title = data.title;
+				var category = data.category;
+				var old_category = getCategoryForOption(id);
+
+				if (old_category != category)
+					window.location = plan;
+
+				var x = getCategoryForItem(item);
 				$('option-' + id).childNodes[0].update(title);
 				closeItemPopup();
 			},
@@ -475,8 +487,8 @@ function saveEditedItem(plan, data, id)
 function saveItem(form, plan)
 {
 	var title = $F(form.title);
-	var tags = $F(form.tags).split(',');
-	var data = $H({'title': title, 'tags': tags});
+	var category = $F(form.category);
+	var data = $H({'title': title, 'category': category});
 	var id = $F(form.id);
 
 	if (id.empty())

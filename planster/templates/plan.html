@@ -26,8 +26,8 @@
 							<td>Title</td>
 							<td><input name="title" id="itemTitle" /></td>
 						</tr><tr>
-							<td>Tags</td>
-							<td><input name="tags" id="itemTags" /></td>
+							<td>Category</td>
+							<td><input name="category" id="itemCategory" /></td>
 						</tr>
 					</table>
 					<input name="id" type="hidden" value="" id="itemID" />
@@ -119,7 +119,13 @@
 				<th class="count" id="count" {% ifequal plan.count_type 1 %}style="display: none" {% endifequal %}>Total</th>
 				<th class="addItem"><a href="#" onclick="javascript:askPerson(this); return false">Click to add a person</a></th>
 			</tr>
-				{% for option in plan.options %}
+				{% for category in plan.by_category %}
+				{% if category.name %}
+				<tr>
+					<td class="category" colspan="{{ plan.people|length|add:"1" }}">{{ category.name }}</td><td colspan="2" />
+				</tr>
+				{% endif %}
+					{% for option in category.items %}
 				<tr>
 					<td class="option" id="option-{{ option.id }}"><a href="#" onclick="javascript:askItem(this); return false">{{ option.name }}</a></td>
 					{% for person in plan.people %}
@@ -128,6 +134,17 @@
 					<td class="count" id="{{ option.id }}-count" {% ifequal plan.count_type 1 %}style="display: none" {% endifequal %}>{{ option.count }}</td>
 					<td></td>
 				</tr>
+					{% endfor %}
+				{% endfor %}
+				{% for option in plan.options %}
+<!--				<tr>
+					<td class="option" id="option-{{ option.id }}"><a href="#" onclick="javascript:askItem(this); return false">{{ option.name }}</a></td>
+					{% for person in plan.people %}
+					<td id="response-{{ person.id }}-{{ option.id }}" class="answer"><a href="#" onclick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/{% get_status option person %}.png" alt="unknown" title="unknown" /></a></td>
+					{% endfor %}
+					<td class="count" id="{{ option.id }}-count" {% ifequal plan.count_type 1 %}style="display: none" {% endifequal %}>{{ option.count }}</td>
+					<td></td>
+				</tr>-->
 				{% endfor %}
 				<tr>
 					<td class="addItem"><a href="#" onclick="javascript:askItem(this); return false" id="addItemLink">Click to add an item</a></td>

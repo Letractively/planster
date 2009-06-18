@@ -73,6 +73,12 @@ table.responses th.count {
 	color: #c8ccc6;
 }
 
+table.responses td.category {
+	font-weight: bold;
+	font-style: italic;
+	font-size: x-small;
+}
+
 table.responses td.option a,
 table.responses th.person a {
 	text-decoration: none;
