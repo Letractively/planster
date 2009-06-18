@@ -8,6 +8,10 @@ from django.utils import simplejson as json
 
 port=8000
 
+HTTP_OK = 200
+HTTP_CREATED = 201
+HTTP_BADREQ = 400
+
 class TestAPI(unittest.TestCase):
 	cookie = None
 
@@ -77,9 +81,28 @@ class TestAPI(unittest.TestCase):
 		response = connection.getresponse()
 		return response
 
+	def __http_post_delete(self, url):
+		params = urllib.urlencode({'_method': 'delete'})
+		connection = httplib.HTTPConnection('localhost', port)
+		headers = {"Accept": "application/json"}
+		if self.cookie:
+			headers['Cookie'] = self.cookie
+		connection.request("POST", '/rpc/' + url, params, headers)
+		response = connection.getresponse()
+		return response
+
+	def __http_delete(self, url):
+		connection = httplib.HTTPConnection('localhost', port)
+		headers = {"Accept": "application/json"}
+		if self.cookie:
+			headers['Cookie'] = self.cookie
+		connection.request("DELETE", '/rpc/' + url, '', headers)
+		response = connection.getresponse()
+		return response
+
 	def __http_get(self, url):
 		connection = httplib.HTTPConnection('localhost', port)
-		headers = {}
+		headers = {"Accept": "application/json"}
 		if self.cookie:
 			headers['Cookie'] = self.cookie
 		connection.request("GET", '/rpc/' + url, '', headers)
@@ -363,6 +386,69 @@ class TestAPI(unittest.TestCase):
 		self.assertTrue('title' in data)
 		self.assertEqual(good['title'], data['title'])
 
+	def testDeleteItem(self):
+		milk = {'title': 'Milk'}
+		beer = {'title': 'Beer'}
+
+		answer = self.__http_put(self.planID + '/options', milk)
+		self.assertEqual(HTTP_CREATED, answer.status)
+
+		answer = self.__http_put(self.planID + '/options', beer)
+		self.assertEqual(HTTP_CREATED, answer.status)
+		data = json.loads(answer.read())
+		id = str(data['id'])
+
+		answer = self.__http_get(self.planID + '/options')
+		self.assertEqual(HTTP_OK, answer.status)
+		data = json.loads(answer.read())
+		self.assertEqual(len(data), 2)
+
+		answer = self.__http_delete(self.planID + '/options/' + id)
+		self.assertEqual(HTTP_OK, answer.status)
+
+		answer = self.__http_get(self.planID + '/options')
+		self.assertEqual(HTTP_OK, answer.status)
+		data = json.loads(answer.read())
+		self.assertEqual(len(data), 1)
+		self.assertEqual(data[0]['title'], milk['title'])
+
+		answer = self.__http_put(self.planID + '/options', beer)
+		self.assertEqual(HTTP_CREATED, answer.status)
+		data = json.loads(answer.read())
+		id = str(data['id'])
+
+		answer = self.__http_post_delete(self.planID + '/options/' + id)
+		self.assertEqual(HTTP_OK, answer.status)
+
+		answer = self.__http_get(self.planID + '/options')
+		self.assertEqual(HTTP_OK, answer.status)
+		data = json.loads(answer.read())
+		self.assertEqual(len(data), 1)
+		self.assertEqual(data[0]['title'], milk['title'])
+
+	def testInvalidItem(self):
+		data = {'title': ''}
+		answer = self.__http_put(self.planID + '/options', data)
+		self.assertEqual(answer.status, HTTP_BADREQ)
+
+		data = {'title': '      '}
+		answer = self.__http_put(self.planID + '/options', data)
+		self.assertEqual(answer.status, HTTP_BADREQ)
+
+		data = {'title': 'Milk'}
+		answer = self.__http_put(self.planID + '/options', data)
+		self.assertEqual(answer.status, HTTP_CREATED)
+		milk = json.loads(answer.read())
+
+		id = str(milk['id'])
+		milk['title'] = '  '
+		answer = self.__http_post(self.planID + '/options/' + id, milk)
+		self.assertEqual(answer.status, HTTP_BADREQ)
+
+		answer = self.__http_get(self.planID + '/options/' + id)
+		self.assertEqual(answer.status, HTTP_OK)
+		milk = json.loads(answer.read())
+		self.assertEqual(milk['title'], data['title'])
 
 	def testPutItems(self):
 		items = ['Pizza', 'Pasta', 'Meat']
@@ -419,6 +505,30 @@ class TestAPI(unittest.TestCase):
 		self.assertTrue(peter in data)
 		self.assertTrue(frank in data)
 
+	def testInvalidPerson(self):
+		data = {'name': ''}
+		answer = self.__http_put(self.planID + '/people', data)
+		self.assertEqual(answer.status, HTTP_BADREQ)
+
+		data = {'name': '      '}
+		answer = self.__http_put(self.planID + '/people', data)
+		self.assertEqual(answer.status, HTTP_BADREQ)
+
+		data = {'name': 'John'}
+		answer = self.__http_put(self.planID + '/people', data)
+		self.assertEqual(answer.status, HTTP_CREATED)
+		john = json.loads(answer.read())
+
+		id = str(john['id'])
+		john['name'] = '  '
+		answer = self.__http_post(self.planID + '/people/' + id, john)
+		self.assertEqual(answer.status, HTTP_BADREQ)
+
+		answer = self.__http_get(self.planID + '/people/' + id)
+		self.assertEqual(answer.status, HTTP_OK)
+		john = json.loads(answer.read())
+		self.assertEqual(john['name'], data['name'])
+
 	def testModifyPerson(self):
 		frank = {'name': 'Frank'}
 		answer = self.__http_put(self.planID + '/people', frank)
@@ -451,6 +561,47 @@ class TestAPI(unittest.TestCase):
 		data = json.loads(answer.read())
 		self.assertTrue('name' in data)
 		self.assertEqual(joe['name'], data['name'])
+
+	def testDeletePerson(self):
+		john = {'name': 'John Doe'}
+		jack = {'name': 'Jack Doe'}
+		answer = self.__http_put(self.planID + '/people', john)
+		self.assertEqual(answer.status, 201)
+
+		answer = self.__http_put(self.planID + '/people', jack)
+		self.assertEqual(answer.status, 201)
+		data = json.loads(answer.read())
+		id = data['id']
+
+		answer = self.__http_get(self.planID + '/people')
+		data = json.loads(answer.read())
+		self.assertEqual(2, len(data))
+
+		answer = self.__http_delete(self.planID + '/people/' + str(id))
+		self.assertEqual(answer.status, 200)
+
+		answer = self.__http_get(self.planID + '/people')
+		data = json.loads(answer.read())
+		self.assertEqual(1, len(data))
+		self.assertEqual(john['name'], data[0]['name'])
+
+		answer = self.__http_put(self.planID + '/people', jack)
+		self.assertEqual(answer.status, 201)
+		data = json.loads(answer.read())
+		id = data['id']
+
+		answer = self.__http_get(self.planID + '/people')
+		data = json.loads(answer.read())
+		self.assertEqual(2, len(data))
+
+		answer = self.__http_post_delete(self.planID + '/people/' +
+				str(id))
+		self.assertEqual(answer.status, 200)
+
+		answer = self.__http_get(self.planID + '/people')
+		data = json.loads(answer.read())
+		self.assertEqual(1, len(data))
+		self.assertEqual(john['name'], data[0]['name'])
 
 	def testSetResponse(self):
 		jack = {'name': 'Jack'}

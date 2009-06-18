@@ -341,18 +341,39 @@ function saveInstructions(form, plan)
 
 function saveEditedPerson(plan, data, id)
 {
-	new Ajax.Request('rpc/' + plan + '/people/' + id,
+	var name = data.get('name');
+
+	if (name.blank())
 	{
-		method: 'post',
-		postBody: data.toJSON(),
-		onSuccess: function(transport)
+		if (!confirm('Delete this person?'))
+			return;
+
+		new Ajax.Request('rpc/' + plan + '/people/' + id,
 		{
-			data = transport.responseJSON;
-			$('person-' + id).childNodes[0].update(data.name);
-			closePersonPopup();
-		},
-		onFailure: function() { error(); }
-	});
+			method: 'delete',
+			onSuccess: function(transport)
+			{
+				window.location = plan;
+			},
+			onFailure: function() { error(); }
+		});
+	}
+	else
+	{
+		new Ajax.Request('rpc/' + plan + '/people/' + id,
+		{
+			method: 'post',
+			postBody: data.toJSON(),
+			onSuccess: function(transport)
+			{
+				var data = transport.responseJSON;
+				var name = data.name;
+				$('person-' + id).childNodes[0].update(name);
+				closePersonPopup();
+			},
+			onFailure: function() { error(); }
+		});
+	}
 }
 
 function saveNewPerson(plan, data)
@@ -371,12 +392,14 @@ function saveNewPerson(plan, data)
 
 function savePerson(form, plan)
 {
-	var data = $H({'name': $F(form.name)});
+	var name = $F(form.name);
+	var data = $H({'name': name});
 	var id = $F(form.id);
 
 	if (id.empty())
 	{
-		saveNewPerson(plan, data);
+		if (!name.blank())
+			saveNewPerson(plan, data);
 	}
 	else
 	{
@@ -400,28 +423,51 @@ function saveNewItem(plan, data)
 
 function saveEditedItem(plan, data, id)
 {
-	new Ajax.Request('rpc/' + plan + '/options/' + id,
+	var title = data.get('title');
+
+	if (title.blank())
 	{
-		method: 'put',
-		postBody: data.toJSON(),
-		onSuccess: function(transport)
+		if (!confirm('Delete this option?'))
+			return;
+
+		new Ajax.Request('rpc/' + plan + '/options/' + id,
 		{
-			var data = transport.responseJSON;
-			$('option-' + id).childNodes[0].update(data.title);
-			closeItemPopup();
-		},
-		onFailure: function() { error(); }
-	});
+			method: 'delete',
+			onSuccess: function(transport)
+			{
+				window.location = plan;
+			},
+			onFailure: function() { error(); }
+		});
+	}
+	else
+	{
+		new Ajax.Request('rpc/' + plan + '/options/' + id,
+		{
+			method: 'put',
+			postBody: data.toJSON(),
+			onSuccess: function(transport)
+			{
+				var data = transport.responseJSON;
+				var title = data.title;
+				$('option-' + id).childNodes[0].update(title);
+				closeItemPopup();
+			},
+			onFailure: function() { error(); }
+		});
+	}
 }
 
 function saveItem(form, plan)
 {
-	var data = $H({'title': $F(form.title)});
+	var title = $F(form.title);
+	var data = $H({'title': title});
 	var id = $F(form.id);
 
 	if (id.empty())
 	{
-		saveNewItem(plan, data);
+		if (!title.blank())
+			saveNewItem(plan, data);
 	}
 	else
 	{
