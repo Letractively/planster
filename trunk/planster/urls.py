@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import *
+from django.contrib.auth import views as auth_views
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -9,10 +10,10 @@ urlpatterns = patterns('',
 	(r'^rpc/(?P<plan_hash>\w{15})/options/(?P<option_id>\d+)',
 		'planster.main.rpc.option'),
 	(r'^rpc/(?P<plan_hash>\w{15})/options', 'planster.main.rpc.options'),
-	(r'^rpc/(?P<plan_hash>\w{15})/instructions',
-		'planster.main.rpc.instructions'),
-	(r'^rpc/(?P<plan_hash>\w{15})/title', 'planster.main.rpc.title'),
-	(r'^rpc/(?P<plan_hash>\w{15})/owner', 'planster.main.rpc.owner'),
+	#(r'^rpc/(?P<plan_hash>\w{15})/instructions',
+	#	'planster.main.rpc.instructions'),
+	#(r'^rpc/(?P<plan_hash>\w{15})/title', 'planster.main.rpc.title'),
+	#(r'^rpc/(?P<plan_hash>\w{15})/owner', 'planster.main.rpc.owner'),
 	(r'^rpc/(?P<plan_hash>\w{15})/people/(?P<person_id>\d+)/responses',
 		'planster.main.rpc.responses'),
 	(r'^rpc/(?P<plan_hash>\w{15})/people/(?P<person_id>\d+)',
@@ -23,6 +24,12 @@ urlpatterns = patterns('',
 	(r'^(?P<plan_id>\w{15})', 'planster.main.views.plan'),
 	(r'^$', 'planster.main.views.index'),
 	(r'^create$', 'planster.main.views.create'),
+	(r'^export$', 'planster.main.views.export'),
+	(r'^accounts/profile/$', 'planster.main.views.profile'),
+	#(r'^accounts/profile/$', auth_views.password_reset),
+	#(r'^accounts/login/$', 'django.contrib.auth.views.login'),
+	#(r'^accounts/logout/$', 'django.contrib.auth.views.logout', { 'next_page': '/'}),
+	(r'^accounts/', include('registration.urls')),
 	(r'^media/(?P<path>.*)$', 'django.views.static.serve',
 		{'document_root': '/home/stefan/projects/planster/trunk/planster/media'}),
 

@@ -85,6 +85,15 @@ table.responses th.person a {
 	color: #555753;
 }
 
+table.registration th {
+	text-align: left;
+}
+
+table.registration ul {
+	padding: 0 10px;
+	margin: 0;
+}
+
 #options {
 	height: 56px;
 	background-color: #555753;
@@ -186,4 +195,13 @@ table.responses td.option {
 
 #responsePopup img.selection {
 	position: absolute;
+}
+
+.error,
+ul.errorlist {
+	color: red;
+}
+
+ul.errorlist li {
+	list-style-type: none;
 }

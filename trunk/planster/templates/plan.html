@@ -85,6 +85,12 @@
 		<div class="category">&nbsp;</div>
 	</div>
 	<div id="toolbar" class="closed">
+{% if user.is_authenticated %}
+	Signed in as <a href="{% url planster.main.views.profile %}">{{ user.username }}</a>. <a href="{% url auth_logout %}">Sign out</a>
+{% else %}
+	<a href="{% url auth_login %}?next=/{{ plan.hash }}">Sign in</a>
+{% endif %}
+
 		<a href="#" onclick="javascript:toggleOptions(); return false"><img src="{{ MEDIA_URL }}/img/options.png" alt="options" title="Edit options" /></a>
 	</div>
 {% endblock %}

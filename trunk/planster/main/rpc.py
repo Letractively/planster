@@ -11,7 +11,7 @@ import datetime
 import cgi
 
 # TODO: remove
-import sys
+#import sys
 #print >>sys.stdout, data
 #print >>sys.stdout, request.POST
 
@@ -31,6 +31,8 @@ class PlansterRPCHandler(object):
 			return HttpResponseBadRequest()
 
 	def handle(self, request):
+		self.request = request
+
 		if request.method == 'PUT':
 			data = request.raw_post_data
 			return self.__handle_data(self.put, data)
@@ -44,7 +46,6 @@ class PlansterRPCHandler(object):
 			elif ('_method' in request.POST and
 				request.POST['_method'].upper() == 'DELETE'):
 				return self.delete()
-#				return self.__handle_data(self.delete, data)
 			else:
 				data = request.raw_post_data
 				return self.__handle_data(self.post, data)
@@ -59,27 +60,26 @@ class PlansterPlansRPCHandler(PlansterRPCHandler):
 	def put(self, args):
 		plan = Plan()
 
-		"""
-		if not 'captcha-id' in args:
-			return HttpResponseBadRequest('Weird')
-		if not 'captcha-value' in args:
-			return HttpResponseBadRequest('Please enter a value')
+		if not self.request.user.is_authenticated():
+			if not 'captcha-id' in args:
+				return HttpResponseBadRequest('Weird')
+			if not 'captcha-value' in args:
+				return HttpResponseBadRequest('Please enter a value')
 
-		captcha_id = args['captcha-id']
-		captcha_value = args['captcha-value']
+			captcha_id = args['captcha-id']
+			captcha_value = args['captcha-value']
 
-		if not captcha_value.isdigit():
-			return HttpResponseBadRequest('Please enter a number')
+			if not captcha_value.isdigit():
+				return HttpResponseBadRequest('Please enter a number')
 
-		captcha_value = int(captcha_value)
-		answer = CaptchaRequest.validate(captcha_id, captcha_value)
+			captcha_value = int(captcha_value)
+			answer = CaptchaRequest.validate(captcha_id, captcha_value)
 
-		if answer != CAPTCHA_ANSWER_OK:
-			captcha = generate_sum_captcha()
-			response = HttpResponseForbidden('Wrong answer')
-			response['location'] = captcha.uid
-			return response
-		"""
+			if answer != CAPTCHA_ANSWER_OK:
+				captcha = generate_sum_captcha()
+				response = HttpResponseForbidden('Wrong answer')
+				response['location'] = captcha.uid
+				return response
 
 		if 'title' in args:
 			plan.title = args['title']
