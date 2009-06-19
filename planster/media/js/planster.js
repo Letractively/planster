@@ -214,8 +214,14 @@ function createPlan(form)
 	var title = $F(form.title);
 	var instructions = $F(form.instructions);
 	var expires = $F(form.expires);
-	var captcha_id = $F(form.captcha_id);
-	var captcha_value = $F(form.captcha_value);
+	var captcha_id;
+	var captcha_value;
+
+	if (form.captcha_id)
+	{
+		captcha_id = $F(form.captcha_id);
+		captcha_value = $F(form.captcha_value);
+	}
 
 	var data = $H({
 		'title': title,

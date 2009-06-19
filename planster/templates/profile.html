@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h2>Your profile</h2>
+<ul>
+	<li><a href="{% url auth_password_change %}">Change my password</a></li>
+</ul>
+{% endblock %}

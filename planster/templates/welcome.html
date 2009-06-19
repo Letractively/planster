@@ -22,12 +22,15 @@
 		<option>5</option>
 		<option>6</option>
 	</select> months</p>
+{% if not user.is_authenticated %}
 	<p>And prove that you're a human by answering this:</p>
 	<p>
 		<img src="/{{ req.uid }}.jpg" alt="" title="" id="captcha" />
 		<input name="captcha_value" value="" size="2" />
 		<input type="hidden" name="captcha_id" value="{{ req.uid }}" />
+		or <a href="{% url auth_login %}?next=/">Sign in</a>
 	</p>
+{% endif %}
 	<p>That's it. Now click the 'create' button.</p>
 	<p><input type="submit" value="create" /></p>
 </form>
