@@ -49,6 +49,8 @@ ADMIN_MEDIA_PREFIX = '/media2/'
 
 ACCOUNT_ACTIVATION_DAYS = 7
 
+AUTH_PROFILE_MODULE = 'main.userprofile'
+
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '5a()5^e7^k_-a8e!wkjo_dqii@0y8y-cirsf2d%3#)lfb3ik0$'
 

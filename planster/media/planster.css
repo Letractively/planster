@@ -18,6 +18,13 @@ img {
 	height: 66px;
 }
 
+#toolbar-welcome {
+	border-top: 5px white solid;
+	text-align: right;
+	padding-right: 70px;
+	height: 66px;
+}
+
 #toolbar.closed {
 	background-image: url(gradient.png);
 }
@@ -204,4 +211,9 @@ ul.errorlist {
 
 ul.errorlist li {
 	list-style-type: none;
+}
+
+#profile div {
+	float: left;
+	margin: 0 40px 0 0;
 }

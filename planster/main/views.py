@@ -3,12 +3,13 @@
 #
 
 from django.template import Context, loader
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.utils import simplejson as json
-from planster.main.models import Plan
+from planster.main.models import Plan, UserProfile
 from django.template import RequestContext
-from django.contrib.auth.decorators import user_passes_test
+from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import user_passes_test, login_required
 from planster.djaptcha.examples import generate_sum_captcha
 
 def index(request):
@@ -24,14 +25,39 @@ def create(request):
 
 def plan(request, plan_id):
 	plan = Plan.objects.get(hash=plan_id)
+
+	user = request.user
+
+	if user.is_authenticated():
+		profile = user.get_profile()
+		profile.plans.add(plan)
+
 	response = render_to_response('plan.html', {'plan': plan},
 		context_instance = RequestContext(request))
 	response['Cache-Control'] = 'no-cache'
 	return response
 
+@login_required
 def profile(request):
+	#x = UserProfile(user=request.user)
+	#x.save()
+
+	#import datetime
+	#x = request.user.get_profile()
+	#plan = Plan()
+	#plan.expires = datetime.date.today()
+	#plan.save()
+	#x.plans.add(plan)
+
+	if 'clear' in request.GET:
+		profile = request.user.get_profile()
+		profile.plans.clear()
+		return HttpResponseRedirect(reverse('planster.main.views.profile'))
+
 	return render_to_response('profile.html',
-		context_instance = RequestContext(request))
+		{ 'profile': request.user.get_profile() },
+		context_instance = RequestContext(request),
+	)
 
 @user_passes_test(lambda u: u.is_superuser)
 def export(request):
