@@ -2,6 +2,7 @@
 # Copyright (C) 2009 Stefan Ott, all rights reserved
 #
 from django.db import models
+from django.contrib.auth.models import User
 from random import seed, choice
 import string
 
@@ -104,6 +105,10 @@ class Category(object):
 
 	def add(self, item):
 		self.items.append(item)
+
+class UserProfile(models.Model):
+	user = models.ForeignKey(User, unique=True)
+	plans = models.ManyToManyField("Plan")
 
 class Option(models.Model):
 	name = models.CharField(max_length=100)
