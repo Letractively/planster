@@ -37,6 +37,24 @@ def plan(request, plan_id):
 	response['Cache-Control'] = 'no-cache'
 	return response
 
+def legacy(request, plan_hash):
+	response = HttpResponseRedirect('http://www.planster.net/%s' %
+			plan_hash)
+	return response
+
+def nojs(request):
+	return render_to_response('nojs.html',
+		context_instance = RequestContext(request))
+
+def server_error(request, code=500):
+	response = render_to_response('%d.html' % code,
+		context_instance = RequestContext(request))
+	response.status_code = code
+	return response
+
+def error_404(request):
+	return server_error(request, 404)
+
 @login_required
 def profile(request):
 	#x = UserProfile(user=request.user)

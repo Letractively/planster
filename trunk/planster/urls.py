@@ -22,10 +22,12 @@ urlpatterns = patterns('',
 	(r'^rpc/(?P<plan_hash>\w{15})', 'planster.main.rpc.plan'),
 	(r'^rpc', 'planster.main.rpc.plans'),
 	(r'^(?P<plan_id>\w{15})', 'planster.main.views.plan'),
+	(r'^(?P<plan_hash>\w{12})', 'planster.main.views.legacy'),
 	(r'^$', 'planster.main.views.index'),
 	(r'^create$', 'planster.main.views.create'),
 	(r'^export$', 'planster.main.views.export'),
 	(r'^accounts/profile/$', 'planster.main.views.profile'),
+	(r'^nojs$', 'planster.main.views.nojs'),
 	#(r'^accounts/profile/$', auth_views.password_reset),
 	#(r'^accounts/login/$', 'django.contrib.auth.views.login'),
 	#(r'^accounts/logout/$', 'django.contrib.auth.views.logout', { 'next_page': '/'}),
@@ -43,3 +45,6 @@ urlpatterns = patterns('',
 	# Uncomment the next line to enable the admin:
 	(r'^admin/(.*)', admin.site.root),
 )
+
+handler404 = 'planster.main.views.error_404'
+handler500 = 'planster.main.views.server_error'
