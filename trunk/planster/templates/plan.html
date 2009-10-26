@@ -87,7 +87,7 @@
 	</div>
 	<div id="toolbar" class="closed">
 {% if user.is_authenticated %}
-	Signed in as <a href="{% url planster.main.views.profile %}">{{ user.username }}</a>. <a href="{% url auth_logout %}">Sign out</a>
+	Signed in as <a href="{% url plans.views.profile %}">{{ user.username }}</a>. <a href="{% url auth_logout %}">Sign out</a>
 {% else %}
 	<a href="{% url auth_login %}?next=/{{ plan.hash }}">Sign in</a>
 {% endif %}

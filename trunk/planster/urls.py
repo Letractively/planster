@@ -6,7 +6,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-	(r'^', include('main.urls')),
+	(r'^', include('plans.urls')),
 	(r'^admin/(.*)', admin.site.root),
 	(r'^accounts/', include('registration.urls')),
 	(r'^favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url': 'http://static.planster.net/img/favicon.ico'}),
