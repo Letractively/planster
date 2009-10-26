@@ -1,7 +1,7 @@
 # Django settings for planster project.
 
 DEBUG = False
-DEBUG = True
+#DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -36,25 +36,25 @@ USE_I18N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = '/home/stefan/htdocs/planster.net/nx-static'
+MEDIA_ROOT = '/home/stefan/htdocs/planster.net/static'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = 'http://nx-static.planster.net/'
+MEDIA_URL = 'http://static.planster.net/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
 #ADMIN_MEDIA_PREFIX = '/media2/'
-ADMIN_MEDIA_PREFIX = 'http://nx-static.planster.net/admin-media/'
+ADMIN_MEDIA_PREFIX = 'http://static.planster.net/admin-media/'
 
 ACCOUNT_ACTIVATION_DAYS = 7
 
 AUTH_PROFILE_MODULE = 'main.UserProfile'
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = ''
+SECRET_KEY = '!P@*OELDHLAIUYP@378o1p-_&_(*!@LLHASDA)(!@PA:SDAKLJ'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -75,7 +75,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-	'/home/stefan/htdocs/planster.net/nx/planster/templates'
+	'/home/stefan/htdocs/planster.net/www/planster/templates'
 )
 
 INSTALLED_APPS = (
