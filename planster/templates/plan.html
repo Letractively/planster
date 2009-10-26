@@ -136,22 +136,12 @@
 				<tr>
 					<td class="option" id="option-{{ option.id }}"><a href="#" onclick="javascript:askItem(this); return false">{{ option.name }}</a></td>
 					{% for person in plan.people %}
-					<td id="response-{{ person.id }}-{{ option.id }}" class="answer"><a href="#" onclick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/{% get_status option person %}.png" alt="unknown" title="unknown" /></a></td>
+					<td id="response-{{ person.id }}-{{ option.id }}" class="answer"><a href="#" onclick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/{% get_status option person %}.png" alt="{% get_status option person %}" title="{% get_status option person %}" /></a></td>
 					{% endfor %}
 					<td class="count" id="{{ option.id }}-count" {% ifequal plan.count_type 1 %}style="display: none" {% endifequal %}>{{ option.count }}</td>
 					<td></td>
 				</tr>
 					{% endfor %}
-				{% endfor %}
-				{% for option in plan.options %}
-<!--				<tr>
-					<td class="option" id="option-{{ option.id }}"><a href="#" onclick="javascript:askItem(this); return false">{{ option.name }}</a></td>
-					{% for person in plan.people %}
-					<td id="response-{{ person.id }}-{{ option.id }}" class="answer"><a href="#" onclick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/{% get_status option person %}.png" alt="unknown" title="unknown" /></a></td>
-					{% endfor %}
-					<td class="count" id="{{ option.id }}-count" {% ifequal plan.count_type 1 %}style="display: none" {% endifequal %}>{{ option.count }}</td>
-					<td></td>
-				</tr>-->
 				{% endfor %}
 				<tr>
 					<td class="addItem"><a href="#" onclick="javascript:askItem(this); return false" id="addItemLink">Click to add an item</a></td>
