@@ -481,7 +481,6 @@ function saveEditedItem(plan, data, id)
 				if (old_category != category)
 					window.location = plan;
 
-				var x = getCategoryForItem(item);
 				$('option-' + id).childNodes[0].update(title);
 				closeItemPopup();
 			},

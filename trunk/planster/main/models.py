@@ -5,10 +5,18 @@ from django.db import models
 from django.contrib.auth.models import User
 from random import seed, choice
 import string
+from django.db.models.signals import post_save
 
 COUNT_TYPE_NONE = 1
 COUNT_TYPE_ONLY_YES = 2
 COUNT_TYPE_BOTH = 3
+
+def create_profile(sender, instance, created, **kwargs):
+	if created and isinstance(instance, User):
+		profile = UserProfile(user=instance)
+		profile.save()
+
+post_save.connect(create_profile)
 
 class Callable:
 	def __init__(self, anycallable):

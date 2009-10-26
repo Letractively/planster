@@ -38,7 +38,7 @@ def plan(request, plan_id):
 	return response
 
 def legacy(request, plan_hash):
-	response = HttpResponseRedirect('http://www.planster.net/%s' %
+	response = HttpResponseRedirect('http://legacy.planster.net/%s' %
 			plan_hash)
 	return response
 
