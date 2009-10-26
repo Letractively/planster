@@ -1,12 +1,12 @@
 from django.http import HttpResponse
-from planster.djaptcha.models import CaptchaRequest
+from djaptcha.models import CaptchaRequest
 from cStringIO import StringIO
 import random
 import Image,ImageDraw,ImageFont
 
 # You need to get the font from somewhere and have it accessible by Django
 # I have it set in the djaptcha's settings dir 
-from planster.djaptcha.settings import FONT_PATH,FONT_SIZE
+from djaptcha.settings import FONT_PATH,FONT_SIZE
 
 
 def captcha_image(request,token_uid):

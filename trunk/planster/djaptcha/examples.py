@@ -1,4 +1,4 @@
-from planster.djaptcha.models import CaptchaRequest
+from djaptcha.models import CaptchaRequest
 from random import random
 
 def generate_sum_captcha(request_path='any'):
