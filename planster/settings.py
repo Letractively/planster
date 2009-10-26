@@ -1,7 +1,7 @@
 # Django settings for planster project.
 
 DEBUG = False
-#DEBUG = True
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -46,14 +46,15 @@ MEDIA_URL = 'http://nx-static.planster.net/'
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/media2/'
+#ADMIN_MEDIA_PREFIX = '/media2/'
+ADMIN_MEDIA_PREFIX = 'http://nx-static.planster.net/admin-media/'
 
 ACCOUNT_ACTIVATION_DAYS = 7
 
-AUTH_PROFILE_MODULE = 'main.userprofile'
+AUTH_PROFILE_MODULE = 'main.UserProfile'
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '5a()5^e7^k_-a8e!wkjo_dqii@0y8y-cirsf2d%3#)lfb3ik0$'
+SECRET_KEY = ''
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
