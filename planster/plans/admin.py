@@ -1,7 +1,7 @@
 #
 # Copyright (C) 2009 Stefan Ott, all rights reserved
 #
-from planster.main.models import *
+from plans.models import *
 from django.contrib import admin
 
 admin.site.register(Plan)

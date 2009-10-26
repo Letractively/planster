@@ -6,11 +6,11 @@ from django.template import Context, loader
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.utils import simplejson as json
-from planster.main.models import Plan, UserProfile
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import user_passes_test, login_required
-from planster.djaptcha.examples import generate_sum_captcha
+from plans.models import Plan, UserProfile
+from djaptcha.examples import generate_sum_captcha
 
 def index(request):
 	plan = Plan()
@@ -70,7 +70,7 @@ def profile(request):
 	if 'clear' in request.GET:
 		profile = request.user.get_profile()
 		profile.plans.clear()
-		return HttpResponseRedirect(reverse('planster.main.views.profile'))
+		return HttpResponseRedirect(reverse('plans.views.profile'))
 
 	return render_to_response('profile.html',
 		{ 'profile': request.user.get_profile() },
