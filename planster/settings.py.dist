@@ -75,7 +75,7 @@ TEMPLATE_DIRS = (
 	# "C:/www/django/templates".
 	# Always use forward slashes, even on Windows.
 	# Don't forget to use absolute paths, not relative paths.
-	'/home/stefan/htdocs/planster.net/www/planster/templates'
+	'/home/stefan/htdocs/planster.net/www/planster/plans/templates'
 )
 
 INSTALLED_APPS = (

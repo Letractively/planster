@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load planster_tags %}
+{% load i18n %}
+
+{% block precontent %}
+	<div id="responsePopup" style="display: none" class="popup">
+		<div class="title"><a href="#" onclick="javascript:closeResponsePopup(); return false"><img class="close" src="{{ MEDIA_URL }}/img/close.png" alt="close" title="close" /></a>Select Response</div>
+		<div class="selection">
+			<img onmouseover="javascript:setSelection(this); return false" onclick="javascript:setResponse(1, '{{ plan.hash }}'); return false" src="{{ MEDIA_URL }}/img/yes.png" alt="yes" />
+			<img onmouseover="javascript:setSelection(this); return false" onclick="javascript:setResponse(3, '{{ plan.hash }}'); return false" src="{{ MEDIA_URL }}/img/maybe.png" alt="maybe" />
+			<img onmouseover="javascript:setSelection(this); return false" onclick="javascript:setResponse(2, '{{ plan.hash }}'); return false" src="{{ MEDIA_URL }}/img/no.png" alt="no" />
+		</div>
+		<img src="{{ MEDIA_URL }}/img/triangle.png" class="handle" alt="" />
+		<img src="{{ MEDIA_URL }}/img/selection.png" class="selection" id="responseSelector" style="display: none" alt="" />
+	</div>
+	<div id="itemPopup" style="display: none" class="popup">
+		<div class="title">
+			<a href="#" onclick="javascript:closeItemPopup(); return false"><img class="close" src="{{ MEDIA_URL }}/img/close.png" alt="close" title="close" /></a>
+			<span id="addItemTitle">Add an item</span>
+			<span id="editItemTitle" style="display: none">Edit item</span>
+		</div><div class="content">
+			<form onsubmit="javascript:saveItem(this, '{{ plan.hash }}'); return false" action="$" onkeypress="javascript:closeItemPopupOnEscape(event); return true">
+				<div>
+					<table>
+						<tr>
+							<td>Title</td>
+							<td><input name="title" id="itemTitle" /></td>
+						</tr><tr>
+							<td>Category</td>
+							<td><input name="category" id="itemCategory" /></td>
+						</tr>
+					</table>
+					<input name="id" type="hidden" value="" id="itemID" />
+					<div id="calendar" style="padding: 10px 0">
+						<script type="text/javascript"><!--
+						var cal = Calendar.setup ({
+							flat : 'calendar',
+							firstDay : 1,
+							weekNumbers: false,
+							ifFormat: '%Y',
+							flatCallback: itemDateChanged
+						});
+						--></script>
+					</div>
+				</div>
+				<div>
+					<input type="submit" value="save" style="float: right" />
+					<input type="submit" value="delete" style="float: right" onclick="$('itemTitle').value=''" />
+					<a href="#" onclick="javascript:toggleCalendar(); return false" id="showCalendarLink" style="display: none">show calendar</a>
+					<a href="#" onclick="javascript:toggleCalendar(); return false" id="hideCalendarLink">hide calendar</a>
+				</div>
+			</form>
+		</div>
+		<img src="{{ MEDIA_URL }}/img/triangle.png" class="handle" alt="" />
+	</div>
+	<div id="personPopup" style="display: none" class="popup">
+		<div class="title">
+			<a href="#" onclick="javascript:closePersonPopup(); return false"><img class="close" src="{{ MEDIA_URL }}/img/close.png" alt="close" title="close" /></a>
+			<span id="addPersonTitle">Add a</span>
+			<span id="editPersonTitle" style="display: none">Edit</span> Person
+		</div><div class="content">
+			<form onsubmit="javascript:savePerson(this, '{{ plan.hash }}');return false" onkeypress="javascript:closePersonPopupOnEscape(event); return true" action="$">
+				<div>
+					<input name="name" id="personName" />
+					<input name="id" type="hidden" value="" />
+				</div>
+			</form>
+		</div>
+		<img src="{{ MEDIA_URL }}/img/triangle.png" class="handle" alt="" />
+	</div>
+	<div id="options" style="display: none">
+		<form action="$">
+			<ul class="category">
+				<li><input type="radio" name="count" value="1" {% ifequal 1 plan.count_type %}checked="checked" {% endifequal %} onclick="javascript:setCountType(this, '{{ plan.hash }}')" /> Hide totals</li>
+				<li><input type="radio" name="count" value="2" {% ifequal 2 plan.count_type %}checked="checked" {% endifequal %} onclick="javascript:setCountType(this, '{{ plan.hash }}')" /> Count only <img src="{{ MEDIA_URL }}/img/yes-sample.png" alt="yes" title="yes" /></li>
+				<li><input type="radio" name="count" value="3" {% ifequal 3 plan.count_type %}checked="checked" {% endifequal %} onclick="javascript:setCountType(this, '{{ plan.hash }}')" /> Count <img src="{{ MEDIA_URL }}/img/maybe-sample.png" alt="maybe" title="maybe" /> as half <img src="{{ MEDIA_URL }}/img/yes-sample.png" alt="yes" title="yes" /></li>
+			</ul>
+		</form>
+		<ul class="category" style="list-style-image: url({{ MEDIA_URL }}/img/arrow.png); margin-left: 10px;">
+			<li><a href="#" onclick="javascript:editTitle(); return false;">Edit title</a></li>
+			<li><a href="#" onclick="javascript:editInstructions(); return false">Edit comment</a></li>
+		</ul>
+		<ul class="category">
+			<li>This plan was created on {{ plan.created|date:"d M Y" }} and expires on {{ plan.expires|date:"d M Y" }}</li>
+		</ul>
+		<div class="category">&nbsp;</div>
+	</div>
+	<div id="toolbar" class="closed">
+{% if user.is_authenticated %}
+	Signed in as <a href="{% url plans.views.profile %}">{{ user.username }}</a>. <a href="{% url auth_logout %}">Sign out</a>
+{% else %}
+	<a href="{% url auth_login %}?next=/{{ plan.hash }}">Sign in</a>
+{% endif %}
+
+		<a href="#" onclick="javascript:toggleOptions(); return false"><img src="{{ MEDIA_URL }}/img/options.png" alt="options" title="Edit options" /></a>
+	</div>
+{% endblock %}
+{% block content %}
+		<form onsubmit="javascript:saveTitle(this, '{{ plan.hash }}');return false" action="#" onkeypress="javascript:abortEditingTitleOnEscape(event); return true">
+			<h1>
+				<span id="title">{{ plan.title }}</span>
+				<span id="titleForm" style="display: none">
+					<input name="title" value="" id="titleInput" />
+				</span>
+			</h1>
+		</form>
+		<div id="instructions">
+			<form onsubmit="javascript:saveInstructions(this, '{{ plan.hash }}');return false" action="$" onkeypress="javascript:abortEditingInstructionsOnEscape(event); return true">
+				<div id="instructionsText">{{ plan.instructions }}</div>
+				<div id="instructionsForm" style="display: none">
+					<textarea name="instructions" id="instructionsInput" rows="3" cols="70">Please choose the books or texts that you have read. We will be discussing them on Monday.</textarea>
+					<input type="submit" value="save" />
+				</div>
+			</form>
+		</div>
+		<table class="responses">
+			<col />
+			{% for person in plan.people %}
+			<col class="{% cycle 'odd' 'even' %}" />
+			{% endfor %}
+			<tr>
+				<th />
+				{% for person in plan.people %}
+				<th class="person" id="person-{{ person.id }}"><a href="#" onclick="javascript:askPerson(this); return false">{{ person }}</a></th>
+				{% endfor %}
+				<th class="count" id="count" {% ifequal plan.count_type 1 %}style="display: none" {% endifequal %}>Total</th>
+				<th class="addItem"><a href="#" onclick="javascript:askPerson(this); return false">Click to add a person</a></th>
+			</tr>
+				{% for category in plan.by_category %}
+				{% if category.name %}
+				<tr>
+					<td class="category" colspan="{{ plan.people|length|add:"1" }}">{{ category.name }}</td><td colspan="2" />
+				</tr>
+				{% endif %}
+					{% for option in category.items %}
+				<tr>
+					<td class="option" id="option-{{ option.id }}"><a href="#" onclick="javascript:askItem(this); return false">{{ option.name }}</a></td>
+					{% for person in plan.people %}
+					<td id="response-{{ person.id }}-{{ option.id }}" class="answer"><a href="#" onclick="askResponse(this); return false"><img src="{{ MEDIA_URL }}/img/{% get_status option person %}.png" alt="{% get_status option person %}" title="{% get_status option person %}" /></a></td>
+					{% endfor %}
+					<td class="count" id="{{ option.id }}-count" {% ifequal plan.count_type 1 %}style="display: none" {% endifequal %}>{{ option.count }}</td>
+					<td></td>
+				</tr>
+					{% endfor %}
+				{% endfor %}
+				<tr>
+					<td class="addItem"><a href="#" onclick="javascript:askItem(this); return false" id="addItemLink">Click to add an item</a></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+			</table>
+{% endblock %}
