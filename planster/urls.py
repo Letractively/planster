@@ -32,8 +32,9 @@ urlpatterns = patterns('',
 	#(r'^accounts/login/$', 'django.contrib.auth.views.login'),
 	#(r'^accounts/logout/$', 'django.contrib.auth.views.logout', { 'next_page': '/'}),
 	(r'^accounts/', include('registration.urls')),
-	(r'^media/(?P<path>.*)$', 'django.views.static.serve',
-		{'document_root': '/home/stefan/projects/planster/trunk/planster/media'}),
+	(r'^favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url': 'http://static.planster.net/img/favicon.ico'}),
+	#(r'^media/(?P<path>.*)$', 'django.views.static.serve',
+	#	{'document_root': '/home/stefan/projects/planster/trunk/planster/media'}),
 
 	# Example:
 	# (r'^planster/', include('planster.foo.urls')),
