@@ -356,9 +356,9 @@ function saveInstructions(form, plan)
 		onSuccess: function(transport)
 		{
 			var data = transport.responseJSON;
-			$('instructions').update(data.instructions);
+			$('instructionsText').update(data.instructions);
 			$('instructionsForm').hide();
-			$('instructions').show();
+			$('instructionsText').show();
 		},
 		onFailure: function() { error(); }
 	});
