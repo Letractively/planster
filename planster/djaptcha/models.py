@@ -1,7 +1,7 @@
 from django.db import models
 from datetime import datetime,timedelta
 from random import random
-from planster.djaptcha.settings import TIMEOUT
+from djaptcha.settings import TIMEOUT
 import sha
 
 def future_datetime(**kw_args):
