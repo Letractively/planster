@@ -54,7 +54,7 @@ ACCOUNT_ACTIVATION_DAYS = 7
 AUTH_PROFILE_MODULE = 'main.UserProfile'
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '!P@*OELDHLAIUYP@378o1p-_&_(*!@LLHASDA)(!@PA:SDAKLJ'
+SECRET_KEY = ''
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
