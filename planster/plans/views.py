@@ -3,7 +3,7 @@
 #
 
 from django.template import Context, loader
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
 from django.utils import simplejson as json
 from django.template import RequestContext
@@ -24,7 +24,10 @@ def create(request):
 		context_instance = RequestContext(request))
 
 def plan(request, plan_id):
-	plan = Plan.objects.get(hash=plan_id)
+	try:
+		plan = Plan.objects.get(hash=plan_id)
+	except Plan.DoesNotExist:
+		raise Http404
 
 	user = request.user
 
@@ -57,16 +60,6 @@ def error_404(request):
 
 @login_required
 def profile(request):
-	#x = UserProfile(user=request.user)
-	#x.save()
-
-	#import datetime
-	#x = request.user.get_profile()
-	#plan = Plan()
-	#plan.expires = datetime.date.today()
-	#plan.save()
-	#x.plans.add(plan)
-
 	if 'clear' in request.GET:
 		profile = request.user.get_profile()
 		profile.plans.clear()
