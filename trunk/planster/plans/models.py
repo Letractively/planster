@@ -37,8 +37,6 @@ class Plan(models.Model):
 	created = models.DateTimeField(auto_now_add=True)
 	expires = models.DateTimeField()
 	owner = models.EmailField()
-	#participants_locked = models.BooleanField(default=False)
-	#settings_locked = models.BooleanField(default=False)
 	hash = models.CharField(max_length=15, unique=True,
 		default=Planster.hash)
 	count_type = models.IntegerField(choices=(
@@ -176,6 +174,9 @@ class Response(models.Model):
 		(3, 'Maybe'),
 		(4, 'No response'),
 	))
+
+	class Meta:
+		unique_together = (('option', 'participant'),)
 
 	def __unicode__(self):
 		return "%s says %d to %s" % (

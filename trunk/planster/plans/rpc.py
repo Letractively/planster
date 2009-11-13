@@ -7,13 +7,8 @@ from plans.models import *
 from djaptcha.models import CaptchaRequest, CAPTCHA_ANSWER_OK
 from djaptcha.examples import generate_sum_captcha
 from dateutil.relativedelta import relativedelta
-import datetime
 import cgi
-
-# TODO: remove
-#import sys
-#print >>sys.stdout, data
-#print >>sys.stdout, request.POST
+import datetime
 
 class HttpResponseCreated(HttpResponse):
 	status_code = 201
