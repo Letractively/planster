@@ -69,10 +69,9 @@ class Plan(models.Model):
 			categories[category].add(option)
 
 		result = []
-		for category in categories:
+		for category in sorted(categories):
 			result.append(categories[category])
 
-		print result
 		return result
 
 	def __unicode__(self):
@@ -123,6 +122,9 @@ class Option(models.Model):
 
 	def __unicode__(self):
 		return self.name
+
+	class Meta:
+		ordering = ['category', 'name']
 
 	def count(self):
 		sum = 0
