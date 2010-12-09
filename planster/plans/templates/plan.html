@@ -58,7 +58,10 @@
 			<a href="#" onclick="javascript:closePersonPopup(); return false"><img class="close" src="{{ MEDIA_URL }}/img/close.png" alt="close" title="close" /></a>
 			<span id="addPersonTitle">Add a</span>
 			<span id="editPersonTitle" style="display: none">Edit</span> Person
-		</div><div class="content">
+			</div><div class="content">
+			<div id="personFormProgress" style="display: none">
+				<img src="{{ MEDIA_URL }}/img/progress.gif" alt="" title="" /> Please wait...
+			</div>
 			<form onsubmit="javascript:savePerson(this, '{{ plan.hash }}');return false" onkeypress="javascript:closePersonPopupOnEscape(event); return true" action="$">
 				<div>
 					<input name="name" id="personName" />
@@ -93,6 +96,7 @@
 {% endif %}
 
 		<a href="#" onclick="javascript:toggleOptions(); return false"><img src="{{ MEDIA_URL }}/img/options.png" alt="options" title="Edit options" /></a>
+		<img src="{{ MEDIA_URL }}/img/progress.gif" alt="" title="" id="progress" style="position: absolute; right: 0; margin: 3px; display: none" />
 	</div>
 {% endblock %}
 {% block content %}

@@ -364,7 +364,7 @@ function saveInstructions(form, plan)
 	});
 }
 
-function saveEditedPerson(plan, data, id)
+function saveEditedPerson(form, plan, data, id)
 {
 	var name = data.get('name');
 
@@ -372,6 +372,8 @@ function saveEditedPerson(plan, data, id)
 	{
 		if (!confirm('Delete this person?'))
 			return;
+
+		$('progress').show();
 
 		new Ajax.Request('rpc/' + plan + '/people/' + id,
 		{
@@ -385,6 +387,8 @@ function saveEditedPerson(plan, data, id)
 	}
 	else
 	{
+		$('progress').show();
+
 		new Ajax.Request('rpc/' + plan + '/people/' + id,
 		{
 			method: 'post',
@@ -395,8 +399,13 @@ function saveEditedPerson(plan, data, id)
 				var name = data.name;
 				$('person-' + id).childNodes[0].update(name);
 				closePersonPopup();
+				$('progress').hide();
 			},
-			onFailure: function() { error(); }
+			onFailure: function()
+			{
+				$('progress').hide();
+				error();
+			}
 		});
 	}
 }
@@ -424,11 +433,14 @@ function savePerson(form, plan)
 	if (id.empty())
 	{
 		if (!name.blank())
+		{
+			$('progress').show();
 			saveNewPerson(plan, data);
+		}
 	}
 	else
 	{
-		saveEditedPerson(plan, data, id);
+		saveEditedPerson(form, plan, data, id);
 	}
 }
 
