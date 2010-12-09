@@ -3,7 +3,7 @@
 # export PYTHONPATH=/home/stefan/projects/planster/trunk/
 # export DJANGO_SETTINGS_MODULE="planster.settings"
 import unittest
-from planster.main.models import *
+from plans.models import *
 import datetime
 
 port=8000

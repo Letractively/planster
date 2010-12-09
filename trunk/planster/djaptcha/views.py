@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from djaptcha.models import CaptchaRequest
 from cStringIO import StringIO
 import random
@@ -13,7 +13,10 @@ def captcha_image(request,token_uid):
     """
     Generate a new captcha image.
     """
-    captcha = CaptchaRequest.objects.get(uid=token_uid)
+    try:
+    	captcha = CaptchaRequest.objects.get(uid=token_uid)
+    except CaptchaRequest.DoesNotExist:
+	raise Http404;
     text = captcha.text
     #TODO: Calculate the image dimensions according to the given text.
     #      The dimensions below are for a "X+Y" text

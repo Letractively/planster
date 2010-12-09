@@ -50,6 +50,9 @@ class PlansterRPCHandler(object):
 		else:
 			return HttpResponseBadRequest()
 
+	def get(self):
+		return HttpResponseBadRequest()
+
 
 class PlansterPlansRPCHandler(PlansterRPCHandler):
 	def put(self, args):
